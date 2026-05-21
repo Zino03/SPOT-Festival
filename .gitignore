@@ -1,0 +1,16 @@
+# Secrets
+backend/src/main/resources/application.yaml
+backend/src/main/resources/application.yml
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Postman
+.postman/
+postman/
