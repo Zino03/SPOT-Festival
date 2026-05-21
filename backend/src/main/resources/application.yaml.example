@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/spotdb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 여기에_DB_비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+public-data:
+  api-key: 여기에_공공데이터_API_키
+  festival-url: "https://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api"
+
+kakao:
+  rest-api-key: 여기에_카카오_REST_API_키
