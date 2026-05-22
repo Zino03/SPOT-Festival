@@ -85,7 +85,7 @@ function HeroBanner() {
       <div className="hero_topbar">
         {/* TODO: API 연동 후 liveCount는 자동으로 실제 데이터 반영됨 */}
         <span className="hero_live">
-          <span className="hero_live-dot"></span>
+          <span className="hero_live_dot"></span>
           LIVE · 지금 열리는 축제 {liveCount}곳
         </span>
         <div className="hero_filters">
@@ -115,24 +115,24 @@ function HeroBanner() {
           한 번의 클릭으로 떠나는 로컬 큐레이션 가이드.
         </p>
         <div className="hero_buttons">
-          <button className="hero_btn-primary">지금 떠나기 →</button>
-          <button className="hero_btn-secondary">전국 지도 보기</button>
+          <button className="hero_btn_primary">지금 떠나기 →</button>
+          <button className="hero_btn_secondary">전국 지도 보기</button>
         </div>
       </div>
 
       {/* 오른쪽 SPOT INDEX 카드 */}
-      <div className="hero_index-card">
-        <p className="hero_index-label">이번 주 SPOT INDEX</p>
-        <div className="hero_index-stats">
-          <div className="hero_index-item">
+      <div className="hero_index_card">
+        <p className="hero_index_label">이번 주 SPOT INDEX</p>
+        <div className="hero_index_stats">
+          <div className="hero_index_item">
             <strong>247</strong>
             <span>축제</span>
           </div>
-          <div className="hero_index-item">
+          <div className="hero_index_item">
             <strong>1.2K</strong>
             <span>핫플</span>
           </div>
-          <div className="hero_index-item">
+          <div className="hero_index_item">
             <strong>896</strong>
             <span>주차</span>
           </div>

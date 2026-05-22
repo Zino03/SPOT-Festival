@@ -1,27 +1,122 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;  /* 정렬 */
+  justify-content: space-between;
   padding: 0 32px;
   height: 64px;
   background: #fff;
   border-bottom: 1px solid #eee;
-  position: sticky;   /* 스크롤해도 상단 고정 */
+  position: sticky;
   top: 0;
   z-index: 100;
 }
 
-/* 커서 올릴 시 빨간 밑줄 */
-.header__nav a:hover {
-  color: #3B6EFF;
-  border-bottom: 2px solid #FF4E50;
+/* 로고 */
+.header_logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* AI 코스 시작 버튼  */
-.header__ai-btn {
-  color: #FF6B35;
+.header_logo-icon {
+  width: 36px;
+  height: 36px;
+  background: #2351cc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+.header_logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header_logo-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1;
+}
+
+.header_logo-sub {
+  font-size: 10px;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
+/* 네비게이션 */
+.header_nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.header_nav a {
+  text-decoration: none;
+  font-size: 15px;
+  color: #555;
+  padding-bottom: 4px;
+}
+
+.header_nav a:hover {
+  color: #1a1a2e;
+}
+
+.header_nav a.active {
+  color: #1a1a2e;
+  font-weight: 600;
+  border-bottom: 2px solid #ff4e50;
+}
+
+/* 검색 + 버튼 */
+.header_actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.header_search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f5f5;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #888;
+}
+
+.header_search input {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px;
+  color: #555;
+  width: 180px;
+}
+
+kbd {
+  background: #e8e8e8;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #888;
+}
+
+/* AI 코스 시작 버튼 */
+.header_ai_btn {
+  color: #ff6b35;
   border: none;
   background: none;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
+}
+
+.header_ai_btn:hover {
+  opacity: 0.8;
 }

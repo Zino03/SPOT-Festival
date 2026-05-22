@@ -29,7 +29,7 @@ function Header() {
           <input type="text" placeholder="축제, 지역, 카페 검색" />
           <kbd>⌘K</kbd>
         </div>
-        <button className="header__ai-btn">
+        <button className="header_ai-btn">
           ✦ AI 코스 시작
         </button>
       </div>
