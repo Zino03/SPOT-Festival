@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* 정렬 */
+  padding: 0 32px;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;   /* 스크롤해도 상단 고정 */
+  top: 0;
+  z-index: 100;
+}
+
+/* 커서 올릴 시 빨간 밑줄 */
+.header__nav a:hover {
+  color: #3B6EFF;
+  border-bottom: 2px solid #FF4E50;
+}
+
+/* AI 코스 시작 버튼  */
+.header__ai-btn {
+  color: #FF6B35;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+}
