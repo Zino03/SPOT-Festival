@@ -1,0 +1,36 @@
+/* 전체 배경 */
+.coursebuilder {
+  background: #2351cc;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 64px 80px;
+  border-radius: 16px;
+  margin: 0 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 타이틀 강조 (나만의 코스) */
+.coursebuilder_title span {
+  color: #ff6b35;
+}
+
+/* 완료된 스텝 */
+.coursebuilder_step_done {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* 진행 중인 스텝 */
+.coursebuilder_step_active {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* 대기 중인 스텝 */
+.coursebuilder_step_waiting {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+}
