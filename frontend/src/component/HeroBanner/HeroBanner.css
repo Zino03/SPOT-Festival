@@ -1,0 +1,234 @@
+.hero {
+  position: relative;        
+  height: 560px;
+  border-radius: 16px;
+  overflow: hidden;          
+  color: #fff;
+  margin: 16px 24px;
+
+  /* TODO: 랜덤 배경 이미지 - JS에서 style={{ backgroundImage }} 로 주입 */
+  background-color: #1a1a2e; /* 임시 배경색 */
+  background-size: cover;    
+  background-position: center;
+}
+
+/* 배경 이미지 위에 어두운 반투명 레이어 */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;                  
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.65) 0%,  /* 왼쪽: 텍스트 가독성을 위해 어둡게 */
+    rgba(0, 0, 0, 0.2) 100%  /* 오른쪽: 배경 이미지가 보이도록 밝게 */
+  );
+  z-index: 0;                /* 배경 위, 콘텐츠 아래 */
+}
+
+/* ─────────────────────────────────────
+   상단 바 (LIVE 뱃지 + 필터 버튼)
+───────────────────────────────────── */
+.hero_topbar {
+  position: absolute;        /* hero 기준으로 상단 고정 */
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* LIVE 뱃지는 왼쪽, 필터 버튼은 오른쪽 */
+  z-index: 1;                /* 오버레이(::before) 위에 표시 */
+}
+
+/* LIVE 아이콘 */
+.hero_live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.45); 
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px); 
+  border-radius: 999px;       
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 빨간 깜빡이는 점 */
+.hero_live_dot {
+  width: 8px;
+  height: 8px;
+  background: #ff4e50;        
+  border-radius: 50%;         
+  animation: blink 1.4s ease-in-out infinite; /* 깜빡임 애니메이션 반복 */
+}
+
+/* 깜빡임 키프레임 */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; } 
+}
+
+/* 필터 버튼 묶음 */
+.hero_filters {
+  display: flex;
+  gap: 8px;                   
+}
+
+/* 필터 버튼 기본 스타일 */
+.hero_filter {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  cursor: pointer;            
+  transition: background 0.2s; 
+}
+
+/* 필터 버튼 호버 */
+.hero_filter:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 선택된 필터 버튼 */
+.hero_filter.active {
+  background: #fff;
+  color: #1a1a2e;             
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────
+   왼쪽 메인 콘텐츠 (타이틀 + 버튼)
+───────────────────────────────────── */
+.hero_content {
+  position: absolute;         
+  bottom: 48px;
+  left: 48px;
+  z-index: 1;
+  max-width: 480px;           
+}
+
+/* 소제목 */
+.hero_label {
+  font-size: 12px;
+  letter-spacing: 0.15em;     
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+}
+
+/* 메인 타이틀 */
+.hero_title {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.2;           
+  margin-bottom: 16px;
+  word-break: keep-all;       
+}
+
+/* 설명 텍스트 */
+.hero_desc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 28px;
+  word-break: keep-all;
+}
+
+/* 버튼 묶음 */
+.hero_buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 지금 떠나기 버튼  */
+.hero_btn_primary {
+  background: #ff6b35;        
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+/* 지금 떠나기 버튼 호버 */
+.hero_btn_primary:hover {
+  background: #e85d2a;        
+  transform: translateY(-1px); 
+}
+
+/* 전국 지도 보기 버튼 */
+.hero_btn_secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* 전국 지도 보기 버튼 호버 */
+.hero_btn_secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ─────────────────────────────────────
+   오른쪽 SPOT INDEX 카드
+───────────────────────────────────── */
+.hero_index_card {
+  position: absolute;         
+  bottom: 48px;
+  right: 48px;
+  background: rgba(255, 255, 255, 0.92); 
+  color: #1a1a2e;
+  border-radius: 16px;
+  padding: 20px 28px;
+  backdrop-filter: blur(12px); 
+  z-index: 1;
+  min-width: 240px;
+}
+
+/* 카드 상단 라벨 */
+.hero_index_label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #888;
+  text-transform: uppercase; 
+  margin-bottom: 12px;
+}
+
+/* 숫자 3개 가로 배치 */
+.hero_index_stats {
+  display: flex;
+  gap: 24px;
+}
+
+/* 숫자 + 라벨 세로 배치 */
+.hero_index_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 숫자  */
+.hero_index_item strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1;
+}
+
+/* 숫자 아래 설명 (축제, 핫플, 주차) */
+.hero_index_item span {
+  font-size: 12px;
+  color: #888;
+}
