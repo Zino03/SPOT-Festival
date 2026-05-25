@@ -1,22 +1,17 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import MapPage from './pages/MapPage'
 import Header from './component/Header/Header'
-import HeroBanner from './component/HeroBanner/HeroBanner'
-import DayTrip from './component/DayTrip/DayTrip'
-import CourseBuilder from './component/CourseBuilder/CourseBuilder'
-import RegionGrid from './component/RegionGrid/RegionGrid'
-import Trending from './component/Trending/Trending'
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <Header />
-      <main>
-        <HeroBanner />
-        <DayTrip />
-        <CourseBuilder />
-        <RegionGrid />
-        <Trending />
-      </main>
-    </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/map" element={<MapPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
