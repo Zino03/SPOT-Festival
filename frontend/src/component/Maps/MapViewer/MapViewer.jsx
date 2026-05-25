@@ -1,11 +1,68 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom'
+import './MapViewer.css'
 
-const MapViewer = () => {
+function MapViewer({ selectedRegion, onSelectRegion }) {
+  const navigate = useNavigate()
+
+  // 싱글 클릭 - 지역 선택 (툴팁 표시)
+  function handleClick(region) {
+    onSelectRegion(region)
+  }
+
+  // 더블 클릭 - 도별 지도 페이지로 이동
+  function handleDoubleClick(region) {
+    // TODO: 도별 지도 페이지 생성 후 아래 경로 수정
+    // navigate(`/map/${region.nameEn.toLowerCase()}`)
+    console.log(`${region.nameKo} 도별 지도로 이동 예정`)
+  }
+
   return (
-    <div style={{ padding: '20px', border: '1px dashed #ccc', margin: '10px' }}>
-      <h2>🗺️ 지도 뷰어 (팀원이 작업 중...)</h2>
-    </div>
-  );
-};
+    <div className="mapviewer">
 
-export default MapViewer;
+      {/* 지도 헤더 */}
+      <div className="mapviewer_header">
+        <div>
+          <p className="mapviewer_label">INTERACTIVE MAP</p>
+          <p className="mapviewer_subtitle">대한민국 · 광역시·도 단위</p>
+        </div>
+        <div className="mapviewer_controls">
+          <button>+</button>
+          <button>−</button>
+          <button>⊡</button>
+        </div>
+      </div>
+
+      {/* TODO: 지도 API/라이브러리 연동 자리 */}
+      {/* 지도 연동 시 아래 placeholder 제거하고 지도 컴포넌트 삽입 */}
+      {/* 지도의 각 지역에 onClick={handleClick}, onDoubleClick={handleDoubleClick} 연결 */}
+      <div className="mapviewer_placeholder">
+        <p className="mapviewer_placeholder_icon">🗺️</p>
+        <p className="mapviewer_placeholder_title">지도 영역</p>
+        <p className="mapviewer_placeholder_desc">지도 API 연동 예정</p>
+      </div>
+
+      {/* 선택된 지역 툴팁 카드 (싱글 클릭 시 표시) */}
+      {selectedRegion && (
+        <div
+          className="mapviewer_tooltip"
+          onDoubleClick={() => handleDoubleClick(selectedRegion)}
+        >
+          <p className="mapviewer_tooltip_label">CURRENT · 현재 보고 있는 지역</p>
+          <h3 className="mapviewer_tooltip_name">{selectedRegion.nameKo}</h3>
+          <p className="mapviewer_tooltip_count">{selectedRegion.count}개 축제 진행중</p>
+          <p className="mapviewer_tooltip_hint">더블 클릭으로 도별 지도 보기</p>
+        </div>
+      )}
+
+      {/* 범례 */}
+      <div className="mapviewer_legend">
+        <span><i className="mapviewer_legend_dot default"></i>일반 지역</span>
+        <span><i className="mapviewer_legend_dot selected"></i>선택 지역</span>
+        <span><i className="mapviewer_legend_dot live"></i>라이브 축제</span>
+      </div>
+
+    </div>
+  )
+}
+
+export default MapViewer
