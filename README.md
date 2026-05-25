@@ -59,22 +59,7 @@ cd SPOT-Festival
 
 ---
 
-### 3단계 — dev 브랜치로 이동
-
-```bash
-git checkout dev
-```
-
-아래처럼 뜨면 성공:
-
-```
-Branch 'dev' set up to track remote branch 'dev' from 'origin'.
-Switched to a new branch 'dev'
-```
-
----
-
-### 4단계 — 프론트엔드 세팅
+### 3단계 — 프론트엔드 세팅
 
 ```bash
 cd frontend
@@ -86,7 +71,7 @@ npm run dev
 
 ---
 
-### 5단계 — 백엔드 세팅
+### 4단계 — 백엔드 세팅
 
 **① MySQL DB 생성**
 
@@ -128,7 +113,7 @@ SPOT Backend is running!
 ```
 □ Git 설치 및 전역 설정 완료
 □ 레포 clone 완료
-□ dev 브랜치 이동 확인
+□ feature 브랜치 이동 확인
 □ Node.js 설치 → npm install → npm run dev → localhost:5173 확인
 □ JDK 17 설치 확인 (java -version)
 □ MySQL 설치 → spotdb 데이터베이스 생성
@@ -142,8 +127,7 @@ SPOT Backend is running!
 ## 🌿 브랜치 전략
 
 ```
-main        ← 최종 배포 (직접 push 금지)
-dev         ← 통합 브랜치 (PR merge만)
+main        ← 통합
 feature/*   ← 기능 개발
 ```
 
@@ -161,9 +145,8 @@ feature/AI-코스-빌더
 ## 📅 매일 작업 흐름
 
 ```bash
-# 1. 작업 시작 전 항상 최신 dev 받기
-git checkout dev
-git pull origin dev
+# 1. 작업 시작 전 항상 최신 받기
+git pull origin main
 
 # 2. 내 기능 브랜치 생성
 git checkout -b feature/기능이름
@@ -173,26 +156,6 @@ git add .
 git commit -m "feat: 기능 설명"
 git push --set-upstream origin feature/기능이름
 
-# 4. GitHub에서 dev로 Pull Request 생성 → 팀원 확인 후 merge
+# 4. GitHub에서 Pull Request 생성 → 팀원 확인 후 merge
 ```
-
----
-
-## 📝 커밋 메시지 규칙
-
-| 태그 | 설명 |
-|---|---|
-| `feat` | 새 기능 추가 |
-| `fix` | 버그 수정 |
-| `style` | CSS/UI 변경 |
-| `refactor` | 코드 구조 개선 |
-| `docs` | 문서/주석 수정 |
-| `chore` | 설정 파일 변경 |
-
-**예시:**
-
-```bash
-git commit -m "feat: 전국 지도 컴포넌트 추가"
-git commit -m "fix: 축제 상세 API 오류 수정"
-git commit -m "style: 홈 페이지 헤더 스타일 변경"
 ```
