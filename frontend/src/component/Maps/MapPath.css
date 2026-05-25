@@ -1,0 +1,31 @@
+/* MapPath 전체 */
+.mappath {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 24px;
+}
+ 
+/* 홈 텍스트 - 클릭 가능 */
+.mappath_home {
+  color: #888;
+  cursor: pointer;
+}
+ 
+.mappath_home:hover {
+  color: #1a1a2e;
+}
+ 
+/* › 구분자 */
+.mappath_separator {
+  color: #ccc;
+}
+ 
+/* 현재 페이지 - 클릭 안 됨 */
+.mappath_current {
+  color: #1a1a2e;
+  font-weight: 500;
+}
+ 
