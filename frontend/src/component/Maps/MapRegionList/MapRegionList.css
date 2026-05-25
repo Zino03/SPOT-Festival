@@ -1,0 +1,123 @@
+/* 리스트 전체 컨테이너 */
+.mapregionlist {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 검색창 */
+.mapregionlist_search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.mapregionlist_search input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #555;
+  width: 100%;
+}
+
+.mapregionlist_search input::placeholder {
+  color: #bbb;
+}
+
+/* 리스트 헤더 */
+.mapregionlist_header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #888;
+  padding: 0 4px;
+}
+
+/* 지역 목록 */
+.mapregionlist_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  max-height: 480px;
+}
+
+/* 지역 아이템 */
+.mapregionlist_item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.mapregionlist_item:hover {
+  background: #f5f5f5;
+}
+
+/* 선택된 지역 */
+.mapregionlist_item.active {
+  background: #eef1fb;
+  border-left: 3px solid #2351cc;
+}
+
+/* 순위 번호 */
+.mapregionlist_rank {
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 600;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+/* 지역명 */
+.mapregionlist_name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mapregionlist_name strong {
+  font-size: 15px;
+  color: #1a1a2e;
+}
+
+.mapregionlist_name span {
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.05em;
+}
+
+/* 축제 개수 */
+.mapregionlist_count {
+  font-size: 13px;
+  color: #888;
+}
+
+.mapregionlist_item.active .mapregionlist_count {
+  color: #2351cc;
+  font-weight: 600;
+}
+
+/* 화살표 */
+.mapregionlist_arrow {
+  font-size: 16px;
+  color: #ccc;
+}
+
+.mapregionlist_item.active .mapregionlist_arrow {
+  color: #2351cc;
+}
