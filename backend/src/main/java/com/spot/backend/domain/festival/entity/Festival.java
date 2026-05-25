@@ -38,6 +38,12 @@ public class Festival {
 
     @Column(nullable = false)
     private Double lng;            // 경도
+    //조회수 (기본값 0)
+    @Column(name = "view_count", columnDefinition = "integer default 0")
+    private int viewCount = 0;
+    //평점 (기본값 0.0)
+    @Column(name = "rating", columnDefinition = "double default 0.0")
+    private double rating = 0.0;
 
     @Builder
     public Festival(String name, String region, String address, LocalDate startDate, LocalDate endDate, Double lat, Double lng) {
@@ -48,5 +54,9 @@ public class Festival {
         this.endDate = endDate;
         this.lat = lat;
         this.lng = lng;
+    }
+    //조회수를 1 증가시키는 비즈니스 메서드
+    public void incrementViewCount() {
+        this.viewCount += 1;
     }
 }
