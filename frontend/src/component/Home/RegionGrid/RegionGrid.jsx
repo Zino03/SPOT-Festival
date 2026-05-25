@@ -53,7 +53,7 @@ function RegionGrid() {
                 <p className="regiongrid_name_ko">{region.nameKo}</p>
               </div>
               {/* 카드 화살표 버튼 - 각 지역 페이지로 이동 */}
-              <button className="regiongrid_arrow" onClick={() => navigate(`/map?region=${region.nameEn.toLowerCase()}`)}>
+              <button className="regiongrid_arrow" onClick={() => navigate(`/region/${region.nameEn.toLowerCase()}`)}>
                 →
               </button>
             </div>

@@ -41,7 +41,7 @@ function MapRegionList({ selectedRegion, onSelectRegion }) {
   // 더블 클릭 - 도별 지도 페이지로 이동
   function handleDoubleClick(region) {
     // TODO: 도별 지도 페이지 생성 후 아래 경로 수정
-    // navigate(`/map/${region.nameEn.toLowerCase()}`)
+    navigate(`/region/${region.nameEn.toLowerCase()}`)
     console.log(`${region.nameKo} 도별 지도로 이동 예정`)
   }
 
