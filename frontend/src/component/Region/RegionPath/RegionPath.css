@@ -1,0 +1,30 @@
+/* 브레드크럼 전체 */
+.regionpath {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+/* 클릭 가능한 링크 (홈, 전국 지도) */
+.regionpath_link {
+  color: #888;
+  cursor: pointer;
+}
+
+.regionpath_link:hover {
+  color: #1a1a2e;
+}
+
+/* › 구분자 */
+.regionpath_separator {
+  color: #ccc;
+}
+
+/* 현재 페이지 - 클릭 안 됨 */
+.regionpath_current {
+  color: #1a1a2e;
+  font-weight: 500;
+}

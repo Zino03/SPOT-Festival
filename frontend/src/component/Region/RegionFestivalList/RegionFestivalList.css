@@ -1,0 +1,197 @@
+/* 리스트 전체 컨테이너 */
+.regionfestivallist {
+  width: 400px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 리스트 헤더 */
+.regionfestivallist_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.regionfestivallist_title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* 강조 텍스트 (4개 축제) */
+.regionfestivallist_title span {
+  color: #ff6b35;
+}
+
+.regionfestivallist_sort {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* 축제 목록 */
+.regionfestivallist_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 축제 아이템 */
+.regionfestivallist_item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.regionfestivallist_item:hover {
+  background: #f8f9fa;
+}
+
+/* LIVE 상태 강조 */
+.regionfestivallist_item.live {
+  border-color: #ff6b35;
+  background: #fff8f5;
+}
+
+/* 축제 이미지 */
+.regionfestivallist_image {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background-color: #c0cfe8;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* LIVE 뱃지 */
+.regionfestivallist_live_badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: #ff4e50;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+/* 축제 정보 */
+.regionfestivallist_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 카테고리 + 평점 */
+.regionfestivallist_meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.regionfestivallist_category {
+  font-size: 11px;
+  color: #888;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.regionfestivallist_rating {
+  font-size: 12px;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+/* 축제명 */
+.regionfestivallist_name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+/* 날짜 */
+.regionfestivallist_date {
+  font-size: 12px;
+  color: #888;
+}
+
+/* 주소 */
+.regionfestivallist_address {
+  font-size: 12px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 화살표 버튼 */
+.regionfestivallist_arrow {
+  font-size: 20px;
+  color: #ccc;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.regionfestivallist_item.live .regionfestivallist_arrow {
+  color: #ff6b35;
+}
+
+/* 하단 버튼 */
+.regionfestivallist_footer {
+  display: flex;
+  gap: 8px;
+}
+
+/* 리스트로 정렬 버튼 */
+.regionfestivallist_btn_list {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.regionfestivallist_btn_list:hover {
+  background: #f5f5f5;
+}
+
+/* 지도로 비교 버튼 */
+.regionfestivallist_btn_map {
+  flex: 1;
+  background: #1a1a2e;
+  border: none;
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.regionfestivallist_btn_map:hover {
+  background: #2351cc;
+}

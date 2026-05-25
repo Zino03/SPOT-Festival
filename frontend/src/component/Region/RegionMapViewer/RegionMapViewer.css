@@ -1,0 +1,128 @@
+/* 지도 전체 컨테이너 */
+.regionmapviewer {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  padding: 24px;
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 지도 헤더 */
+.regionmapviewer_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* REGIONAL MAP 레이블 */
+.regionmapviewer_label {
+  font-size: 11px;
+  color: #ff6b35;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* 충청북도 · 시·군 단위 */
+.regionmapviewer_subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* 컨트롤 버튼 묶음 */
+.regionmapviewer_controls {
+  display: flex;
+  gap: 4px;
+}
+
+.regionmapviewer_controls button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.regionmapviewer_controls button:hover {
+  background: #f5f5f5;
+}
+
+/* TODO: 지도 API 연동 후 삭제 */
+.regionmapviewer_placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px dashed #ddd;
+  min-height: 360px;
+}
+
+.regionmapviewer_placeholder_icon {
+  font-size: 48px;
+}
+
+.regionmapviewer_placeholder_title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #aaa;
+}
+
+.regionmapviewer_placeholder_desc {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* 선택된 시·군 툴팁 카드 */
+.regionmapviewer_tooltip {
+  position: absolute;
+  bottom: 32px;
+  left: 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  padding: 14px 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* FOCUSED 레이블 */
+.regionmapviewer_tooltip_label {
+  font-size: 10px;
+  color: #ff6b35;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* 시·군명 */
+.regionmapviewer_tooltip_name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+/* 축제 개수 설명 */
+.regionmapviewer_tooltip_desc {
+  font-size: 12px;
+  color: #888;
+}
