@@ -9,15 +9,16 @@ import './RegionPage.css'
 
 function RegionPage() {
   const [selectedCity, setSelectedCity] = useState(null)
+  const [festivalCount, setFestivalCount] = useState(0)
 
   return (
     <main className="regionpage">
       <RegionPath />
-      <RegionHeader festivalCount={4} />
+      <RegionHeader festivalCount={festivalCount} />
       <RegionStats />
       <div className="regionpage_content">
         <RegionMapViewer onSelectCity={setSelectedCity} />
-        <RegionFestivalList />
+        <RegionFestivalList onFestivalCountChange={setFestivalCount} />
       </div>
     </main>
   )

@@ -1,0 +1,140 @@
+.festivaldetail {
+  padding: 24px 48px 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.festivaldetail_loading {
+  padding: 80px;
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+}
+
+.festivaldetail_back {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.festivaldetail_back:hover {
+  color: #111;
+}
+
+/* 헤더 */
+.festivaldetail_header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 28px;
+  margin-bottom: 36px;
+}
+
+.festivaldetail_header_top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.festivaldetail_region {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.festivaldetail_live {
+  font-size: 12px;
+  color: #e84040;
+  font-weight: 700;
+}
+
+.festivaldetail_name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 16px;
+}
+
+.festivaldetail_meta {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.festivaldetail_rating {
+  color: #f5a623;
+  font-weight: 600;
+}
+
+.festivaldetail_address {
+  font-size: 14px;
+  color: #777;
+  margin: 0;
+}
+
+/* 주차장 */
+.festivaldetail_parking {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.festivaldetail_parking_title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 16px;
+}
+
+.festivaldetail_parking_empty {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.festivaldetail_parking_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.festivaldetail_parking_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 14px 18px;
+  border: 1px solid #eee;
+}
+
+.festivaldetail_parking_info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.festivaldetail_parking_name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.festivaldetail_parking_address {
+  font-size: 12px;
+  color: #999;
+}
+
+.festivaldetail_parking_distance {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a90e2;
+  white-space: nowrap;
+}

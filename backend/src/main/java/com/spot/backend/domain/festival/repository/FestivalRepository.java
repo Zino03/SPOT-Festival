@@ -10,6 +10,9 @@ import java.util.List;
 
 public interface FestivalRepository extends JpaRepository<Festival, Long> {
     boolean existsByNameAndStartDate(String name, LocalDate startDate);
+
+    @Query("SELECT f FROM Festival f WHERE f.address LIKE %:keyword% OR f.region LIKE %:keyword%")
+    List<Festival> findByRegionKeyword(@Param("keyword") String keyword);
     //Trending 이번주 최대 8개 축제 가져오기 로직
     //우선순위 : 조회수->평점->ID 순
     @Query(value = "SELECT * FROM festival " +

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Trending.css'
 
 const CATEGORIES = ['전체', '음악', '전통', '푸드', '꽃·계절', '야경']
@@ -16,6 +17,7 @@ function calcIsLive(festivals) {
 }
 
 function Trending() {
+    const navigate = useNavigate()
     const [activeCategory, setActiveCategory] = useState('전체')
     const [festivals, setFestivals] = useState([]) // 백엔드에서 가져온 데이터를 담을 상태
 
@@ -105,8 +107,7 @@ function Trending() {
                     📅 {festival.start_date.slice(5).replace('-', '/')} ~ {festival.end_date.slice(5).replace('-', '/')}
                   </span>
 
-                  {/* <Link to={`/festival/${festival.id}`}>자세히 →</Link> */}
-                  <button className="trending_detail_btn">자세히 →</button>
+                  <button className="trending_detail_btn" onClick={() => navigate(`/festival/${festival.id}`)}>자세히 →</button>
                 </div>
               </div>
 
