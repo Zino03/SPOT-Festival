@@ -1,10 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import MapPage from './pages/MapPage'
-<<<<<<< HEAD
-=======
 import RegionPage from './pages/RegionPage'
->>>>>>> feature/region-page
 import Header from './component/Common/Header/Header'
 
 function App() {
