@@ -1,4 +1,5 @@
 import './RegionGrid.css'
+import { useNavigate } from 'react-router-dom'
 
 // 더미 데이터 (나중에 API로 교체 필요시)
 // TODO: API 연동 시 fetch('/api/regions')로 교체
@@ -15,6 +16,8 @@ const REGIONS = [
 ]
 
 function RegionGrid() {
+  const navigate = useNavigate()
+
   return (
     <section className="regiongrid">
 
@@ -49,7 +52,10 @@ function RegionGrid() {
                 <p className="regiongrid_name_en">{region.nameEn}</p>
                 <p className="regiongrid_name_ko">{region.nameKo}</p>
               </div>
-              <button className="regiongrid_arrow">→</button>
+              {/* 카드 화살표 버튼 - 각 지역 페이지로 이동 */}
+              <button className="regiongrid_arrow" onClick={() => navigate(`/map?region=${region.nameEn.toLowerCase()}`)}>
+                →
+              </button>
             </div>
           </div>
         ))}
@@ -58,7 +64,10 @@ function RegionGrid() {
       {/* 하단 바 */}
       <div className="regiongrid_footer">
         <p>📍 전국 17개 광역시도를 모두 — 인터랙티브 전국 지도로 들어가 보세요.</p>
-        <button className="regiongrid_map_btn">전국 지도 열기 →</button>
+        {/* 전국 지도 열기 버튼 - 지도 페이지로 이동 */}
+        <button className="regiongrid_map_btn" onClick={() => navigate('/map')}>
+          전국 지도 열기 →
+        </button>
       </div>
 
     </section>

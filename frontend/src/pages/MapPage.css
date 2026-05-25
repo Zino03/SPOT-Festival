@@ -1,0 +1,11 @@
+.mappage {
+  padding: 24px 48px 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mappage_content {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
