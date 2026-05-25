@@ -13,6 +13,15 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
 
     @Query("SELECT f FROM Festival f WHERE f.address LIKE %:keyword% OR f.region LIKE %:keyword%")
     List<Festival> findByRegionKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT COUNT(f) FROM Festival f WHERE f.address LIKE %:keyword% OR f.region LIKE %:keyword%")
+    long countByRegionKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT COUNT(f) FROM Festival f WHERE f.startDate <= :today AND f.endDate >= :today")
+    long countLiveToday(@Param("today") LocalDate today);
+
+    @Query("SELECT COUNT(f) FROM Festival f WHERE f.startDate <= :monthEnd AND f.endDate >= :monthStart")
+    long countThisMonth(@Param("monthStart") LocalDate monthStart, @Param("monthEnd") LocalDate monthEnd);
     //Trending 이번주 최대 8개 축제 가져오기 로직
     //우선순위 : 조회수->평점->ID 순
     @Query(value = "SELECT * FROM festival " +

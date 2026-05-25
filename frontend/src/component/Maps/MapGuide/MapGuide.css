@@ -1,12 +1,38 @@
-/* 가이드 전체 */
 .mapguide {
   display: flex;
   align-items: center;
   gap: 48px;
-  background: #f8f9fa;
-  border-radius: 16px;
-  padding: 40px 48px;
-  margin-top: 24px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  padding: 40px 56px;
+  margin: 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 배경 장식 */
+.mapguide::before {
+  content: '';
+  position: absolute;
+  right: -60px;
+  top: -60px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(35, 81, 204, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.mapguide::after {
+  content: '';
+  position: absolute;
+  left: 30%;
+  bottom: -80px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.12) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 /* 왼쪽 제목 */
@@ -15,76 +41,88 @@
   flex-direction: column;
   gap: 8px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
-/* HOW TO NAVIGATE 레이블 */
 .mapguide_label {
   font-size: 11px;
-  color: #ff6b35;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  font-weight: 700;
+  letter-spacing: 0.14em;
 }
 
-/* 이렇게 사용해보세요 */
 .mapguide_title {
   font-size: 22px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: #fff;
   white-space: nowrap;
 }
 
 /* 단계 묶음 */
 .mapguide_steps {
   display: flex;
-  gap: 32px;
+  gap: 0;
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
-/* 단계 하나 */
 .mapguide_step {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  flex: 1;
+  padding: 0 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 단계 번호 */
+.mapguide_step:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
 .mapguide_num {
-  font-size: 12px;
-  color: #aaa;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.12);
+  line-height: 1;
 }
 
-/* 단계 제목 */
 .mapguide_step_title {
   font-size: 14px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #fff;
   word-break: keep-all;
 }
 
-/* 단계 설명 */
 .mapguide_step_desc {
   font-size: 13px;
-  color: #888;
+  color: rgba(255, 255, 255, 0.5);
   word-break: keep-all;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* 가이드 더보기 버튼 */
+/* 버튼 */
 .mapguide_btn {
-  background: #1a1a2e;
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  border: none;
-  border-radius: 999px;
-  padding: 12px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  padding: 13px 26px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-base);
 }
 
 .mapguide_btn:hover {
-  background: #2351cc;
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
 }

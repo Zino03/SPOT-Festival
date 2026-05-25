@@ -2,6 +2,9 @@
 backend/src/main/resources/application.yaml
 backend/src/main/resources/application.yml
 
+# Unsplash image URL cache (auto-generated)
+backend/image-cache.json
+
 # IDE
 .idea/
 .vscode/

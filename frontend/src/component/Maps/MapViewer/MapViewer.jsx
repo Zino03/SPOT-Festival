@@ -21,23 +21,21 @@ function MapViewer({ selectedRegion, onSelectRegion }) {
 
       {/* 지도 헤더 */}
       <div className="mapviewer_header">
-        <div>
+        <div className="mapviewer_header_left">
           <p className="mapviewer_label">INTERACTIVE MAP</p>
           <p className="mapviewer_subtitle">대한민국 · 광역시·도 단위</p>
         </div>
         <div className="mapviewer_controls">
-          <button>+</button>
-          <button>−</button>
-          <button>⊡</button>
+          <button title="확대">+</button>
+          <button title="축소">−</button>
+          <button title="전체보기">⊡</button>
         </div>
       </div>
 
-      {/* TODO: 지도 API/라이브러리 연동 자리 */}
-      {/* 지도 연동 시 아래 placeholder 제거하고 지도 컴포넌트 삽입 */}
-      {/* 지도의 각 지역에 onClick={handleClick}, onDoubleClick={handleDoubleClick} 연결 */}
+      {/* 카카오맵 연동 전 플레이스홀더 */}
       <div className="mapviewer_placeholder">
         <p className="mapviewer_placeholder_icon">🗺️</p>
-        <p className="mapviewer_placeholder_title">지도 영역</p>
+        <p className="mapviewer_placeholder_title">카카오맵 연동 준비 중</p>
         <p className="mapviewer_placeholder_desc">지도 API 연동 예정</p>
       </div>
 

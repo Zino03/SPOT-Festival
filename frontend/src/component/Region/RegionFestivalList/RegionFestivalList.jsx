@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { fetchPhotos } from '../../../utils/unsplash'
 import './RegionFestivalList.css'
 
 function calcIsLive(festivals) {
@@ -11,10 +12,11 @@ function calcIsLive(festivals) {
   }))
 }
 
-function RegionFestivalList({ onFestivalCountChange }) {
+function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
   const navigate = useNavigate()
   const { regionId } = useParams()
   const [festivals, setFestivals] = useState([])
+  const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -25,6 +27,13 @@ function RegionFestivalList({ onFestivalCountChange }) {
         const withLive = calcIsLive(data)
         setFestivals(withLive)
         onFestivalCountChange?.(withLive.length)
+        fetchPhotos('Korean outdoor festival celebration', Math.min(withLive.length, 30))
+          .then(urls => setImages(urls))
+        const liveCount = withLive.filter(f => f.isLive).length
+        const avgRating = withLive.length > 0
+          ? (withLive.reduce((sum, f) => sum + (f.rating || 0), 0) / withLive.length).toFixed(1)
+          : 0
+        onStatsChange?.({ festivalCount: withLive.length, liveCount, avgRating })
       })
       .catch(err => console.error('지역 축제 API 에러:', err))
       .finally(() => setLoading(false))
@@ -45,17 +54,15 @@ function RegionFestivalList({ onFestivalCountChange }) {
 
       {/* 축제 카드 목록 */}
       <ul className="regionfestivallist_list">
-        {festivals.map(festival => (
+        {festivals.map((festival, idx) => (
           <li
             key={festival.id}
             className={`regionfestivallist_item ${festival.isLive ? 'live' : ''}`}
             onClick={() => navigate(`/festival/${festival.id}`)}
           >
-            {/* 축제 이미지 */}
             <div
               className="regionfestivallist_image"
-              // TODO: 이미지 생기면 아래 style 주석 해제
-              // style={{ backgroundImage: `url(${festival.image})` }}
+              style={{ backgroundImage: `url(${images[idx % images.length] || `https://picsum.photos/seed/${festival.id}/800/400`})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
             >
               {festival.isLive && (
                 <span className="regionfestivallist_live_badge">LIVE</span>

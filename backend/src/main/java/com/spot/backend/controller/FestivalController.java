@@ -19,6 +19,18 @@ public class FestivalController {
 
     private final FestivalRepository festivalRepository;
 
+    @GetMapping("/stats")
+    public Map<String, Long> getStats() {
+        LocalDate today = LocalDate.now();
+        LocalDate monthStart = today.withDayOfMonth(1);
+        LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
+        return Map.of(
+            "totalCount", festivalRepository.count(),
+            "liveCount",  festivalRepository.countLiveToday(today),
+            "monthCount", festivalRepository.countThisMonth(monthStart, monthEnd)
+        );
+    }
+
     @GetMapping("/trending")
     public List<Festival> getTrendingFestivals() {
         LocalDate today = LocalDate.now();
@@ -45,6 +57,16 @@ public class FestivalController {
         Map.entry("busan",     "부산"),
         Map.entry("jeju",      "제주")
     );
+
+    @GetMapping("/region-counts")
+    public List<Map<String, Object>> getRegionCounts() {
+        return REGION_KEYWORD.entrySet().stream()
+                .map(e -> Map.<String, Object>of(
+                        "regionId", e.getKey(),
+                        "count",    festivalRepository.countByRegionKeyword(e.getValue())
+                ))
+                .toList();
+    }
 
     @GetMapping("/region/{regionId}")
     public ResponseEntity<List<FestivalDetailResponse>> getFestivalsByRegion(@PathVariable String regionId) {

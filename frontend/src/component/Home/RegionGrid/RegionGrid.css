@@ -1,56 +1,182 @@
-/* 그리드를 4열로 */
+/* 섹션 전체 */
+.regiongrid {
+  padding: 64px 48px;
+  background: var(--color-bg-subtle);
+}
+
+/* 헤더 */
+.regiongrid_header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.regiongrid_label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.regiongrid_label_line {
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.regiongrid_title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+.regiongrid_desc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* 카드 그리드 */
 .regiongrid_grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 16px;
 }
 
 /* 카드 */
 .regiongrid_card {
   position: relative;
-  aspect-ratio: 3 / 4;       
-  border-radius: 12px;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background-color: #1a1a2e; /* 임시 배경 */
   background-size: cover;
   background-position: center;
   cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
-/* 카드 하단 텍스트가 안 보일시 필요한 어두운 그레디언트
+.regiongrid_card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 그라디언트 오버레이 */
 .regiongrid_card::before {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0,0,0,0.7) 0%,
-    rgba(0,0,0,0.0) 50%
+    rgba(0,0,0,0.72) 0%,
+    rgba(0,0,0,0.1) 55%,
+    rgba(0,0,0,0.0) 100%
   );
+  z-index: 0;
 }
-*/
 
 /* 뱃지 (우측 상단) */
 .regiongrid_badge {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(0,0,0,0.5);
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 12px;
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 1;
 }
 
 /* 카드 하단 정보 */
 .regiongrid_card_bottom {
   position: absolute;
   bottom: 16px;
-  left: 16px;
-  right: 16px;
+  left: 18px;
+  right: 14px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   color: #fff;
   z-index: 1;
+}
+
+.regiongrid_name_en {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 2px;
+}
+
+.regiongrid_name_ko {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+/* 화살표 버튼 */
+.regiongrid_arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.18s;
+}
+
+.regiongrid_card:hover .regiongrid_arrow {
+  background: rgba(255,255,255,0.35);
+}
+
+/* 하단 바 */
+.regiongrid_footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.regiongrid_footer p {
+  font-size: 14px;
+  color: var(--color-text-sub);
+}
+
+.regiongrid_map_btn {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.18s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.regiongrid_map_btn:hover {
+  background: var(--color-blue);
+  transform: translateY(-1px);
 }
