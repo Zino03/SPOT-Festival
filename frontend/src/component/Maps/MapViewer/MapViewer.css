@@ -1,0 +1,157 @@
+/* 지도 전체 컨테이너 */
+.mapviewer {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  padding: 24px;
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 지도 헤더 */
+.mapviewer_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* INTERACTIVE MAP 레이블 */
+.mapviewer_label {
+  font-size: 11px;
+  color: #ff6b35;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* 대한민국 · 광역시·도 단위 */
+.mapviewer_subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* 컨트롤 버튼 묶음 */
+.mapviewer_controls {
+  display: flex;
+  gap: 4px;
+}
+
+.mapviewer_controls button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.mapviewer_controls button:hover {
+  background: #f5f5f5;
+}
+
+/* TODO: 지도 API 연동 후 삭제 */
+.mapviewer_placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px dashed #ddd;
+  min-height: 400px;
+}
+
+.mapviewer_placeholder_icon {
+  font-size: 48px;
+}
+
+.mapviewer_placeholder_title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #aaa;
+}
+
+.mapviewer_placeholder_desc {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* 선택된 지역 툴팁 카드 */
+.mapviewer_tooltip {
+  position: absolute;
+  bottom: 80px;
+  left: 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  padding: 16px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.mapviewer_tooltip_label {
+  font-size: 10px;
+  color: #ff6b35;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.mapviewer_tooltip_name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.mapviewer_tooltip_desc {
+  font-size: 13px;
+  color: #888;
+}
+
+/* 범례 */
+.mapviewer_legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* 범례 점 */
+.mapviewer_legend_dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.mapviewer_legend_dot.default  { background: #c8d4e8; }
+.mapviewer_legend_dot.selected { background: #2351cc; }
+.mapviewer_legend_dot.live     { background: #ff6b35; }
+
+/* 툴팁 힌트 텍스트 */
+.mapviewer_tooltip_count {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.mapviewer_tooltip_hint {
+  font-size: 11px;
+  color: #ccc;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
