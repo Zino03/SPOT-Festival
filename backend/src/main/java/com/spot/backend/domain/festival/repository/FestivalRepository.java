@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface FestivalRepository extends JpaRepository<Festival, Long> {
     boolean existsByNameAndStartDate(String name, LocalDate startDate);
-    //Trending 최대 8개 축제 가져오기 로직
+    //Trending 이번주 최대 8개 축제 가져오기 로직
     //우선순위 : 조회수->평점->ID 순
     @Query(value = "SELECT * FROM festival " +
-            "WHERE end_date >= :today " +
+            "WHERE start_date <= :nextWeek AND end_date >= :today " +
             "ORDER BY view_count DESC, rating DESC, id ASC " +
             "LIMIT 8", nativeQuery = true)
-    List<Festival> findTop8Trending(@Param("today") LocalDate today);
+    List<Festival> findTop8Trending(@Param("today") LocalDate today, @Param("nextWeek") LocalDate nextWeek);
 }

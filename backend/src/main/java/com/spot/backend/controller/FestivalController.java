@@ -22,6 +22,7 @@ public class FestivalController {
     @GetMapping("/trending")
     public List<Festival> getTrendingFestivals() {
         LocalDate today = LocalDate.now();
-        return festivalRepository.findTop8Trending(today);
+        LocalDate nextWeek = today.plusDays(7);
+        return festivalRepository.findTop8Trending(today, nextWeek);
     }
 }
