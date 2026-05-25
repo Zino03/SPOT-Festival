@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import MapPage from './pages/MapPage'
-import Header from './component/Header/Header'
+import Header from './component/Common/Header/Header'
 
 function App() {
   return (
