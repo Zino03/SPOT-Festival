@@ -1,0 +1,68 @@
+/* 스텝 헤더 전체 */
+.builderstepheader {
+  margin-bottom: 20px;
+}
+
+.builderstepheader_top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* 왼쪽 타이틀 */
+.builderstepheader_left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 타이틀 (맛집을 골라요.) */
+.builderstepheader_title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+/* 부제목 */
+.builderstepheader_subtitle {
+  font-size: 13px;
+  color: #888;
+}
+
+/* 후보 개수 강조 */
+.builderstepheader_count {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+/* 필터 탭 묶음 */
+.builderstepheader_filters {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* 필터 버튼 기본 */
+.builderstepheader_filter {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.builderstepheader_filter:hover {
+  background: #f5f5f5;
+}
+
+/* 활성화된 필터 */
+.builderstepheader_filter.active {
+  background: #ff6b35;
+  color: #fff;
+  border-color: #ff6b35;
+  font-weight: 600;
+}
