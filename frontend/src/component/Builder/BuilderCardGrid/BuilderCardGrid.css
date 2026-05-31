@@ -1,0 +1,174 @@
+/* 카드 그리드 전체 */
+.buildercardgrid {
+  margin-bottom: 24px;
+}
+
+/* 3열 그리드 */
+.buildercardgrid_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* 카드 기본 */
+.buildercardgrid_card {
+  background: #fff;
+  border: 2px solid #eee;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+}
+
+.buildercardgrid_card:hover {
+  border-color: #ff6b35;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.15);
+}
+
+/* 선택된 카드 */
+.buildercardgrid_card.selected {
+  border-color: #ff6b35;
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.25);
+}
+
+/* 뱃지 묶음 */
+.buildercardgrid_badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+
+/* AI 1순위 뱃지 */
+.buildercardgrid_badge_ai {
+  background: #ff6b35;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 선택됨 뱃지 */
+.buildercardgrid_badge_selected {
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 북마크 버튼 */
+.buildercardgrid_bookmark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* 이미지 */
+.buildercardgrid_image {
+  height: 160px;
+  background-color: #c0cfe8;
+  background-size: cover;
+  background-position: center;
+}
+
+/* 카드 정보 */
+.buildercardgrid_info {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 가격 + 평점 */
+.buildercardgrid_meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buildercardgrid_price {
+  font-size: 12px;
+  color: #888;
+}
+
+.buildercardgrid_rating {
+  font-size: 12px;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+/* 이름 */
+.buildercardgrid_name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+/* 도보/거리/대기 */
+.buildercardgrid_details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* 대기 없음 */
+.buildercardgrid_wait.none {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* 더보기 카드 */
+.buildercardgrid_more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border: 2px dashed #ddd;
+  border-radius: 16px;
+  cursor: pointer;
+  min-height: 240px;
+  transition: all 0.15s;
+}
+
+.buildercardgrid_more:hover {
+  border-color: #ff6b35;
+  background: #fff8f5;
+}
+
+.buildercardgrid_more_icon {
+  font-size: 32px;
+  color: #ccc;
+  font-weight: 300;
+}
+
+.buildercardgrid_more p {
+  font-size: 16px;
+  font-weight: 700;
+  color: #888;
+}
+
+.buildercardgrid_more_desc {
+  font-size: 12px;
+  color: #bbb;
+}
