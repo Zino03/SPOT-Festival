@@ -1,0 +1,54 @@
+/* 탑바 전체 */
+.buildertopbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+}
+
+/* 왼쪽 경로 영역 */
+.buildertopbar_path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 맥OS 스타일 점 */
+.buildertopbar_dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.buildertopbar_dot.red    { background: #ff5f57; }
+.buildertopbar_dot.yellow { background: #ffbd2e; }
+.buildertopbar_dot.green  { background: #28c840; }
+
+/* URL 텍스트 */
+.buildertopbar_url {
+  font-size: 13px;
+  color: #888;
+  margin-left: 8px;
+  font-family: monospace;
+}
+
+/* 새 코스 버튼 */
+.buildertopbar_btn {
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.buildertopbar_btn:hover {
+  background: #2351cc;
+}
