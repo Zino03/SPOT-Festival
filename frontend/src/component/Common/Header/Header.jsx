@@ -1,11 +1,14 @@
+import { NavLink, useNavigate } from 'react-router-dom'
 import './Header.css'
 
 function Header() {
+  const navigate = useNavigate()
+
   return (
     <header className="header">
 
       {/* 로고 */}
-      <div className="header_logo">
+      <div className="header_logo" onClick={() => navigate('/')}>
         <div className="header_logo-icon">📍</div>
         <div className="header_logo-text">
           <span className="header_logo-title">SPOT</span>
@@ -15,11 +18,11 @@ function Header() {
 
       {/* 네비게이션 */}
       <nav className="header_nav">
-        <a href="#" className="active">홈</a>
-        <a href="#">지도</a>
-        <a href="#">AI 코스</a>
-        <a href="#">축제</a>
-        <a href="#">About</a>
+        <NavLink to="/" end>홈</NavLink>
+        <NavLink to="/map">지도</NavLink>
+        <span className="header_nav_disabled">AI 코스</span>
+        <span className="header_nav_disabled">축제</span>
+        <span className="header_nav_disabled">About</span>
       </nav>
 
       {/* 검색 + AI 버튼 */}
@@ -29,7 +32,7 @@ function Header() {
           <input type="text" placeholder="축제, 지역, 카페 검색" />
           <kbd>⌘K</kbd>
         </div>
-        <button className="header_ai-btn">
+        <button className="header_ai_btn">
           ✦ AI 코스 시작
         </button>
       </div>

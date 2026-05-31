@@ -3,9 +3,13 @@ package com.spot.backend.infrastructure.publicdata.service;
 import com.spot.backend.domain.festival.entity.Festival;
 import com.spot.backend.domain.festival.repository.FestivalRepository;
 import com.spot.backend.infrastructure.publicdata.dto.FestivalApiResponse;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -21,7 +25,16 @@ import java.util.List;
 public class FestivalDataSyncService {
 
     private final FestivalRepository festivalRepository;
-    private final RestClient restClient = RestClient.create();
+    private RestClient restClient;
+
+    @PostConstruct
+    private void init() {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        this.restClient = RestClient.builder()
+                .requestFactory(new HttpComponentsClientHttpRequestFactory(httpClient))
+                .defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                .build();
+    }
 
     @Value("${public-data.api-key}")
     private String serviceKey;

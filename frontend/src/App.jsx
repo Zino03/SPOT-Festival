@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import MapPage from './pages/MapPage'
 import RegionPage from './pages/RegionPage'
+import FestivalDetailPage from './pages/FestivalDetailPage'
 import Header from './component/Common/Header/Header'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/region/:regionId" element={<RegionPage />} />
+        <Route path="/festival/:id" element={<FestivalDetailPage />} />
       </Routes>
     </BrowserRouter>
   )
