@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import SpotPath from '../component/SpotCompare/SpotPath/SpotPath'
-import SpotHeader from '../component/SpotCompare/SpotHeader/SpotHeader'
-import SpotFilter from '../component/SpotCompare/SpotFilter/SpotFilter'
-import SpotBest from '../component/SpotCompare/SpotBest/SpotBest'
-import SpotGrid from '../component/SpotCompare/SpotGrid/SpotGrid'
+import SpotPath from '../component/SpotComparePage/SpotPath/SpotPath'
+import SpotHeader from '../component/SpotComparePage/SpotHeader/SpotHeader'
+import SpotFilter from '../component/SpotComparePage/SpotFilter/SpotFilter'
+import SpotBest from '../component/SpotComparePage/SpotBest/SpotBest'
+import SpotGrid from '../component/SpotComparePage/SpotGrid/SpotGrid'
 import './SpotComparePage.css'
 
 function SpotComparePage() {
