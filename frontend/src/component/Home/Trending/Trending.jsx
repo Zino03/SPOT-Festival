@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { fetchPhotos } from '../../../utils/unsplash'
 import './Trending.css'
 
 const CATEGORIES = ['전체', '음악', '전통', '푸드', '꽃·계절', '야경']
@@ -16,10 +18,11 @@ function calcIsLive(festivals) {
 }
 
 function Trending() {
+    const navigate = useNavigate()
     const [activeCategory, setActiveCategory] = useState('전체')
-    const [festivals, setFestivals] = useState([]) // 백엔드에서 가져온 데이터를 담을 상태
+    const [festivals, setFestivals] = useState([])
+    const [images, setImages] = useState([])
 
-    // 화면이 처음 켜질 때 백엔드 API 1회 호출
     useEffect(() => {
     fetch('http://localhost:8080/api/festivals/trending')
       .then(res => res.json())
@@ -40,8 +43,11 @@ function Trending() {
           image: ''
         }));
 
-        // 데이터 매핑 후 상태(State) 업데이트 -> 화면 렌더링
-        setFestivals(calcIsLive(mappedData));
+        const live = calcIsLive(mappedData)
+        setFestivals(live)
+        // 축제 수만큼 이미지 일괄 요청
+        fetchPhotos('Korean festival outdoor event', live.length)
+          .then(urls => setImages(urls))
       })
       .catch(err => console.error("트렌딩 API 호출 에러:", err));
     }, [])
@@ -79,18 +85,15 @@ function Trending() {
 
         {/* 축제 카드 그리드 영역 */}
         <div className="trending_grid">
-          {filtered.map(festival => (
-            <div key={festival.id} className="trending_card">
+          {filtered.map((festival, idx) => (
+            <div key={festival.id} className="trending_card" onClick={() => navigate(`/festival/${festival.id}`)}>
 
-              <div className="trending_card_image">
+              <div className="trending_card_image" style={{ backgroundImage: `url(${images[idx % images.length] || `https://picsum.photos/seed/${festival.id}/800/400`})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="trending_card_top_left">
                   {festival.isLive && (
                     <span className="trending_live_badge">● LIVE</span>
                   )}
-                  {/* 🎯 실제 DB의 조회수가 표시됩니다 */}
-                  <span className="trending_views">P {festival.views}</span>
                 </div>
-                <button className="trending_bookmark">🔖</button>
               </div>
 
               <div className="trending_card_body">
@@ -105,8 +108,7 @@ function Trending() {
                     📅 {festival.start_date.slice(5).replace('-', '/')} ~ {festival.end_date.slice(5).replace('-', '/')}
                   </span>
 
-                  {/* <Link to={`/festival/${festival.id}`}>자세히 →</Link> */}
-                  <button className="trending_detail_btn">자세히 →</button>
+                  <button className="trending_detail_btn" onClick={() => navigate(`/festival/${festival.id}`)}>자세히 →</button>
                 </div>
               </div>
 

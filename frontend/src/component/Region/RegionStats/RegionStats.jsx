@@ -2,20 +2,16 @@ import './RegionStats.css'
 
 // TODO: API 연동 시 fetch('/api/regions/:regionId/stats')로 교체
 function RegionStats({ stats }) {
-  // 더미 데이터 (API 연동 전)
-  const DUMMY_STATS = {
-    festivalCount: 4,
-    festivalLabel: '이번 가을',
+  const data = {
+    festivalCount: stats?.festivalCount ?? '-',
+    festivalLabel: '등록된 축제',
     cityCount: 12,
     cityLabel: '전 지역',
-    avgRating: 4.6,
+    avgRating: stats?.avgRating ?? '-',
     ratingMax: 5.0,
-    liveCount: 1,
+    liveCount: stats?.liveCount ?? '-',
     liveLabel: '지금 열린 행사',
   }
-
-  // TODO: API 연동 시 DUMMY_STATS → stats prop으로 교체
-  const data = stats || DUMMY_STATS
 
   return (
     <div className="regionstats">

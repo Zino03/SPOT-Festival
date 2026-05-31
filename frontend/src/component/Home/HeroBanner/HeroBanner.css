@@ -68,36 +68,6 @@
   50%       { opacity: 0.2; } 
 }
 
-/* 필터 버튼 묶음 */
-.hero_filters {
-  display: flex;
-  gap: 8px;                   
-}
-
-/* 필터 버튼 기본 스타일 */
-.hero_filter {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  color: #fff;
-  border-radius: 999px;
-  padding: 6px 16px;
-  font-size: 13px;
-  cursor: pointer;            
-  transition: background 0.2s; 
-}
-
-/* 필터 버튼 호버 */
-.hero_filter:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* 선택된 필터 버튼 */
-.hero_filter.active {
-  background: #fff;
-  color: #1a1a2e;             
-  font-weight: 600;
-}
 
 /* ─────────────────────────────────────
    왼쪽 메인 콘텐츠 (타이틀 + 버튼)
@@ -162,24 +132,6 @@
   transform: translateY(-1px); 
 }
 
-/* 전국 지도 보기 버튼 */
-.hero_btn_secondary {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(8px);
-  border-radius: 999px;
-  padding: 14px 28px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-/* 전국 지도 보기 버튼 호버 */
-.hero_btn_secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
 
 /* ─────────────────────────────────────
    오른쪽 SPOT INDEX 카드
@@ -207,10 +159,10 @@
   text-align: left;
 }
 
-/* 숫자 3개 가로 배치 */
+/* 숫자 가로 배치 */
 .hero_index_stats {
   display: flex;
-  gap: 24px;
+  gap: 32px;
 }
 
 /* 숫자 + 라벨 세로 배치 */

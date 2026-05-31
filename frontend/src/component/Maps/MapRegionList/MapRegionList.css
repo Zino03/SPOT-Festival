@@ -1,42 +1,67 @@
-/* 리스트 전체 컨테이너 */
 .mapregionlist {
-  width: 360px;
-  flex-shrink: 0;
+  flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* 헤더 */
+.mapregionlist_top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.mapregionlist_label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+}
+
+.mapregionlist_title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.mapregionlist_hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding-bottom: 2px;
 }
 
 /* 검색창 */
 .mapregionlist_search {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 12px 16px;
+  color: var(--color-text-muted);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s;
+}
+
+.mapregionlist_search:focus-within {
+  border-color: var(--color-accent);
 }
 
 .mapregionlist_search input {
   border: none;
   outline: none;
   font-size: 14px;
-  color: #555;
+  color: var(--color-text);
   width: 100%;
+  font-family: var(--font-base);
 }
 
 .mapregionlist_search input::placeholder {
-  color: #bbb;
-}
-
-/* 리스트 헤더 */
-.mapregionlist_header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #888;
-  padding: 0 4px;
+  color: var(--color-text-muted);
 }
 
 /* 지역 목록 */
@@ -46,78 +71,126 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   overflow-y: auto;
   max-height: 480px;
+  padding-right: 4px;
+}
+
+.mapregionlist_list::-webkit-scrollbar {
+  width: 4px;
+}
+.mapregionlist_list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.mapregionlist_list::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
 }
 
 /* 지역 아이템 */
 .mapregionlist_item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 10px;
+  gap: 14px;
+  padding: 10px 14px 10px 10px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background 0.15s;
-  border-left: 3px solid transparent;
+  transition: background 0.15s, box-shadow 0.15s;
+  border: 1px solid transparent;
+  background: #fff;
 }
 
 .mapregionlist_item:hover {
-  background: #f5f5f5;
+  background: var(--color-bg-subtle);
+  border-color: var(--color-border);
 }
 
-/* 선택된 지역 */
 .mapregionlist_item.active {
   background: #eef1fb;
-  border-left: 3px solid #2351cc;
+  border-color: var(--color-blue);
+  box-shadow: 0 2px 8px rgba(35, 81, 204, 0.1);
 }
 
-/* 순위 번호 */
-.mapregionlist_rank {
-  font-size: 13px;
-  color: #aaa;
-  font-weight: 600;
-  width: 20px;
+/* 썸네일 */
+.mapregionlist_thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background-size: cover;
+  background-position: center;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 순위 뱃지 */
+.mapregionlist_rank {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  padding: 1px 4px;
+  line-height: 1.4;
 }
 
 /* 지역명 */
-.mapregionlist_name {
+.mapregionlist_info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  min-width: 0;
 }
 
-.mapregionlist_name strong {
+.mapregionlist_name_ko {
   font-size: 15px;
-  color: #1a1a2e;
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
-.mapregionlist_name span {
+.mapregionlist_name_en {
   font-size: 11px;
-  color: #aaa;
-  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
 }
 
-/* 축제 개수 */
+/* 우측 축제 수 */
+.mapregionlist_right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
 .mapregionlist_count {
-  font-size: 13px;
-  color: #888;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
 }
 
 .mapregionlist_item.active .mapregionlist_count {
-  color: #2351cc;
-  font-weight: 600;
+  color: var(--color-blue);
+}
+
+.mapregionlist_count_label {
+  font-size: 11px;
+  color: var(--color-text-muted);
 }
 
 /* 화살표 */
 .mapregionlist_arrow {
-  font-size: 16px;
-  color: #ccc;
+  font-size: 18px;
+  color: #ddd;
+  flex-shrink: 0;
 }
 
 .mapregionlist_item.active .mapregionlist_arrow {
-  color: #2351cc;
+  color: var(--color-blue);
 }
