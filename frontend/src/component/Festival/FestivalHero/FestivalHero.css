@@ -1,0 +1,182 @@
+/* 히어로 전체 */
+.festivalhero {
+  margin-bottom: 48px;
+}
+
+/* 배경 이미지 영역 */
+.festivalhero_bg {
+  position: relative;
+  height: 380px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #1a1a2e; /* 임시 배경색 */
+  background-size: cover;
+  background-position: center;
+}
+
+/* 배경 어둡게 */
+.festivalhero_bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.1) 60%
+  );
+  z-index: 0;
+}
+
+/* 우측 상단 썸네일 */
+.festivalhero_thumbnails {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+
+/* 썸네일 이미지 */
+.festivalhero_thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: #333; /* 임시 배경색 */
+  background-size: cover;
+  background-position: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* +more 썸네일 */
+.festivalhero_thumbnail_more {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* 하단 정보 영역 */
+.festivalhero_info {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 1;
+  color: #fff;
+}
+
+/* 뱃지 묶음 */
+.festivalhero_badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* LIVE NOW 뱃지 */
+.festivalhero_badge_live {
+  background: #ff4e50;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 카테고리 뱃지 */
+.festivalhero_badge_category {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11px;
+}
+
+/* P SCORE 뱃지 */
+.festivalhero_badge_score {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11px;
+}
+
+/* 축제명 */
+.festivalhero_title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 12px;
+  word-break: keep-all;
+}
+
+/* 날짜/주소/평점 + 버튼 */
+.festivalhero_meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 왼쪽 날짜/주소/평점 */
+.festivalhero_meta_left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 오른쪽 버튼 묶음 */
+.festivalhero_meta_right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 아이콘 버튼 (북마크, 공유) */
+.festivalhero_btn_icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.festivalhero_btn_icon:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 코스에 추가 버튼 */
+.festivalhero_btn_course {
+  background: #ff6b35;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.festivalhero_btn_course:hover {
+  background: #e85d2a;
+}
