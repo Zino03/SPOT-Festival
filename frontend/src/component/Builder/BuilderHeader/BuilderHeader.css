@@ -1,0 +1,49 @@
+/* 헤더 전체 */
+.builderheader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+/* 레이블 */
+.builderheader_label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+/* 레이블 가로선 */
+.builderheader_label_line {
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: #ff6b35;
+}
+
+/* 메인 타이틀 */
+.builderheader_title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1a1a2e;
+  word-break: keep-all;
+  line-height: 1.2;
+}
+
+/* 타이틀 강조 (당신이 고르는) */
+.builderheader_title span {
+  color: #ff6b35;
+}
+
+/* 설명 텍스트 */
+.builderheader_desc {
+  font-size: 14px;
+  color: #888;
+  line-height: 1.7;
+  word-break: keep-all;
+  max-width: 480px;
+}
