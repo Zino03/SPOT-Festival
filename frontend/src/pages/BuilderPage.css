@@ -1,0 +1,15 @@
+.builderpage {
+  padding: 24px 48px 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.builderpage_content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.builderpage_main {
+  flex: 1;
+}

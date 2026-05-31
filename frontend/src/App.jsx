@@ -5,6 +5,7 @@ import RegionPage from './pages/RegionPage'
 import Header from './component/Common/Header/Header'
 import FestivalPage from './pages/FestivalPage'
 import SpotComparePage from './pages/SpotComparePage'
+import BuilderPage from './pages/BuilderPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/region/:regionId" element={<RegionPage />} />
         <Route path="/festival/:festivalId" element={<FestivalPage />} />
         <Route path="/festival/:festivalId/compare" element={<SpotComparePage />} />
+        <Route path="/builder" element={<BuilderPage />} />
       </Routes>
     </BrowserRouter>
   )
