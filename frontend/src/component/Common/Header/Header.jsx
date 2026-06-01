@@ -20,8 +20,7 @@ function Header() {
       <nav className="header_nav">
         <NavLink to="/" end>홈</NavLink>
         <NavLink to="/map">지도</NavLink>
-        <span className="header_nav_disabled">AI 코스</span>
-        <span className="header_nav_disabled">축제</span>
+        <NavLink to="/builder">AI 코스</NavLink>
         <span className="header_nav_disabled">About</span>
       </nav>
 
@@ -32,7 +31,7 @@ function Header() {
           <input type="text" placeholder="축제, 지역, 카페 검색" />
           <kbd>⌘K</kbd>
         </div>
-        <button className="header_ai_btn">
+        <button className="header_ai_btn" onClick={() => navigate('/builder')}>
           ✦ AI 코스 시작
         </button>
       </div>

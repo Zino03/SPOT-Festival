@@ -2,14 +2,13 @@
 .festivalnearbymap {
   flex: 1;
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid #eee;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
   padding: 16px;
-  position: relative;
-  min-height: 480px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  box-shadow: var(--shadow-sm);
 }
 
 /* 상단 필터 버튼 */
@@ -41,33 +40,38 @@
   font-weight: 600;
 }
 
-/* TODO: 지도 API 연동 후 삭제 */
-.festivalnearbymap_placeholder {
+/* 카카오 지도 */
+.festivalnearbymap_map {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #f8f9fa;
   border-radius: 12px;
-  border: 2px dashed #ddd;
+  overflow: hidden;
   min-height: 360px;
 }
 
-.festivalnearbymap_placeholder_icon {
-  font-size: 48px;
+/* 축제 위치 핀 */
+.kakao_festival_pin {
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-full);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  font-family: var(--font-base);
+  position: relative;
 }
 
-.festivalnearbymap_placeholder_title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #aaa;
-}
-
-.festivalnearbymap_placeholder_desc {
-  font-size: 13px;
-  color: #ccc;
+.kakao_festival_pin::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-accent);
+  border-bottom: none;
 }
 
 /* 지도 컨트롤 버튼 */
