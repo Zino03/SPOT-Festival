@@ -1,3 +1,7 @@
+// 전국 지도 페이지
+// 히어로 배너(통계) + 카카오맵(MapViewer) + 지역 리스트(MapRegionList) + 이용 가이드(MapGuide)로 구성
+// 히어로 배경은 Unsplash에서 받아오며, 실패 시 picsum 폴백 이미지를 사용
+
 import { useState, useEffect } from 'react'
 import MapViewer from '../component/Maps/MapViewer/MapViewer'
 import MapRegionList from '../component/Maps/MapRegionList/MapRegionList'
@@ -8,10 +12,10 @@ import './MapPage.css'
 const FALLBACK_BG = 'https://picsum.photos/seed/korea-map-hero/1600/480'
 
 function MapPage() {
-  const [selectedRegion, setSelectedRegion] = useState(null)
   const [stats, setStats] = useState({ totalCount: 0, liveCount: 0, monthCount: 0 })
   const [heroBg, setHeroBg] = useState(FALLBACK_BG)
 
+  // 전국 축제 통계 (전체 수 / 라이브 수 / 이번 달 수)
   useEffect(() => {
     fetch('http://localhost:8080/api/festivals/stats')
       .then(res => res.json())
@@ -19,6 +23,7 @@ function MapPage() {
       .catch(err => console.error('stats API 에러:', err))
   }, [])
 
+  // 히어로 배경 이미지
   useEffect(() => {
     fetchPhoto('South Korea landscape travel aerial')
       .then(url => { if (url) setHeroBg(url) })
@@ -27,7 +32,7 @@ function MapPage() {
   return (
     <main className="mappage">
 
-      {/* 히어로 */}
+      {/* 히어로 배너 */}
       <div
         className="mappage_hero"
         style={{ backgroundImage: `url(${heroBg})` }}
@@ -42,6 +47,8 @@ function MapPage() {
               지도 위 광역시·도를 선택해 지역별 축제를 탐색하세요.
             </p>
           </div>
+
+          {/* 우측 통계 카드 */}
           <div className="mappage_hero_stats">
             <div className="mappage_hero_stat">
               <strong>{stats.totalCount.toLocaleString()}</strong>
@@ -61,15 +68,13 @@ function MapPage() {
         </div>
       </div>
 
-      {/* 지도 + 리스트 */}
+      {/* 지도 + 지역 리스트 */}
       <div className="mappage_content">
-        <MapViewer
-          selectedRegion={selectedRegion}
-          onSelectRegion={setSelectedRegion}
-        />
+        <MapViewer onSelectRegion={() => {}} />
         <MapRegionList />
       </div>
 
+      {/* 이용 방법 가이드 */}
       <MapGuide />
     </main>
   )

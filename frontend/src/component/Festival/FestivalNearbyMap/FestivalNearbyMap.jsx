@@ -1,17 +1,31 @@
+// 축제 상세 페이지 카카오 지도 컴포넌트
+// 축제 위치에 커스텀 핀을 표시하고, 카카오 Places API로 주변 장소를 검색해 마커 표시
+//
+
+// 1. festival 변경 시 : 지도 초기화 + 축제 위치 핀 생성 → mapReady = true
+// 2. activeCategory / activeSort / mapReady 변경 시 : 기존 마커 제거 후 Places 재검색
+// 3. selectedPlaceId 변경 시 : 해당 마커 인포윈도우 오픈 + 지도 중심 이동
+
+// 페이지네이션
+// categorySearch 결과를 pagination.nextPage()로 모두 누적한 뒤 onNearbyLoad에 한 번에 전달
+// nearbyPlaces에 캐시가 있으면 재검색 없이 재사용
+
+// 반경: 식당/카페 1000m, 주차장 2000m
+
 import { useEffect, useRef, useState } from 'react'
 import { loadKakaoMap } from '../../../utils/kakao'
 import './FestivalNearbyMap.css'
 
 const KAKAO_CATEGORY = { restaurant: 'FD6', cafe: 'CE7', parking: 'PK6' }
-const KAKAO_RADIUS   = { restaurant: 1000,  cafe: 1000,  parking: 2000  }
+const KAKAO_RADIUS = { restaurant: 1000, cafe: 1000, parking: 2000 }
 
 function FestivalNearbyMap({ festival, activeCategory, activeSort, nearbyPlaces, onNearbyLoad, selectedPlaceId, onSelectPlace }) {
-  const mapRef     = useRef(null)
-  const mapObjRef  = useRef(null)
-  const markersRef = useRef([]) // [{ marker, infoWindow, id }]
+  const mapRef = useRef(null)
+  const mapObjRef = useRef(null)
+  const markersRef = useRef([]) // [{ marker, infoWindow, id }] — 마커 제거/검색용
   const [mapReady, setMapReady] = useState(false)
 
-  // 지도 + 축제 위치 핀 초기화
+  // 1. 지도 초기화 + 축제 위치 핀
   useEffect(() => {
     if (!festival?.lat || !festival?.lng) return
     let destroyed = false
@@ -37,16 +51,18 @@ function FestivalNearbyMap({ festival, activeCategory, activeSort, nearbyPlaces,
     return () => { destroyed = true }
   }, [festival])
 
-  // 카테고리 변경 시 마커 교체
+  // 2. 카테고리 / 정렬 변경 시 마커 교체
   useEffect(() => {
     const map = mapObjRef.current
     if (!map || !window.kakao?.maps) return
     let destroyed = false
 
+    // 기존 마커 전체 제거
     markersRef.current.forEach(({ marker, infoWindow }) => { infoWindow.close(); marker.setMap(null) })
     markersRef.current = []
 
     const { kakao } = window
+    // 축제 위치를 bounds 시작점으로 포함
     const bounds = new kakao.maps.LatLngBounds()
     if (festival?.lat && festival?.lng) {
       bounds.extend(new kakao.maps.LatLng(festival.lat, festival.lng))
@@ -72,14 +88,14 @@ function FestivalNearbyMap({ festival, activeCategory, activeSort, nearbyPlaces,
       if (!bounds.isEmpty()) map.setBounds(bounds)
     }
 
-    // 이미 검색한 결과 있으면 재사용
+    // 캐시 있으면 재사용
     const cached = nearbyPlaces[activeCategory]
     if (cached?.length) { addMarkers(cached); return () => { destroyed = true } }
 
-    // 카카오 Places 검색 — 전체 페이지 누적
     const code = KAKAO_CATEGORY[activeCategory]
     if (!code || !festival?.lat) return () => { destroyed = true }
 
+    // 전체 페이지 누적 후 onNearbyLoad에 전달
     const allPlaces = []
     const ps = new kakao.maps.services.Places()
     const sortBy = activeSort === 'accuracy'
@@ -108,7 +124,7 @@ function FestivalNearbyMap({ festival, activeCategory, activeSort, nearbyPlaces,
     return () => { destroyed = true }
   }, [activeCategory, activeSort, festival, nearbyPlaces, mapReady])
 
-  // 선택된 장소 → 마커 포커싱
+  // 3. 선택된 장소 → 인포윈도우 오픈 + 지도 중심 이동
   useEffect(() => {
     const map = mapObjRef.current
     if (!map || !window.kakao?.maps) return

@@ -2,10 +2,10 @@ import './BuilderReceipt.css'
 
 // 단계 정의
 const RECEIPT_STEPS = [
-  { id: 1, label: '축제',    icon: '🎪' },
-  { id: 2, label: '맛집',    icon: '🍴' },
-  { id: 3, label: '카페',    icon: '☕' },
-  { id: 4, label: '주차장',  icon: '🅿' },
+  { id: 1, label: '축제', icon: '🎪' },
+  { id: 2, label: '맛집', icon: '🍴' },
+  { id: 3, label: '카페', icon: '☕' },
+  { id: 4, label: '주차장', icon: '🅿' },
   { id: 5, label: 'AI 리포트', icon: '✦' },
 ]
 
@@ -26,7 +26,7 @@ function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDi
       {/* 단계별 선택 목록 */}
       <ul className="builderreceipt_list">
         {RECEIPT_STEPS.slice(0, 4).map(step => {
-          const isDone   = currentStep > step.id
+          const isDone = currentStep > step.id
           const isActive = currentStep === step.id
           // TODO: API 연동 시 selectedItems → 실제 선택 데이터로 교체
           const selected = selectedItems?.[step.id]

@@ -2,10 +2,10 @@ import './BuilderStepper.css'
 
 // 단계 정의
 const STEPS = [
-  { id: 1, label: '축제'      },
-  { id: 2, label: '맛집'      },
-  { id: 3, label: '카페'      },
-  { id: 4, label: '주차'      },
+  { id: 1, label: '축제' },
+  { id: 2, label: '맛집' },
+  { id: 3, label: '카페' },
+  { id: 4, label: '주차' },
   { id: 5, label: 'AI 리포트' },
 ]
 
@@ -13,9 +13,9 @@ function BuilderStepper({ currentStep, selectedItems }) {
   return (
     <div className="builderstepper">
       {STEPS.map((step, index) => {
-        const isDone    = currentStep > step.id   // 완료된 단계
-        const isActive  = currentStep === step.id  // 현재 단계
-        const isPending = currentStep < step.id    // 아직 안 된 단계
+        const isDone = currentStep > step.id // 완료된 단계
+        const isActive = currentStep === step.id // 현재 단계
+        const isPending = currentStep < step.id // 아직 안 된 단계
 
         return (
           <div key={step.id} className="builderstepper_item">

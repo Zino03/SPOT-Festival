@@ -1,19 +1,24 @@
+// 서비스 소개 페이지 (/about)
+// 임시
+
 import { useNavigate } from 'react-router-dom'
 import './AboutPage.css'
 
+// 서비스 사용 순서 가이드
 const GUIDE_STEPS = [
   { num: '01', icon: '🗺️', title: '지도에서 지역 선택', desc: '전국 지도에서 원하는 광역시·도 핀을 클릭하면 해당 지역 페이지로 이동합니다.' },
-  { num: '02', icon: '🎪', title: '지역별 축제 탐색',   desc: '지역 페이지에서 진행 중이거나 예정된 축제 목록을 지도와 리스트로 확인합니다.' },
-  { num: '03', icon: '📍', title: '축제 상세 확인',     desc: '축제를 클릭하면 위치, 날짜, 주변 식당·카페·주차장 정보를 한눈에 볼 수 있습니다.' },
-  { num: '04', icon: '✦',  title: 'AI 코스 빌더',      desc: '축제·맛집·카페·주차장을 단계별로 고르면 Gemini AI가 최적 하루 코스를 생성합니다.' },
+  { num: '02', icon: '🎪', title: '지역별 축제 탐색', desc: '지역 페이지에서 진행 중이거나 예정된 축제 목록을 지도와 리스트로 확인합니다.' },
+  { num: '03', icon: '📍', title: '축제 상세 확인', desc: '축제를 클릭하면 위치, 날짜, 주변 식당·카페·주차장 정보를 한눈에 볼 수 있습니다.' },
+  { num: '04', icon: '✦', title: 'AI 코스 빌더', desc: '축제·맛집·카페·주차장을 단계별로 고르면 Gemini AI가 최적 하루 코스를 생성합니다.' },
 ]
 
+// 서비스에 사용된 기술 스택
 const TECH_STACK = [
-  { category: 'Frontend',  items: ['React', 'React Router', 'Vite'] },
-  { category: 'Backend',   items: ['Spring Boot 3', 'JPA / MySQL'] },
+  { category: 'Frontend', items: ['React', 'React Router', 'Vite'] },
+  { category: 'Backend', items: ['Spring Boot 3', 'JPA / MySQL'] },
   { category: 'Maps & AI', items: ['Kakao Maps SDK', 'Kakao Places API', 'Google Gemini API'] },
-  { category: 'Images',    items: ['Unsplash API'] },
-  { category: 'Data',      items: ['공공데이터포털 문화축제 API'] },
+  { category: 'Images', items: ['Unsplash API'] },
+  { category: 'Data', items: ['공공데이터포털 문화축제 API'] },
 ]
 
 function AboutPage() {
@@ -40,7 +45,7 @@ function AboutPage() {
 
       <div className="aboutpage_body">
 
-        {/* 사용 가이드 */}
+        {/* 사용 가이드 — 4단계 카드 */}
         <section className="aboutpage_section">
           <p className="aboutpage_section_label">HOW TO USE</p>
           <h2 className="aboutpage_section_title">이렇게 사용하세요</h2>
