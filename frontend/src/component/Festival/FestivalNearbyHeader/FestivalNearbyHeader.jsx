@@ -21,7 +21,7 @@ function FestivalNearbyHeader({ activeCategory, onSelectCategory }) {
           축제 주변, 이건 꼭 챙겨가세요.
         </h2>
         <p className="festivalnearbyheader_desc">
-          도보 10분 안에 있는 식당·카페·주차장을 지도와 리스트로 동시에 비교.
+          식당·카페·주차장을 지도와 리스트로 동시에 비교.
         </p>
       </div>
 

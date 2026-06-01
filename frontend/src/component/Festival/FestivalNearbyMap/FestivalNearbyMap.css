@@ -1,51 +1,13 @@
-/* 지도 전체 컨테이너 */
 .festivalnearbymap {
   flex: 1;
-  background: #fff;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
 
-/* 상단 필터 버튼 */
-.festivalnearbymap_filters {
-  display: flex;
-  gap: 8px;
-}
-
-.festivalnearbymap_filter {
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 12px;
-  color: #555;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.festivalnearbymap_filter:hover {
-  background: #f5f5f5;
-}
-
-/* 활성화된 필터 */
-.festivalnearbymap_filter.active {
-  background: #1a1a2e;
-  color: #fff;
-  border-color: #1a1a2e;
-  font-weight: 600;
-}
-
-/* 카카오 지도 */
 .festivalnearbymap_map {
-  flex: 1;
-  border-radius: 12px;
-  overflow: hidden;
-  min-height: 360px;
+  width: 100%;
+  height: 100%;
 }
 
 /* 축제 위치 핀 */
@@ -72,55 +34,4 @@
   border: 5px solid transparent;
   border-top-color: var(--color-accent);
   border-bottom: none;
-}
-
-/* 지도 컨트롤 버튼 */
-.festivalnearbymap_controls {
-  position: absolute;
-  top: 60px;
-  right: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.festivalnearbymap_controls button {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.festivalnearbymap_controls button:hover {
-  background: #f5f5f5;
-}
-
-/* 축척 */
-.festivalnearbymap_scale {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-}
-
-.festivalnearbymap_scale_bar {
-  width: 100px;
-  height: 3px;
-  background: #555;
-  border-radius: 999px;
-}
-
-.festivalnearbymap_scale span {
-  font-size: 11px;
-  color: #888;
 }

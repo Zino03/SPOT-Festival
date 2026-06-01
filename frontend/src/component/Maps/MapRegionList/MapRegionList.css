@@ -160,28 +160,22 @@
 }
 
 /* 우측 축제 수 */
-.mapregionlist_right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  flex-shrink: 0;
-}
-
 .mapregionlist_count {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--color-primary);
-  line-height: 1;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .mapregionlist_item.active .mapregionlist_count {
+  background: #eef1fb;
+  border-color: var(--color-blue);
   color: var(--color-blue);
-}
-
-.mapregionlist_count_label {
-  font-size: 11px;
-  color: var(--color-text-muted);
 }
 
 /* 화살표 */

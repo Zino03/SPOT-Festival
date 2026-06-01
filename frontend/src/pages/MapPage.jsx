@@ -67,10 +67,7 @@ function MapPage() {
           selectedRegion={selectedRegion}
           onSelectRegion={setSelectedRegion}
         />
-        <MapRegionList
-          selectedRegion={selectedRegion}
-          onSelectRegion={setSelectedRegion}
-        />
+        <MapRegionList />
       </div>
 
       <MapGuide />

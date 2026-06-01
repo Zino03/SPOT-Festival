@@ -3,47 +3,57 @@ import { useNavigate } from 'react-router-dom'
 import { fetchPhotos } from '../../../utils/unsplash'
 import './MapRegionList.css'
 
-const DUMMY_REGIONS = [
-  { id: 1,  nameKo: '서울',  nameEn: 'Seoul',     regionId: 'seoul',     count: 38 },
-  { id: 2,  nameKo: '경기',  nameEn: 'Gyeonggi',  regionId: 'gyeonggi',  count: 31 },
-  { id: 3,  nameKo: '경북',  nameEn: 'Gyeongbuk', regionId: 'gyeongbuk', count: 24 },
-  { id: 4,  nameKo: '경남',  nameEn: 'Gyeongnam', regionId: 'gyeongnam', count: 22 },
-  { id: 5,  nameKo: '충북',  nameEn: 'Chungbuk',  regionId: 'chungbuk',  count: 21 },
-  { id: 6,  nameKo: '전남',  nameEn: 'Jeonnam',   regionId: 'jeonnam',   count: 19 },
-  { id: 7,  nameKo: '강원',  nameEn: 'Gangwon',   regionId: 'gangwon',   count: 18 },
-  { id: 8,  nameKo: '부산',  nameEn: 'Busan',     regionId: 'busan',     count: 17 },
-  { id: 9,  nameKo: '전북',  nameEn: 'Jeonbuk',   regionId: 'jeonbuk',   count: 16 },
-  { id: 10, nameKo: '대구',  nameEn: 'Daegu',     regionId: 'daegu',     count: 15 },
-  { id: 11, nameKo: '충남',  nameEn: 'Chungnam',  regionId: 'chungnam',  count: 14 },
-  { id: 12, nameKo: '인천',  nameEn: 'Incheon',   regionId: 'incheon',   count: 12 },
-  { id: 13, nameKo: '대전',  nameEn: 'Daejeon',   regionId: 'daejeon',   count: 9  },
-  { id: 14, nameKo: '제주',  nameEn: 'Jeju',      regionId: 'jeju',      count: 8  },
-  { id: 15, nameKo: '울산',  nameEn: 'Ulsan',     regionId: 'ulsan',     count: 6  },
-  { id: 16, nameKo: '광주',  nameEn: 'Gwangju',   regionId: 'gwangju',   count: 7  },
-  { id: 17, nameKo: '세종',  nameEn: 'Sejong',    regionId: 'sejong',    count: 4  },
+const REGION_META = [
+  { id: 1,  nameKo: '서울',  nameEn: 'Seoul',     regionId: 'seoul'     },
+  { id: 2,  nameKo: '경기',  nameEn: 'Gyeonggi',  regionId: 'gyeonggi'  },
+  { id: 3,  nameKo: '경북',  nameEn: 'Gyeongbuk', regionId: 'gyeongbuk' },
+  { id: 4,  nameKo: '경남',  nameEn: 'Gyeongnam', regionId: 'gyeongnam' },
+  { id: 5,  nameKo: '충북',  nameEn: 'Chungbuk',  regionId: 'chungbuk'  },
+  { id: 6,  nameKo: '전남',  nameEn: 'Jeonnam',   regionId: 'jeonnam'   },
+  { id: 7,  nameKo: '강원',  nameEn: 'Gangwon',   regionId: 'gangwon'   },
+  { id: 8,  nameKo: '부산',  nameEn: 'Busan',     regionId: 'busan'     },
+  { id: 9,  nameKo: '전북',  nameEn: 'Jeonbuk',   regionId: 'jeonbuk'   },
+  { id: 10, nameKo: '대구',  nameEn: 'Daegu',     regionId: 'daegu'     },
+  { id: 11, nameKo: '충남',  nameEn: 'Chungnam',  regionId: 'chungnam'  },
+  { id: 12, nameKo: '인천',  nameEn: 'Incheon',   regionId: 'incheon'   },
+  { id: 13, nameKo: '대전',  nameEn: 'Daejeon',   regionId: 'daejeon'   },
+  { id: 14, nameKo: '제주',  nameEn: 'Jeju',      regionId: 'jeju'      },
+  { id: 15, nameKo: '울산',  nameEn: 'Ulsan',     regionId: 'ulsan'     },
+  { id: 16, nameKo: '광주',  nameEn: 'Gwangju',   regionId: 'gwangju'   },
+  { id: 17, nameKo: '세종',  nameEn: 'Sejong',    regionId: 'sejong'    },
 ]
 
-function MapRegionList({ selectedRegion, onSelectRegion }) {
+function MapRegionList() {
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
+  const [counts, setCounts] = useState({})
   const [images, setImages] = useState({})
 
+  // 실제 축제 수 API 연동
   useEffect(() => {
-    // 17개를 1번 배치 요청으로 처리
-    fetchPhotos('Korea landscape nature', DUMMY_REGIONS.length, 'squarish')
+    fetch('http://localhost:8080/api/festivals/region-counts')
+      .then(r => r.json())
+      .then(data => {
+        const map = {}
+        data.forEach(item => { map[item.regionId] = item.count })
+        setCounts(map)
+      })
+      .catch(err => console.error('region-counts 에러:', err))
+  }, [])
+
+  useEffect(() => {
+    fetchPhotos('Korea landscape nature', REGION_META.length, 'squarish')
       .then(urls => {
         const map = {}
-        DUMMY_REGIONS.forEach((r, i) => {
-          if (urls[i]) map[r.regionId] = urls[i]
-        })
+        REGION_META.forEach((r, i) => { if (urls[i]) map[r.regionId] = urls[i] })
         setImages(map)
       })
   }, [])
 
-  const filtered = DUMMY_REGIONS.filter(r =>
-    r.nameKo.includes(searchQuery) ||
-    r.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
+  // 실제 카운트 기준으로 정렬
+  const sorted = [...REGION_META].sort(
+    (a, b) => (counts[b.regionId] ?? 0) - (counts[a.regionId] ?? 0)
   )
+
 
   return (
     <div className="mapregionlist">
@@ -54,30 +64,16 @@ function MapRegionList({ selectedRegion, onSelectRegion }) {
           <p className="mapregionlist_label">REGIONS</p>
           <p className="mapregionlist_title">17개 광역시·도</p>
         </div>
-        <span className="mapregionlist_hint">클릭 → 선택 · 더블클릭 → 이동</span>
+        <span className="mapregionlist_hint">클릭하면 지역 페이지로 이동</span>
       </div>
 
-      {/* 검색창 */}
-      <div className="mapregionlist_search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input
-          type="text"
-          placeholder="시·도 검색"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-        />
-      </div>
-
-      {/* 지역 목록 */}
+{/* 지역 목록 */}
       <ul className="mapregionlist_list">
-        {filtered.map((region, idx) => (
+        {sorted.map((region, idx) => (
           <li
             key={region.id}
-            className={`mapregionlist_item ${selectedRegion?.id === region.id ? 'active' : ''}`}
-            onClick={() => onSelectRegion(region)}
-            onDoubleClick={() => navigate(`/region/${region.regionId}`)}
+            className="mapregionlist_item"
+            onClick={() => navigate(`/region/${region.regionId}`)}
           >
             <div
               className="mapregionlist_thumb"
@@ -89,10 +85,9 @@ function MapRegionList({ selectedRegion, onSelectRegion }) {
               <strong className="mapregionlist_name_ko">{region.nameKo}</strong>
               <span className="mapregionlist_name_en">{region.nameEn}</span>
             </div>
-            <div className="mapregionlist_right">
-              <span className="mapregionlist_count">{region.count}</span>
-              <span className="mapregionlist_count_label">개 축제</span>
-            </div>
+            <span className="mapregionlist_count">
+              {counts[region.regionId] ?? '—'}개
+            </span>
             <span className="mapregionlist_arrow">›</span>
           </li>
         ))}

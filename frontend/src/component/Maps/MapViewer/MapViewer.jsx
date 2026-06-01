@@ -20,9 +20,16 @@ function MapViewer({ onSelectRegion }) {
       const { kakao } = window
 
       const map = new kakao.maps.Map(mapRef.current, {
-        center: new kakao.maps.LatLng(36.2, 127.9),
-        level: 8,
+        center: new kakao.maps.LatLng(36.5, 127.9),
+        level: 13,
       })
+
+      // 제주~독도까지 전국이 보이도록 bounds 맞춤
+      const bounds = new kakao.maps.LatLngBounds(
+        new kakao.maps.LatLng(33.0, 124.5),
+        new kakao.maps.LatLng(38.7, 131.9)
+      )
+      map.setBounds(bounds)
 
       overlaysRef.current.forEach(o => o.setMap(null))
       overlaysRef.current = []
@@ -44,8 +51,6 @@ function MapViewer({ onSelectRegion }) {
         overlay.setMap(map)
         overlaysRef.current.push(overlay)
 
-        // 클릭 이벤트는 DOM에서 직접 처리
-        kakao.maps.event.addListener(map, 'idle', () => {})
       })
 
       // 이벤트 위임 — 핀 클릭 시 지역 페이지 이동
