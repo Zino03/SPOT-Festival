@@ -20,13 +20,15 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
     @Query("SELECT COUNT(f) FROM Festival f WHERE f.startDate <= :today AND f.endDate >= :today")
     long countLiveToday(@Param("today") LocalDate today);
 
+    @Query("SELECT f FROM Festival f WHERE f.name LIKE %:q% OR f.region LIKE %:q% ORDER BY f.viewCount DESC")
+    List<Festival> searchByKeyword(@Param("q") String q, org.springframework.data.domain.Pageable pageable);
+
     @Query("SELECT COUNT(f) FROM Festival f WHERE f.startDate <= :monthEnd AND f.endDate >= :monthStart")
     long countThisMonth(@Param("monthStart") LocalDate monthStart, @Param("monthEnd") LocalDate monthEnd);
-    //Trending 이번주 최대 8개 축제 가져오기 로직
-    //우선순위 : 조회수->평점->ID 순
+    // Trending: 종료되지 않은 축제 중 조회수 상위 8개
     @Query(value = "SELECT * FROM festival " +
-            "WHERE start_date <= :nextWeek AND end_date >= :today " +
-            "ORDER BY view_count DESC, rating DESC, id ASC " +
+            "WHERE end_date >= :today " +
+            "ORDER BY view_count DESC, id ASC " +
             "LIMIT 8", nativeQuery = true)
-    List<Festival> findTop8Trending(@Param("today") LocalDate today, @Param("nextWeek") LocalDate nextWeek);
+    List<Festival> findTop8Trending(@Param("today") LocalDate today);
 }

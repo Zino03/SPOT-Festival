@@ -48,18 +48,6 @@ function RegionHeader({ festivalCount }) {
         <p className="regionheader_desc">{region.desc}</p>
       </div>
 
-      {/* 오른쪽: 액션 버튼 */}
-      <div className="regionheader_actions">
-        <button className="regionheader_btn">
-          🔽 필터
-        </button>
-        <button className="regionheader_btn">
-          📅 10월
-        </button>
-        <button className="regionheader_btn_share">
-          ↗ 공유
-        </button>
-      </div>
 
     </div>
   )

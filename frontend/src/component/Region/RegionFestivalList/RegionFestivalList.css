@@ -33,9 +33,34 @@
   color: #ff6b35;
 }
 
-.regionfestivallist_sort {
+.regionfestivallist_sort_btns {
+  display: flex;
+  gap: 4px;
+}
+
+.regionfestivallist_sort_btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
   font-size: 12px;
-  color: #aaa;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-base);
+}
+
+.regionfestivallist_sort_btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.regionfestivallist_sort_btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
 }
 
 /* 축제 목록 */

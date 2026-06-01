@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { fetchPhoto } from '../../../utils/unsplash'
 import './FestivalHero.css'
 
@@ -11,6 +12,7 @@ const FESTIVAL_QUERIES = [
 ]
 
 function FestivalHero({ festival }) {
+  const navigate = useNavigate()
   const [heroBg, setHeroBg] = useState('')
 
   useEffect(() => {
@@ -25,27 +27,32 @@ function FestivalHero({ festival }) {
   const startDate = festival.startDate?.slice(5).replace('-', '/')
   const endDate   = festival.endDate?.slice(5).replace('-', '/')
 
+  function handleAddToCourse() {
+    navigate('/builder', {
+      state: {
+        preselectedFestival: {
+          id:       festival.id,
+          name:     festival.name,
+          category: festival.region,
+          lat:      festival.lat,
+          lng:      festival.lng,
+          date:     `${startDate} ~ ${endDate}`,
+          isAI:     false,
+        }
+      }
+    })
+  }
+
   return (
     <div className="festivalhero">
       <div
         className="festivalhero_bg"
         style={heroBg ? { backgroundImage: `url(${heroBg})` } : {}}
       >
-        <div className="festivalhero_thumbnails">
-          {[0, 1, 2].map(i => (
-            <div
-              key={i}
-              className="festivalhero_thumbnail"
-              style={heroBg ? { backgroundImage: `url(${heroBg})`, filter: `brightness(${0.9 - i * 0.15})` } : {}}
-            />
-          ))}
-        </div>
-
         <div className="festivalhero_info">
           <div className="festivalhero_badges">
             {isLive && <span className="festivalhero_badge_live">● LIVE NOW</span>}
             <span className="festivalhero_badge_category">{festival.region}</span>
-            <span className="festivalhero_badge_score">★ {festival.rating}</span>
           </div>
 
           <h1 className="festivalhero_title">{festival.name}</h1>
@@ -54,12 +61,12 @@ function FestivalHero({ festival }) {
             <div className="festivalhero_meta_left">
               <span>📅 {startDate} ~ {endDate}</span>
               <span>📍 {festival.address}</span>
-              <span>👁 조회 {festival.viewCount?.toLocaleString()}</span>
+              <span>👁 {festival.viewCount?.toLocaleString()}</span>
             </div>
             <div className="festivalhero_meta_right">
-              <button className="festivalhero_btn_icon">🔖</button>
-              <button className="festivalhero_btn_icon">↗</button>
-              <button className="festivalhero_btn_course">코스에 추가 →</button>
+              <button className="festivalhero_btn_course" onClick={handleAddToCourse}>
+                코스에 추가 →
+              </button>
             </div>
           </div>
         </div>

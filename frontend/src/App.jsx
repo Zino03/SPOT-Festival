@@ -5,6 +5,7 @@ import RegionPage from './pages/RegionPage'
 import Header from './component/Common/Header/Header'
 import FestivalPage from './pages/FestivalPage'
 import BuilderPage from './pages/BuilderPage'
+import AboutPage from './pages/AboutPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/region/:regionId" element={<RegionPage />} />
         <Route path="/festival/:festivalId" element={<FestivalPage />} />
         <Route path="/builder" element={<BuilderPage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </BrowserRouter>
   )

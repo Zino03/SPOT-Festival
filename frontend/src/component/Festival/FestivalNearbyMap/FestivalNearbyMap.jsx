@@ -1,20 +1,14 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { loadKakaoMap } from '../../../utils/kakao'
 import './FestivalNearbyMap.css'
 
-const CATEGORY_FILTERS = [
-  { label: '식당', icon: '🍴', value: 'restaurant' },
-  { label: '카페', icon: '☕', value: 'cafe'       },
-  { label: '주차장', icon: '🅿', value: 'parking'  },
-]
+const KAKAO_CATEGORY = { restaurant: 'FD6', cafe: 'CE7', parking: 'PK6' }
 
-// 카카오 카테고리 코드
-const KAKAO_CATEGORY = { restaurant: 'FD6', cafe: 'CE7' }
-
-function FestivalNearbyMap({ festival, activeCategory, parkings, nearbyPlaces, onNearbyLoad }) {
+function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoad, selectedPlaceId, onSelectPlace }) {
   const mapRef     = useRef(null)
   const mapObjRef  = useRef(null)
-  const markersRef = useRef([])
+  const markersRef = useRef([]) // [{ marker, infoWindow, id }]
+  const [mapReady, setMapReady] = useState(false)
 
   // 지도 + 축제 위치 핀 초기화
   useEffect(() => {
@@ -32,15 +26,17 @@ function FestivalNearbyMap({ festival, activeCategory, parkings, nearbyPlaces, o
         yAnchor: 1,
         map,
       })
+
+      setMapReady(true)
     }).catch(err => console.error(err.message))
   }, [festival])
 
   // 카테고리 변경 시 마커 교체
   useEffect(() => {
     const map = mapObjRef.current
-    if (!map) return
+    if (!map || !window.kakao?.maps) return
 
-    markersRef.current.forEach(m => m.setMap(null))
+    markersRef.current.forEach(({ marker, infoWindow }) => { infoWindow.close(); marker.setMap(null) })
     markersRef.current = []
 
     const { kakao } = window
@@ -57,24 +53,19 @@ function FestivalNearbyMap({ festival, activeCategory, parkings, nearbyPlaces, o
 
         const pos = new kakao.maps.LatLng(lat, lng)
         const marker = new kakao.maps.Marker({ position: pos, map })
-        markersRef.current.push(marker)
-        bounds.extend(pos)
-
         const iw = new kakao.maps.InfoWindow({
           content: `<div class="kakao_festival_info"><strong>${p.place_name}</strong><span>${p.distance ?? ''}${p.distance ? 'm' : ''}</span></div>`,
           removable: true,
         })
-        kakao.maps.event.addListener(marker, 'click', () => iw.open(map, marker))
+        markersRef.current.push({ marker, infoWindow: iw, id: p.id })
+        bounds.extend(pos)
+
+        kakao.maps.event.addListener(marker, 'click', () => onSelectPlace(p.id))
       })
       if (!bounds.isEmpty()) map.setBounds(bounds)
     }
 
-    if (activeCategory === 'parking') {
-      addMarkers(parkings)
-      return
-    }
-
-    // 식당 / 카페: 이미 검색한 결과 있으면 재사용
+    // 이미 검색한 결과 있으면 재사용
     const cached = nearbyPlaces[activeCategory]
     if (cached?.length) { addMarkers(cached); return }
 
@@ -93,21 +84,25 @@ function FestivalNearbyMap({ festival, activeCategory, parkings, nearbyPlaces, o
       radius: 1500,
       sort: kakao.maps.services.SortBy.DISTANCE,
     })
-  }, [activeCategory, festival, parkings, nearbyPlaces])
+  }, [activeCategory, festival, nearbyPlaces, mapReady])
+
+  // 선택된 장소 → 마커 포커싱
+  useEffect(() => {
+    const map = mapObjRef.current
+    if (!map || !window.kakao?.maps) return
+
+    markersRef.current.forEach(({ infoWindow }) => infoWindow.close())
+
+    if (!selectedPlaceId) return
+    const found = markersRef.current.find(m => m.id === selectedPlaceId)
+    if (!found) return
+
+    found.infoWindow.open(map, found.marker)
+    map.panTo(found.marker.getPosition())
+  }, [selectedPlaceId])
 
   return (
     <div className="festivalnearbymap">
-      <div className="festivalnearbymap_filters">
-        {CATEGORY_FILTERS.map(cat => (
-          <button
-            key={cat.value}
-            className={`festivalnearbymap_filter ${activeCategory === cat.value ? 'active' : ''}`}
-            onClick={() => {}}
-          >
-            {cat.icon} {cat.label}
-          </button>
-        ))}
-      </div>
       <div ref={mapRef} className="festivalnearbymap_map" />
     </div>
   )

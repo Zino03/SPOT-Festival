@@ -2,13 +2,11 @@ package com.spot.backend.domain.planner.controller;
 
 import com.spot.backend.domain.festival.dto.PlannerRequestDto;
 import com.spot.backend.domain.planner.service.TravelPlannerService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/planner")
+@CrossOrigin(origins = "http://localhost:5173")
 public class PlannerController {
 
     private final TravelPlannerService travelPlannerService;

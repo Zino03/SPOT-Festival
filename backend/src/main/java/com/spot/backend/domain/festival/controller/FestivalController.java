@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.PageRequest;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +33,16 @@ public class FestivalController {
         );
     }
 
+    @GetMapping("/search")
+    public List<FestivalDetailResponse> search(@RequestParam String q) {
+        if (q == null || q.isBlank()) return List.of();
+        return festivalRepository.searchByKeyword(q.trim(), PageRequest.of(0, 50))
+                .stream().map(FestivalDetailResponse::new).toList();
+    }
+
     @GetMapping("/trending")
     public List<Festival> getTrendingFestivals() {
-        LocalDate today = LocalDate.now();
-        LocalDate nextWeek = today.plusDays(7);
-        return festivalRepository.findTop8Trending(today, nextWeek);
+        return festivalRepository.findTop8Trending(LocalDate.now());
     }
 
     private static final Map<String, String> REGION_KEYWORD = Map.ofEntries(
