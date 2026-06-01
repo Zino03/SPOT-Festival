@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/api/images")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ImageController {
-
+    // Unplash API 이미지 가져오기
     @Value("${unsplash.access-key}")
     private String accessKey;
 
@@ -34,6 +34,7 @@ public class ImageController {
     // 캐시 파일 경로 (백엔드 루트 기준)
     private static final String CACHE_FILE = "image-cache.json";
 
+    // 앱 시작 시 캐시를 읽어서 복원
     @PostConstruct
     @SuppressWarnings("unchecked")
     void loadCache() {
@@ -59,7 +60,7 @@ public class ImageController {
         }
     }
 
-    /** 단일 이미지 URL */
+    // 단일 이미지 URL
     @SuppressWarnings("unchecked")
     @GetMapping("/photo")
     public ResponseEntity<Map<String, String>> getPhoto(
@@ -99,7 +100,7 @@ public class ImageController {
         }
     }
 
-    /** 여러 이미지 URL 목록 (최대 30장) */
+    // 여러 이미지 URL 목록 (최대 30장)
     @SuppressWarnings("unchecked")
     @GetMapping("/photos")
     public ResponseEntity<List<String>> getPhotos(
