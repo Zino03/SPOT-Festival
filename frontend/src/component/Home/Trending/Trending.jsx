@@ -32,7 +32,6 @@ function Trending() {
           name: f.name,
           start_date: f.startDate,
           end_date: f.endDate,
-          rating: f.rating,
           views: f.viewCount,
         }));
 

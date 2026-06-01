@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+// 공공데이터 API 응답 원본
+// FestivalApiResponse → Response → Body → List<Item> 순서로 접근
 @Getter
 @Setter
 public class FestivalApiResponse {
@@ -25,28 +27,28 @@ public class FestivalApiResponse {
     @Getter
     @Setter
     public static class Item {
-        @JsonProperty("fstvlNm")
-        private String fstvlNm;       // 축제명
+        @JsonProperty("fstvlNm") // JSON 키 이름과 Java 필드 매핑
+        private String fstvlNm; // 축제명
 
         @JsonProperty("insttNm")
-        private String insttNm;       // 지역명 (제공기관명)
+        private String insttNm; // 지역명 (제공기관명)
 
         @JsonProperty("rdnmadr")
-        private String rdnmadr;       // 소재지도로명주소
+        private String rdnmadr; // 소재지도로명주소
 
         @JsonProperty("lnmadr")
-        private String lnmadr;        // 소재지지번주소 (도로명주소가 없을 때 대비)
+        private String lnmadr; // 소재지지번주소 (도로명주소가 없을 때 대비)
 
         @JsonProperty("fstvlStartDate") // 응답 데이터 구조에 맞춤
         private String fstvlStartDate;
 
-        @JsonProperty("fstvlEndDate")   // 응답 데이터 구조에 맞춤
+        @JsonProperty("fstvlEndDate") // 응답 데이터 구조에 맞춤
         private String fstvlEndDate;
 
         @JsonProperty("latitude")
-        private String latitude;      // 위도
+        private String latitude; // 위도
 
         @JsonProperty("longitude")
-        private String longitude;     // 경도
+        private String longitude; // 경도
     }
 }

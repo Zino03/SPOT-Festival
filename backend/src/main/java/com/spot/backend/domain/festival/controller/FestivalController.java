@@ -1,7 +1,6 @@
 package com.spot.backend.domain.festival.controller;
 
 import com.spot.backend.domain.festival.dto.FestivalDetailResponse;
-import com.spot.backend.domain.festival.entity.Festival;
 import com.spot.backend.domain.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,38 +12,43 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/festivals")
-@RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@RestController // 모든 메서드가 JSON을 반환하는 컨트롤러
+@RequestMapping("/api/festivals") // 엔드포인트 명시
+@RequiredArgsConstructor // final 필드를 받는 생성자 자동 생성
+// -> Spring이 그 생성자로 FestivalRepository 주입
 public class FestivalController {
-
     private final FestivalRepository festivalRepository;
 
+    // 홈 화면 통계 카드
     @GetMapping("/stats")
     public Map<String, Long> getStats() {
         LocalDate today = LocalDate.now();
         LocalDate monthStart = today.withDayOfMonth(1);
         LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
         return Map.of(
-            "totalCount", festivalRepository.count(),
-            "liveCount",  festivalRepository.countLiveToday(today),
-            "monthCount", festivalRepository.countThisMonth(monthStart, monthEnd)
+            "totalCount", festivalRepository.count(), // 전체 축제수
+            "liveCount",  festivalRepository.countLiveToday(today), // 오늘 진행 중인 축제수
+            "monthCount", festivalRepository.countThisMonth(monthStart, monthEnd) // 이번 달 축제 수
         );
     }
 
+    // 검색 API
     @GetMapping("/search")
     public List<FestivalDetailResponse> search(@RequestParam String q) {
-        if (q == null || q.isBlank()) return List.of();
+        if (q == null || q.isBlank()) return List.of(); // 빈 문자열 반환 시 빈 배열 반환
+        // 앞뒤 공백 제거하고 최대 50개까지만 반환
         return festivalRepository.searchByKeyword(q.trim(), PageRequest.of(0, 50))
                 .stream().map(FestivalDetailResponse::new).toList();
     }
 
+    // 홈 화면 Trending
     @GetMapping("/trending")
-    public List<Festival> getTrendingFestivals() {
-        return festivalRepository.findTop8Trending(LocalDate.now());
+    public List<FestivalDetailResponse> getTrendingFestivals() {
+        return festivalRepository.findTop8Trending(LocalDate.now())
+                .stream().map(FestivalDetailResponse::new).toList();
     }
 
+    // 지역 영문 매핑
     private static final Map<String, String> REGION_KEYWORD = Map.ofEntries(
         Map.entry("seoul",     "서울"),
         Map.entry("gyeonggi",  "경기"),
@@ -65,6 +69,7 @@ public class FestivalController {
         Map.entry("jeju",      "제주")
     );
 
+    // 지도 각 지역 표시할 축제 수 API
     @GetMapping("/region-counts")
     public List<Map<String, Object>> getRegionCounts() {
         return REGION_KEYWORD.entrySet().stream()
@@ -75,10 +80,11 @@ public class FestivalController {
                 .toList();
     }
 
+   // 지역별 축제 목록 API
     @GetMapping("/region/{regionId}")
     public ResponseEntity<List<FestivalDetailResponse>> getFestivalsByRegion(@PathVariable String regionId) {
-        String keyword = REGION_KEYWORD.get(regionId.toLowerCase());
-        if (keyword == null) return ResponseEntity.badRequest().build();
+        String keyword = REGION_KEYWORD.get(regionId.toLowerCase()); // 대소문자 구분 x
+        if (keyword == null) return ResponseEntity.badRequest().build(); // 없는 지역이면 400 에러
         List<FestivalDetailResponse> result = festivalRepository.findByRegionKeyword(keyword)
                 .stream()
                 .map(FestivalDetailResponse::new)
@@ -86,14 +92,15 @@ public class FestivalController {
         return ResponseEntity.ok(result);
     }
 
+     // 축제 상세 페이지 API 
     @GetMapping("/{id}")
     public ResponseEntity<FestivalDetailResponse> getFestivalDetail(@PathVariable Long id) {
         return festivalRepository.findById(id)
                 .map(festival -> {
-                    festival.incrementViewCount();
+                    festival.incrementViewCount(); // 조회 시 viewCount + 1
                     festivalRepository.save(festival);
                     return ResponseEntity.ok(new FestivalDetailResponse(festival));
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build()); // 없는 ID면 404
     }
 }
