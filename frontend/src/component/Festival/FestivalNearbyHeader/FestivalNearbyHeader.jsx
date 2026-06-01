@@ -1,4 +1,7 @@
-import { useState } from 'react'
+// 축제 상세 페이지 주변 정보 섹션 헤더 컴포넌트
+// 좌측 타이틀 + 우측 카테고리 탭(식당 / 카페 / 주차장) 구성
+// 탭 선택 시 FestivalPage의 activeCategory를 변경해 지도와 목록을 동시 갱신
+
 import './FestivalNearbyHeader.css'
 
 const CATEGORIES = [
@@ -11,7 +14,7 @@ function FestivalNearbyHeader({ activeCategory, onSelectCategory }) {
   return (
     <div className="festivalnearbyheader">
 
-      {/* 왼쪽 텍스트 */}
+      {/* 좌측 섹션 타이틀 */}
       <div className="festivalnearbyheader_left">
         <p className="festivalnearbyheader_label">
           <span className="festivalnearbyheader_label_line"></span>
@@ -25,8 +28,7 @@ function FestivalNearbyHeader({ activeCategory, onSelectCategory }) {
         </p>
       </div>
 
-      {/* 오른쪽 카테고리 탭 */}
-      {/* TODO: API 연동 시 각 카테고리 개수 동적으로 표시 */}
+      {/* 우측 카테고리 탭 */}
       <div className="festivalnearbyheader_tabs">
         {CATEGORIES.map(cat => (
           <button
