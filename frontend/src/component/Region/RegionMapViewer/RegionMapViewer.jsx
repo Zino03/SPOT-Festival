@@ -1,96 +1,93 @@
-import { useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { loadKakaoMap, REGION_CENTERS } from '../../../utils/kakao'
 import './RegionMapViewer.css'
 
-// 지역 ID → 한글명 변환
-// TODO: API 연동 시 fetch로 교체
 const REGION_NAMES = {
-  seoul:     '서울',
-  gyeonggi:  '경기',
-  incheon:   '인천',
-  gangwon:   '강원',
-  chungnam:  '충남',
-  chungbuk:  '충청북도',
-  daejeon:   '대전',
-  sejong:    '세종',
-  jeonbuk:   '전북',
-  jeonnam:   '전남',
-  gwangju:   '광주',
-  gyeongbuk: '경북',
-  gyeongnam: '경남',
-  daegu:     '대구',
-  ulsan:     '울산',
-  busan:     '부산',
-  jeju:      '제주',
+  seoul: '서울', gyeonggi: '경기', incheon: '인천', gangwon: '강원',
+  chungnam: '충남', chungbuk: '충북', daejeon: '대전', sejong: '세종',
+  jeonbuk: '전북', jeonnam: '전남', gwangju: '광주', gyeongbuk: '경북',
+  gyeongnam: '경남', daegu: '대구', ulsan: '울산', busan: '부산', jeju: '제주',
 }
 
-// 더미 시·군 데이터
-// TODO: API 연동 시 fetch('/api/regions/:regionId/cities')로 교체
-const DUMMY_CITIES = {
-  chungbuk: [
-    { id: 1, nameKo: '청주시',  nameEn: 'Cheongju',  festivalCount: 8  },
-    { id: 2, nameKo: '충주시',  nameEn: 'Chungju',   festivalCount: 3  },
-    { id: 3, nameKo: '제천시',  nameEn: 'Jecheon',   festivalCount: 2  },
-    { id: 4, nameKo: '단양군',  nameEn: 'Danyang',   festivalCount: 1  },
-    { id: 5, nameKo: '음성군',  nameEn: 'Eumseong',  festivalCount: 0  },
-    { id: 6, nameKo: '진천군',  nameEn: 'Jincheon',  festivalCount: 0  },
-    { id: 7, nameKo: '괴산군',  nameEn: 'Goesan',    festivalCount: 1  },
-    { id: 8, nameKo: '보은군',  nameEn: 'Boeun',     festivalCount: 0  },
-    { id: 9, nameKo: '옥천군',  nameEn: 'Okcheon',   festivalCount: 0  },
-  ],
-}
-
-function RegionMapViewer({ onSelectCity }) {
+function RegionMapViewer() {
   const { regionId } = useParams()
-  const [selectedCity, setSelectedCity] = useState(null)
+  const mapRef      = useRef(null)
+  const markersRef  = useRef([])
+  const infoWinRef  = useRef(null)
 
-  const regionName = REGION_NAMES[regionId] || regionId
-  const cities = DUMMY_CITIES[regionId] || []
+  useEffect(() => {
+    const center = REGION_CENTERS[regionId] ?? REGION_CENTERS['seoul']
 
-  // 싱글 클릭 - 시·군 선택 (툴팁 표시)
-  function handleClick(city) {
-    setSelectedCity(city)
-    if (onSelectCity) onSelectCity(city)
-  }
+    loadKakaoMap().then(() => {
+      const { kakao } = window
+
+      const map = new kakao.maps.Map(mapRef.current, {
+        center: new kakao.maps.LatLng(center.lat, center.lng),
+        level: 9,
+      })
+
+      // 기존 마커 제거
+      markersRef.current.forEach(m => m.setMap(null))
+      markersRef.current = []
+      infoWinRef.current?.close()
+
+      // 지역 축제 마커 추가
+      fetch(`http://localhost:8080/api/festivals/region/${regionId}`)
+        .then(r => r.json())
+        .then(festivals => {
+          festivals.forEach(f => {
+            if (!f.lat || !f.lng || (f.lat === 0 && f.lng === 0)) return
+
+            const marker = new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(f.lat, f.lng),
+              map,
+            })
+            markersRef.current.push(marker)
+
+            const infoWindow = new kakao.maps.InfoWindow({
+              content: `
+                <div class="kakao_festival_info">
+                  <strong>${f.name}</strong>
+                  <span>${f.startDate?.slice(5).replace('-', '/')} ~ ${f.endDate?.slice(5).replace('-', '/')}</span>
+                </div>`,
+              removable: true,
+            })
+
+            kakao.maps.event.addListener(marker, 'click', () => {
+              infoWinRef.current?.close()
+              infoWindow.open(map, marker)
+              infoWinRef.current = infoWindow
+            })
+          })
+
+          // 마커가 있으면 지도 범위 자동 조정
+          if (markersRef.current.length > 0) {
+            const bounds = new kakao.maps.LatLngBounds()
+            markersRef.current.forEach(m => bounds.extend(m.getPosition()))
+            map.setBounds(bounds)
+          }
+        })
+        .catch(err => console.error('축제 마커 로드 실패:', err))
+    }).catch(err => console.error(err.message))
+
+    return () => {
+      markersRef.current.forEach(m => m.setMap(null))
+      infoWinRef.current?.close()
+    }
+  }, [regionId])
 
   return (
     <div className="regionmapviewer">
-
-      {/* 지도 헤더 */}
       <div className="regionmapviewer_header">
         <div>
           <p className="regionmapviewer_label">REGIONAL MAP</p>
-          <p className="regionmapviewer_subtitle">{regionName} · 시·군 단위</p>
-        </div>
-        <div className="regionmapviewer_controls">
-          <button>+</button>
-          <button>−</button>
-          <button>⊡</button>
-        </div>
-      </div>
-
-      {/* TODO: 지도 API 연동 자리 */}
-      {/* 지도 연동 시 아래 placeholder 제거 후 지도 컴포넌트 삽입 */}
-      {/* 각 시·군 클릭 시 handleClick(city) 호출 */}
-      <div className="regionmapviewer_placeholder">
-        <p className="regionmapviewer_placeholder_icon">🗺️</p>
-        <p className="regionmapviewer_placeholder_title">{regionName} 지도</p>
-        <p className="regionmapviewer_placeholder_desc">지도 API 연동 예정</p>
-      </div>
-
-      {/* 선택된 시·군 툴팁 카드 */}
-      {selectedCity && (
-        <div className="regionmapviewer_tooltip">
-          <p className="regionmapviewer_tooltip_label">FOCUSED</p>
-          <h3 className="regionmapviewer_tooltip_name">
-            {selectedCity.nameKo} · {selectedCity.nameEn}
-          </h3>
-          <p className="regionmapviewer_tooltip_desc">
-            {selectedCity.festivalCount}개 축제 · 가장 축제가 많은 도시
+          <p className="regionmapviewer_subtitle">
+            {REGION_NAMES[regionId] || regionId} · 축제 위치
           </p>
         </div>
-      )}
-
+      </div>
+      <div ref={mapRef} className="regionmapviewer_map" />
     </div>
   )
 }
