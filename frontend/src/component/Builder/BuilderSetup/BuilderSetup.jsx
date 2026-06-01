@@ -2,13 +2,13 @@ import { useState } from 'react'
 import './BuilderSetup.css'
 
 const COMPANIONS = ['혼자', '연인', '친구들', '가족', '부모님']
-const DURATIONS  = ['당일치기', '1박 2일', '2박 3일']
-const THEMES     = ['조용한', '힐링', '활동적인', '전통적인', '먹거리 탐방', '야경', '자연']
+const DURATIONS = ['당일치기', '1박 2일', '2박 3일']
+const THEMES = ['조용한', '힐링', '활동적인', '전통적인', '먹거리 탐방', '야경', '자연']
 
 function BuilderSetup({ onComplete }) {
   const [companion, setCompanion] = useState('')
-  const [duration,  setDuration]  = useState('')
-  const [themes,    setThemes]    = useState([])
+  const [duration, setDuration] = useState('')
+  const [themes, setThemes] = useState([])
 
   function toggleTheme(t) {
     setThemes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
