@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import './Header.css'
 
 function Header() {
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
   const [query,   setQuery]   = useState('')
   const [results, setResults] = useState([])
   const [open,    setOpen]    = useState(false)
@@ -50,13 +50,11 @@ function Header() {
       <nav className="header_nav">
         <NavLink to="/" end>홈</NavLink>
         <NavLink to="/map">지도</NavLink>
-        <NavLink to="/builder">AI 코스</NavLink>
         <NavLink to="/about">About</NavLink>
       </nav>
 
       <div className="header_actions">
 
-        {/* 검색창 + 드롭다운 */}
         <div className="header_search_wrap" ref={wrapRef}>
           <div className="header_search">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
