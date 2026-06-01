@@ -1,4 +1,4 @@
-package com.spot.backend.controller;
+package com.spot.backend.domain.festival.controller;
 
 import com.spot.backend.infrastructure.publicdata.service.FestivalDataSyncService;
 import lombok.RequiredArgsConstructor;
