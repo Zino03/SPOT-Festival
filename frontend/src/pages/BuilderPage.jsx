@@ -1,23 +1,23 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import BuilderSetup    from '../component/Builder/BuilderSetup/BuilderSetup'
-import BuilderReport   from '../component/Builder/BuilderReport/BuilderReport'
-import BuilderTopBar   from '../component/Builder/BuilderTopBar/BuilderTopBar'
-import BuilderPath     from '../component/Builder/BuilderPath/BuilderPath'
-import BuilderHeader   from '../component/Builder/BuilderHeader/BuilderHeader'
-import BuilderStepper  from '../component/Builder/BuilderStepper/BuilderStepper'
+import BuilderSetup from '../component/Builder/BuilderSetup/BuilderSetup'
+import BuilderReport from '../component/Builder/BuilderReport/BuilderReport'
+import BuilderTopBar from '../component/Builder/BuilderTopBar/BuilderTopBar'
+import BuilderPath from '../component/Builder/BuilderPath/BuilderPath'
+import BuilderHeader from '../component/Builder/BuilderHeader/BuilderHeader'
+import BuilderStepper from '../component/Builder/BuilderStepper/BuilderStepper'
 import BuilderStepHeader from '../component/Builder/BuilderStepHeader/BuilderStepHeader'
 import BuilderCardGrid from '../component/Builder/BuilderCardGrid/BuilderCardGrid'
-import BuilderNav      from '../component/Builder/BuilderNav/BuilderNav'
-import BuilderReceipt  from '../component/Builder/BuilderReceipt/BuilderReceipt'
+import BuilderNav from '../component/Builder/BuilderNav/BuilderNav'
+import BuilderReceipt from '../component/Builder/BuilderReceipt/BuilderReceipt'
 import './BuilderPage.css'
 
 function BuilderPage() {
   const location = useLocation()
   const preselected = location.state?.preselectedFestival ?? null
 
-  const [step,          setStep]          = useState(0)
-  const [preferences,   setPreferences]   = useState({})
+  const [step, setStep] = useState(0)
+  const [preferences, setPreferences] = useState({})
   const [selectedItems, setSelectedItems] = useState(
     preselected ? { 1: preselected } : {}
   )

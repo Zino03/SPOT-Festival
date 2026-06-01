@@ -3,27 +3,27 @@ import { useNavigate } from 'react-router-dom'
 import './BuilderReport.css'
 
 function BuilderReport({ selectedItems, preferences, onReset }) {
-  const navigate  = useNavigate()
-  const [result,  setResult]  = useState(null)
+  const navigate = useNavigate()
+  const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error,   setError]   = useState(null)
+  const [error, setError] = useState(null)
 
   const festival = selectedItems[1]
 
   useEffect(() => {
     const body = {
-      festivalName: festival?.name  || '',
-      latitude:     festival?.lat   || 0,
-      longitude:    festival?.lng   || 0,
-      duration:     preferences.duration,
-      companion:    preferences.companion,
-      themes:       preferences.themes,
+      festivalName: festival?.name || '',
+      latitude: festival?.lat || 0,
+      longitude: festival?.lng || 0,
+      duration: preferences.duration,
+      companion: preferences.companion,
+      themes: preferences.themes,
     }
 
     fetch('http://localhost:8080/api/planner/generate', {
-      method:  'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(body),
+      body: JSON.stringify(body),
     })
       .then(r => r.text())
       .then(text => {
@@ -79,9 +79,9 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
       {/* 선택 요약 */}
       <div className="builderreport_summary">
         {[
-          { step: 1, label: '축제',   icon: '🎪' },
-          { step: 2, label: '맛집',   icon: '🍴' },
-          { step: 3, label: '카페',   icon: '☕' },
+          { step: 1, label: '축제', icon: '🎪' },
+          { step: 2, label: '맛집', icon: '🍴' },
+          { step: 3, label: '카페', icon: '☕' },
           { step: 4, label: '주차장', icon: '🅿' },
         ].map(({ step, label, icon }) => (
           selectedItems[step] && (

@@ -54,6 +54,7 @@
   display: flex;
   align-items: center;
   gap: 32px;
+  margin-left: 48px;
 }
 
 .header_nav a {
@@ -85,7 +86,25 @@
 .header_actions {
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: flex-end;
+  gap: 16px;
+  flex: 1;
+}
+
+/* AI 코스 시작 버튼 */
+.header_ai_btn {
+  color: #ff6b35;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  font-family: var(--font-base);
+}
+
+.header_ai_btn:hover {
+  opacity: 0.8;
 }
 
 /* 검색 전체 래퍼 (드롭다운 포함) */
@@ -201,16 +220,3 @@
   flex-shrink: 0;
 }
 
-/* AI 코스 시작 버튼 */
-.header_ai_btn {
-  color: #ff6b35;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.header_ai_btn:hover {
-  opacity: 0.8;
-}
