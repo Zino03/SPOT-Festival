@@ -1,18 +1,18 @@
-/* 돌아가기 버튼 */
 .festivalback {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   background: none;
   border: none;
-  font-size: 14px;
-  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-sub);
   cursor: pointer;
-  padding: 0;
-  margin-bottom: 20px;
+  padding: 12px 48px;
   transition: color 0.15s;
+  font-family: var(--font-base);
 }
 
 .festivalback:hover {
-  color: #1a1a2e;
+  color: var(--color-primary);
 }

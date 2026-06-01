@@ -1,10 +1,16 @@
-/* 리스트 전체 */
 .festivalnearbylist {
-  width: 380px;
+  width: 360px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+}
+
+.festivalnearbylist_empty {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
 }
 
 /* 리스트 헤더 */
@@ -13,64 +19,83 @@
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  color: #888;
+  color: var(--color-text-muted);
   padding: 0 4px;
-  margin-bottom: 4px;
 }
 
 .festivalnearbylist_sort {
   cursor: pointer;
-  color: #555;
+  color: var(--color-text-sub);
   font-weight: 500;
 }
 
-/* 장소 목록 */
+/* 장소 목록 — 스크롤 */
 .festivalnearbylist_list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  max-height: 440px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
+
+.festivalnearbylist_list::-webkit-scrollbar { width: 4px; }
+.festivalnearbylist_list::-webkit-scrollbar-track { background: transparent; }
+.festivalnearbylist_list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 
 /* 장소 아이템 */
 .festivalnearbylist_item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background 0.15s;
-}
-
-.festivalnearbylist_item:first-child {
-  border-color: #ff6b35;
-  background: #fff8f5;
+  transition: box-shadow 0.15s, border-color 0.15s;
 }
 
 .festivalnearbylist_item:hover {
-  background: #f8f9fa;
+  border-color: #ccc;
+  box-shadow: var(--shadow-sm);
 }
 
-/* 순서 알파벳 */
+/* 1등 강조 */
+.festivalnearbylist_item:first-child {
+  border-color: var(--color-accent);
+  background: #fff8f5;
+}
+
+/* 순서 */
 .festivalnearbylist_rank {
-  width: 20px;
-  font-size: 13px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-bg-subtle);
+  font-size: 11px;
   font-weight: 700;
-  color: #888;
+  color: var(--color-text-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.festivalnearbylist_item:first-child .festivalnearbylist_rank {
+  background: var(--color-accent);
+  color: #fff;
 }
 
 /* 이미지 */
 .festivalnearbylist_image {
   width: 48px;
   height: 48px;
-  border-radius: 8px;
-  background-color: #e0e0e0;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-subtle);
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
@@ -82,47 +107,37 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
-/* 장소명 */
 .festivalnearbylist_name {
   font-size: 14px;
-  font-weight: 600;
-  color: #1a1a2e;
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* 거리/유무료/스코어 */
 .festivalnearbylist_meta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 12px;
-  color: #aaa;
+  color: var(--color-text-muted);
+  flex-wrap: wrap;
 }
 
-/* 유료/무료 뱃지 */
-.festivalnearbylist_paid {
-  border-radius: 4px;
-  padding: 1px 6px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.festivalnearbylist_paid.free {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.festivalnearbylist_paid.paid {
-  background: #fce4ec;
-  color: #c62828;
+.festivalnearbylist_meta span + span::before {
+  content: '·';
+  margin-right: 6px;
 }
 
 /* 평점 */
 .festivalnearbylist_rating {
   font-size: 13px;
-  color: #ff6b35;
-  font-weight: 600;
+  color: var(--color-accent);
+  font-weight: 700;
   flex-shrink: 0;
 }
 
@@ -131,34 +146,32 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: #1a1a2e;
-  border-radius: 12px;
-  padding: 16px 20px;
-  color: #fff;
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
   margin-top: 4px;
 }
 
-/* AI 아이콘 */
 .festivalnearbylist_aitip_icon {
-  font-size: 18px;
+  font-size: 16px;
   flex-shrink: 0;
-  color: #ff6b35;
+  color: var(--color-accent);
+  margin-top: 2px;
 }
 
-/* AI TIP 레이블 */
 .festivalnearbylist_aitip_label {
-  font-size: 11px;
-  color: #ff6b35;
+  font-size: 10px;
+  color: var(--color-accent);
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   display: block;
   margin-bottom: 4px;
 }
 
-/* AI TIP 텍스트 */
 .festivalnearbylist_aitip p {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.82);
   line-height: 1.6;
   word-break: keep-all;
+  margin: 0;
 }

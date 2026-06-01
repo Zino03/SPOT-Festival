@@ -1,83 +1,56 @@
 import './FestivalNearbyList.css'
 
-// 더미 데이터 (API 연동 전)
-// TODO: API 연동 시 fetch('/api/festivals/:festivalId/nearby?category=restaurant')로 교체
-const DUMMY_NEARBY = {
-  restaurant: [
-    { id: 'A', name: 'OO국밥',    distance: '200m', isPaid: false, score: 99, rating: 4.9, image: '' },
-    { id: 'B', name: '한적 카페',  distance: '320m', isPaid: false, score: 95, rating: 4.7, image: '' },
-    { id: 'C', name: '한강 공영주차장', distance: '180m', isPaid: false, score: 92, rating: 4.5, image: '' },
-    { id: 'D', name: '△△한정식', distance: '460m', isPaid: true,  score: 88, rating: 4.6, image: '' },
-    { id: 'E', name: '감성 베이커리', distance: '280m', isPaid: false, score: 86, rating: 4.4, image: '' },
-    { id: 'F', name: '지하 P타워', distance: '330m', isPaid: true,  score: 84, rating: 4.3, image: '' },
-  ],
-  cafe: [
-    { id: 'A', name: '한적 카페',   distance: '320m', isPaid: false, score: 95, rating: 4.7, image: '' },
-    { id: 'B', name: '감성 베이커리', distance: '280m', isPaid: false, score: 86, rating: 4.4, image: '' },
-  ],
-  parking: [
-    { id: 'A', name: '한강 공영주차장', distance: '180m', isPaid: false, score: 92, rating: 4.5, image: '' },
-    { id: 'B', name: '지하 P타워',     distance: '330m', isPaid: true,  score: 84, rating: 4.3, image: '' },
-  ],
+const AI_TIPS = {
+  parking:    '축제 시작 1시간 전에 도착하면 주차 자리가 여유로워요.',
+  restaurant: '점심 12~13시는 대기가 길어요. 11시 30분 이전을 추천해요.',
+  cafe:       '축제 후 카페는 오후 3~4시가 가장 한산해요.',
 }
 
-// TODO: API 연동 시 아래 더미 AI TIP도 교체
-const DUMMY_AI_TIP = 'OO국밥은 12~13시 줄이 가장 짧아요. 식사 후 한적 카페까지 도보 4분.'
-
-function FestivalNearbyList({ activeCategory }) {
-  // TODO: API 연동 시 DUMMY_NEARBY → fetch 응답으로 교체
-  const places = DUMMY_NEARBY[activeCategory] || DUMMY_NEARBY.restaurant
+function FestivalNearbyList({ activeCategory, places }) {
+  if (!places?.length) {
+    return (
+      <div className="festivalnearbylist">
+        <div className="festivalnearbylist_empty">주변 정보를 불러오는 중...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="festivalnearbylist">
 
-      {/* 리스트 헤더 */}
       <div className="festivalnearbylist_header">
         <span>가까운 순 · {places.length}곳</span>
         <span className="festivalnearbylist_sort">전체 ∨</span>
       </div>
 
-      {/* 장소 목록 */}
       <ul className="festivalnearbylist_list">
-        {places.map(place => (
-          <li key={place.id} className="festivalnearbylist_item">
+        {places.map((place, i) => {
+          const name     = place.place_name
+          const distance = place.distance ? `${place.distance}m` : '-'
+          const address  = place.road_address_name || place.address_name || ''
+          const rank     = String.fromCharCode(65 + i)
 
-            {/* 순서 알파벳 */}
-            <span className="festivalnearbylist_rank">{place.id}</span>
-
-            {/* 이미지 */}
-            <div
-              className="festivalnearbylist_image"
-              // TODO: 이미지 생기면 아래 style 주석 해제
-              // style={{ backgroundImage: `url(${place.image})` }}
-            />
-
-            {/* 장소 정보 */}
-            <div className="festivalnearbylist_info">
-              <h3 className="festivalnearbylist_name">{place.name}</h3>
-              <div className="festivalnearbylist_meta">
-                <span>{place.distance}</span>
-                <span className={`festivalnearbylist_paid ${place.isPaid ? 'paid' : 'free'}`}>
-                  {place.isPaid ? '유료' : 'Free'}
-                </span>
-                <span>Score {place.score}</span>
+          return (
+            <li key={place.id ?? i} className="festivalnearbylist_item">
+              <span className="festivalnearbylist_rank">{rank}</span>
+              <div className="festivalnearbylist_image" />
+              <div className="festivalnearbylist_info">
+                <h3 className="festivalnearbylist_name">{name}</h3>
+                <div className="festivalnearbylist_meta">
+                  <span>{distance}</span>
+                  {address && <span>{address}</span>}
+                </div>
               </div>
-            </div>
-
-            {/* 평점 */}
-            <span className="festivalnearbylist_rating">★ {place.rating}</span>
-
-          </li>
-        ))}
+            </li>
+          )
+        })}
       </ul>
 
-      {/* AI TIP */}
-      {/* TODO: API 연동 시 DUMMY_AI_TIP → fetch 응답으로 교체 */}
       <div className="festivalnearbylist_aitip">
         <span className="festivalnearbylist_aitip_icon">✦</span>
         <div>
           <span className="festivalnearbylist_aitip_label">AI TIP</span>
-          <p>{DUMMY_AI_TIP}</p>
+          <p>{AI_TIPS[activeCategory]}</p>
         </div>
       </div>
 
