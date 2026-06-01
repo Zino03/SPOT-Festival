@@ -1,6 +1,7 @@
 package com.spot.backend.domain.festival.controller;
 
 import com.spot.backend.domain.festival.dto.FestivalDetailResponse;
+import com.spot.backend.domain.festival.entity.Festival;
 import com.spot.backend.domain.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +44,11 @@ public class FestivalController {
 
     // 홈 화면 Trending
     @GetMapping("/trending")
-    public List<FestivalDetailResponse> getTrendingFestivals() {
-        return festivalRepository.findTop8Trending(LocalDate.now())
-                .stream().map(FestivalDetailResponse::new).toList();
+    public List<Festival> getTrendingFestivals() {
+        LocalDate today = LocalDate.now();
+        LocalDate nextWeek = today.plusDays(7);
+
+        return festivalRepository.findTop8Trending(today, nextWeek);
     }
 
     // 지역 영문 매핑
