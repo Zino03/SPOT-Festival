@@ -4,6 +4,7 @@ import './DayTrip.css'
 function DayTrip() {
   const [course, setCourse] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(null)
   useEffect(() => {
       // 플래너 생성 API로 POST 요청을 보냄
       fetch('http://localhost:8080/api/planner/generate', {
@@ -20,7 +21,14 @@ function DayTrip() {
           longitude: 127.4890 // 충북 청주시 경도
         })
       })
-        .then(res => res.json())
+        .then(async (res) => {
+        // 백엔드가 200(성공)이 아닌 에러 상태를 보냈을 때 처리
+            if (!res.ok) {
+                  const errorData = await res.json();
+                  throw new Error(errorData.message); // 백엔드가 보낸 에러 메시지를 던짐
+                }
+                return res.json();
+            })
         .then(data => {
           // 중요: 백엔드에서 주는 데이터(data)를 프론트엔드 UI 구조에 맞게 변환(Mapping)
           const today = new Date();
@@ -46,10 +54,20 @@ function DayTrip() {
         })
         .catch(err => {
           console.error('AI 코스 로딩 에러:', err)
+          setErrorMessage(err.message)
           setIsLoading(false)
         })
     }, [])
-
+  // 에러가 발생했을 때 보여줄 화면
+  if (errorMessage) {
+    return (
+      <section className="daytrip">
+        <div className="daytrip_loading" style={{ color: '#ff6b6b' }}>
+          <span>⚠️</span> {errorMessage}
+        </div>
+      </section>
+    )
+  }
   // 데이터 로딩 중
   if (isLoading || !course) {
     return (
