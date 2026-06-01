@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "festival")
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity // DB 테이블과 매핑되는 JPA 엔티티
+@Table(name = "festival") // 테이블 지정
+@Getter // Lombok
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 외부에서 생성 차단
 public class Festival {
 
     @Id
@@ -19,31 +19,29 @@ public class Festival {
     private Long id;
 
     @Column(nullable = false, length = 255)
-    private String name;           // 축제명
+    private String name; // 축제명
 
     @Column(nullable = false, length = 100)
-    private String region;         // 지역
+    private String region; // 지역
 
     @Column(length = 255)
-    private String address;        // 상세 주소
+    private String address;  // 상세 주소
 
     @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;   // 시작일
+    private LocalDate startDate; // 시작일
 
     @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;     // 종료일
+    private LocalDate endDate; // 종료일
 
     @Column(nullable = false)
-    private Double lat;            // 위도
+    private Double lat; // 위도
 
     @Column(nullable = false)
-    private Double lng;            // 경도
-    //조회수 (기본값 0)
+    private Double lng; // 경도
+
+    // 조회수 (기본값 0)
     @Column(name = "view_count", columnDefinition = "integer default 0")
     private int viewCount = 0;
-    //평점 (기본값 0.0)
-    @Column(name = "rating", columnDefinition = "double default 0.0")
-    private double rating = 0.0;
 
     @Builder
     public Festival(String name, String region, String address, LocalDate startDate, LocalDate endDate, Double lat, Double lng) {
@@ -55,7 +53,8 @@ public class Festival {
         this.lat = lat;
         this.lng = lng;
     }
-    //조회수를 1 증가시키는 비즈니스 메서드
+
+    // 조회수를 1 증가 메서드
     public void incrementViewCount() {
         this.viewCount += 1;
     }

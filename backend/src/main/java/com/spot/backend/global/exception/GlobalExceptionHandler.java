@@ -11,7 +11,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 외부 API (RestClient) 호출 중 에러가 발생했을 때 이 메서드가 낚아챕니다!
+    // 외부 API (RestClient) 호출 중 에러가 발생했을 때 한 곳에 잡아서 처리
     @ExceptionHandler(RestClientResponseException.class)
     public ResponseEntity<Map<String, String>> handleExternalApiException(RestClientResponseException ex) {
 

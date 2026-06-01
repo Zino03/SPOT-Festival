@@ -9,27 +9,30 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ParkingService {
+public class KakaoPlacesService {
 
     @Value("${kakao.rest-api-key}")
     private String kakaoApiKey;
 
     private final RestClient restClient = RestClient.create();
 
-    @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getNearbyParkings(double lat, double lng) {
+        return getNearbyPlaces(lat, lng, "PK6", 15);
+    }
 
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getNearbyPlaces(double lat, double lng, String categoryCode, int size) {
         Map<String, Object> response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
                         .host("dapi.kakao.com")
                         .path("/v2/local/search/category.json")
-                        .queryParam("category_group_code", "PK6")
+                        .queryParam("category_group_code", categoryCode)
                         .queryParam("y", lat)
                         .queryParam("x", lng)
                         .queryParam("radius", 2000)
                         .queryParam("sort", "distance")
-                        .queryParam("size", 15)
+                        .queryParam("size", size)
                         .build())
                 .header("Authorization", "KakaoAK " + kakaoApiKey)
                 .retrieve()

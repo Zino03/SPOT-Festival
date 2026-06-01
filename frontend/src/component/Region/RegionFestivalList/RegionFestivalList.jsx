@@ -31,10 +31,7 @@ function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
         fetchPhotos('Korean outdoor festival celebration', Math.min(withLive.length, 30))
           .then(urls => setImages(urls))
         const liveCount = withLive.filter(f => f.isLive).length
-        const avgRating = withLive.length > 0
-          ? (withLive.reduce((sum, f) => sum + (f.rating || 0), 0) / withLive.length).toFixed(1)
-          : 0
-        onStatsChange?.({ festivalCount: withLive.length, liveCount, avgRating })
+        onStatsChange?.({ festivalCount: withLive.length, liveCount })
       })
       .catch(err => console.error('지역 축제 API 에러:', err))
       .finally(() => setLoading(false))
