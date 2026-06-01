@@ -34,8 +34,8 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
 
     // 종료되지 않은 축제 중 조회수 상위 8개 (홈 화면 Treding)
     @Query(value = "SELECT * FROM festival " +
-            "WHERE end_date >= :today " +
+            "WHERE start_date <= :nextWeek AND end_date >= :today " +
             "ORDER BY view_count DESC, id ASC " +
             "LIMIT 8", nativeQuery = true) // LIMIT 사용을 위해 nativeQuery 사용
-    List<Festival> findTop8Trending(@Param("today") LocalDate today);
+    List<Festival> findTop8Trending(@Param("today") LocalDate today, @Param("nextWeek") LocalDate nextWeek);
 }
