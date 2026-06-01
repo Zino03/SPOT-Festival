@@ -1,14 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { loadKakaoMap, REGION_CENTERS } from '../../../utils/kakao'
+import { REGION_NAMES } from '../../../utils/regions'
 import './RegionMapViewer.css'
-
-const REGION_NAMES = {
-  seoul: '서울', gyeonggi: '경기', incheon: '인천', gangwon: '강원',
-  chungnam: '충남', chungbuk: '충북', daejeon: '대전', sejong: '세종',
-  jeonbuk: '전북', jeonnam: '전남', gwangju: '광주', gyeongbuk: '경북',
-  gyeongnam: '경남', daegu: '대구', ulsan: '울산', busan: '부산', jeju: '제주',
-}
 
 function RegionMapViewer() {
   const { regionId } = useParams()
@@ -18,8 +12,11 @@ function RegionMapViewer() {
 
   useEffect(() => {
     const center = REGION_CENTERS[regionId] ?? REGION_CENTERS['seoul']
+    let destroyed = false
 
     loadKakaoMap().then(() => {
+      if (destroyed || !mapRef.current) return
+
       const { kakao } = window
 
       const map = new kakao.maps.Map(mapRef.current, {
@@ -27,15 +24,15 @@ function RegionMapViewer() {
         level: 9,
       })
 
-      // 기존 마커 제거
       markersRef.current.forEach(m => m.setMap(null))
       markersRef.current = []
       infoWinRef.current?.close()
 
-      // 지역 축제 마커 추가
       fetch(`http://localhost:8080/api/festivals/region/${regionId}`)
         .then(r => r.json())
         .then(festivals => {
+          if (destroyed) return
+
           festivals.forEach(f => {
             if (!f.lat || !f.lng || (f.lat === 0 && f.lng === 0)) return
 
@@ -61,7 +58,6 @@ function RegionMapViewer() {
             })
           })
 
-          // 마커가 있으면 지도 범위 자동 조정
           if (markersRef.current.length > 0) {
             const bounds = new kakao.maps.LatLngBounds()
             markersRef.current.forEach(m => bounds.extend(m.getPosition()))
@@ -72,6 +68,7 @@ function RegionMapViewer() {
     }).catch(err => console.error(err.message))
 
     return () => {
+      destroyed = true
       markersRef.current.forEach(m => m.setMap(null))
       infoWinRef.current?.close()
     }

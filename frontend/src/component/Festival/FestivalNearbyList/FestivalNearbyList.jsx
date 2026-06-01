@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './FestivalNearbyList.css'
 
 const AI_TIPS = {
@@ -7,8 +7,13 @@ const AI_TIPS = {
   cafe:       '축제 후 카페는 오후 3~4시가 가장 한산해요.',
 }
 
-function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectPlace }) {
+const INITIAL_COUNT = 10
+
+function FestivalNearbyList({ activeCategory, activeSort, onSortChange, places, selectedPlaceId, onSelectPlace }) {
   const itemRefs = useRef({})
+  const [showAll, setShowAll] = useState(false)
+
+  useEffect(() => { setShowAll(false) }, [activeCategory, activeSort])
 
   useEffect(() => {
     if (!selectedPlaceId) return
@@ -24,19 +29,32 @@ function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectP
     )
   }
 
+  const visiblePlaces = showAll ? places : places.slice(0, INITIAL_COUNT)
+  const remaining = places.length - INITIAL_COUNT
+
   return (
     <div className="festivalnearbylist">
 
       <div className="festivalnearbylist_header">
-        <span>가까운 순 · {places.length}곳</span>
+        <span>{activeSort === 'accuracy' ? '인기 순' : '가까운 순'} · {places.length}곳</span>
+        <div className="festivalnearbylist_sort">
+          <button
+            className={`festivalnearbylist_sort_btn ${activeSort === 'distance' ? 'active' : ''}`}
+            onClick={() => onSortChange('distance')}
+          >거리순</button>
+          <button
+            className={`festivalnearbylist_sort_btn ${activeSort === 'accuracy' ? 'active' : ''}`}
+            onClick={() => onSortChange('accuracy')}
+          >인기순</button>
+        </div>
       </div>
+      <span className="festivalnearbylist_hint">클릭 포커싱 · 더블클릭 카카오맵</span>
 
       <ul className="festivalnearbylist_list">
-        {places.map((place, i) => {
+        {visiblePlaces.map((place, i) => {
           const name     = place.place_name
           const distance = place.distance ? `${place.distance}m` : '-'
           const address  = place.road_address_name || place.address_name || ''
-          const rank     = String.fromCharCode(65 + i)
           const isActive = selectedPlaceId === place.id
 
           return (
@@ -45,8 +63,9 @@ function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectP
               ref={el => { itemRefs.current[place.id] = el }}
               className={`festivalnearbylist_item${isActive ? ' festivalnearbylist_item--active' : ''}`}
               onClick={() => onSelectPlace(place.id)}
+              onDoubleClick={() => place.place_url && window.open(place.place_url, '_blank')}
             >
-              <span className="festivalnearbylist_rank">{rank}</span>
+              <span className="festivalnearbylist_rank">{i + 1}</span>
               <div className="festivalnearbylist_info">
                 <h3 className="festivalnearbylist_name">{name}</h3>
                 <div className="festivalnearbylist_meta">
@@ -58,6 +77,15 @@ function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectP
           )
         })}
       </ul>
+
+      {!showAll && remaining > 0 && (
+        <button
+          className="festivalnearbylist_more"
+          onClick={() => setShowAll(true)}
+        >
+          더 보기 {remaining}개 ↓
+        </button>
+      )}
 
       <div className="festivalnearbylist_aitip">
         <span className="festivalnearbylist_aitip_icon">✦</span>
