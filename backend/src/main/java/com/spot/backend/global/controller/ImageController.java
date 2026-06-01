@@ -1,4 +1,4 @@
-package com.spot.backend.controller;
+package com.spot.backend.global.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

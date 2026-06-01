@@ -1,4 +1,4 @@
-package com.spot.backend.controller;
+package com.spot.backend.infrastructure.kakao.controller;
 
 import com.spot.backend.infrastructure.kakao.service.ParkingService;
 import lombok.RequiredArgsConstructor;
