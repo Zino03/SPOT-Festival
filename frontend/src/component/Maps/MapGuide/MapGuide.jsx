@@ -1,3 +1,6 @@
+// 전국 지도 페이지 하단 이용 가이드 섹션
+// 3단계 사용법을 가로로 나열하며, 더보기 버튼 클릭 시 About 페이지로 이동.
+
 import { useNavigate } from 'react-router-dom'
 import './MapGuide.css'
 
