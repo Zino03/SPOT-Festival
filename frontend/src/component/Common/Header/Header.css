@@ -88,15 +88,27 @@
   gap: 24px;
 }
 
+/* 검색 전체 래퍼 (드롭다운 포함) */
+.header_search_wrap {
+  position: relative;
+}
+
 .header_search {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #f5f5f5;
-  border-radius: 999px;
-  padding: 8px 16px;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 8px 14px;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-muted);
+  transition: border-color 0.15s;
+}
+
+.header_search:focus-within {
+  border-color: var(--color-accent);
+  background: #fff;
 }
 
 .header_search input {
@@ -104,16 +116,89 @@
   background: none;
   outline: none;
   font-size: 14px;
-  color: #555;
+  color: var(--color-text);
   width: 180px;
+  font-family: var(--font-base);
 }
 
-kbd {
-  background: #e8e8e8;
+.header_search input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.header_search_clear {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* 자동완성 드롭다운 */
+.header_search_dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow-y: auto;
+  max-height: 360px;
+  z-index: 200;
+  min-width: 300px;
+}
+
+.header_search_dropdown::-webkit-scrollbar { width: 4px; }
+.header_search_dropdown::-webkit-scrollbar-track { background: transparent; }
+.header_search_dropdown::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.header_search_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.1s;
+  gap: 12px;
+}
+
+.header_search_item:hover {
+  background: var(--color-bg-subtle);
+}
+
+.header_search_item_left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.header_search_live {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-accent-red);
   border-radius: 4px;
-  padding: 2px 6px;
-  font-size: 11px;
-  color: #888;
+  padding: 1px 5px;
+  flex-shrink: 0;
+}
+
+.header_search_name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header_search_region {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
 }
 
 /* AI 코스 시작 버튼 */

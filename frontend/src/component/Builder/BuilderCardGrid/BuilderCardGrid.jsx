@@ -1,15 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { loadKakaoMap } from '../../../utils/kakao'
 import './BuilderCardGrid.css'
 
-// 단계별 더미 데이터
-// TODO: API 연동 시 fetch('/api/builder/items?step=2&filter=한식')로 교체
+// 단계별 더미 데이터 (step 1은 API로 교체됨)
 const DUMMY_ITEMS = {
-  1: [
-    { id: 1, name: '청주 음악 축제',     category: '음악', price: null,      rating: 4.8, distance: '1.5km', walk: '12분', wait: null,  image: '', isAI: true,  isSelected: false },
-    { id: 2, name: '단양 소백산 철쭉제', category: '꽃·계절', price: null,   rating: 4.4, distance: '2.1km', walk: '8분',  wait: null,  image: '', isAI: false, isSelected: false },
-    { id: 3, name: '충주 세계무술축제',  category: '전통', price: null,      rating: 4.5, distance: '0.8km', walk: '10분', wait: null,  image: '', isAI: false, isSelected: false },
-    { id: 4, name: '제천 한방바이오축제', category: '푸드', price: null,     rating: 4.3, distance: '3.2km', walk: '15분', wait: null,  image: '', isAI: false, isSelected: false },
-  ],
   2: [
     { id: 1, name: 'OO국밥',    category: '한식', price: '₩8,000~',  rating: 4.8, distance: '0.4km', walk: '12분', wait: null,  image: '', isAI: true,  isSelected: true  },
     { id: 2, name: '△△스테이크', category: '양식', price: '₩12,000~', rating: 4.4, distance: '0.7km', walk: '8분',  wait: '5분', image: '', isAI: false, isSelected: false },
@@ -29,14 +23,99 @@ const DUMMY_ITEMS = {
   ],
 }
 
-const SHOW_COUNT = 5  // 처음에 보여줄 카드 수
+const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
+const SHOW_COUNT = 5
 
-function BuilderCardGrid({ currentStep, onSelect }) {
-  const [selectedId, setSelectedId] = useState(null)
-  const [showAll, setShowAll] = useState(false)
+function BuilderCardGrid({ currentStep, festival, onSelect }) {
+  const [selectedId,    setSelectedId]    = useState(null)
+  const [showAll,       setShowAll]       = useState(false)
+  const [festivalItems, setFestivalItems] = useState([])
+  const [kakaoItems,    setKakaoItems]    = useState([])
 
-  // TODO: API 연동 시 DUMMY_ITEMS → fetch 응답으로 교체
-  const items = DUMMY_ITEMS[currentStep] || []
+  // Step 1: 실제 Trending 축제 API 연동
+  useEffect(() => {
+    if (currentStep !== 1) return
+    fetch('http://localhost:8080/api/festivals/trending')
+      .then(res => res.json())
+      .then(data => {
+        const mapped = data.map((f, i) => ({
+          id:       f.id,
+          name:     f.name,
+          category: f.region,
+          price:    null,
+          views:    f.viewCount,
+          distance: null,
+          walk:     null,
+          wait:     null,
+          date:     `${f.startDate?.slice(5).replace('-','/')} ~ ${f.endDate?.slice(5).replace('-','/')}`,
+          lat:      f.lat,
+          lng:      f.lng,
+          image:    '',
+          isAI:     i === 0,  // 조회수 1위 = AI 추천
+        }))
+        setFestivalItems(mapped)
+      })
+      .catch(err => console.error('축제 API 에러:', err))
+  }, [currentStep])
+
+  // Step 2(맛집), Step 3(카페): Kakao Places
+  useEffect(() => {
+    if (![2, 3].includes(currentStep) || !festival?.lat) return
+    setKakaoItems([])
+
+    loadKakaoMap().then(() => {
+      const { kakao } = window
+      const ps = new kakao.maps.services.Places()
+      ps.categorySearch(KAKAO_CODE[currentStep], (result, status) => {
+        if (status !== kakao.maps.services.Status.OK) return
+        setKakaoItems(result.map((p, i) => ({
+          id:       p.id,
+          name:     p.place_name,
+          category: p.category_name?.split('>').pop().trim() || '',
+          price:    null,
+          rating:   null,
+          distance: p.distance ? `${p.distance}m` : null,
+          walk:     p.distance ? `${Math.ceil(p.distance / 80)}분` : null,
+          wait:     null,
+          isAI:     i === 0,
+          address:  p.road_address_name || p.address_name,
+          phone:    p.phone,
+        })))
+      }, {
+        location: new kakao.maps.LatLng(festival.lat, festival.lng),
+        radius: 1500,
+        sort: kakao.maps.services.SortBy.DISTANCE,
+      })
+    })
+  }, [currentStep, festival])
+
+  // Step 4: 주차장 API
+  useEffect(() => {
+    if (currentStep !== 4 || !festival?.lat) return
+    setKakaoItems([])
+
+    fetch(`http://localhost:8080/api/parking/nearby?lat=${festival.lat}&lng=${festival.lng}`)
+      .then(r => r.json())
+      .then(data => setKakaoItems(data.map((p, i) => ({
+        id:       p.id || i,
+        name:     p.place_name,
+        category: '주차장',
+        price:    null,
+        rating:   null,
+        distance: `${p.distance}m`,
+        walk:     `${Math.ceil(p.distance / 80)}분`,
+        wait:     null,
+        isAI:     i === 0,
+        address:  p.road_address_name || p.address_name,
+      }))))
+      .catch(err => console.error('주차장 API 에러:', err))
+  }, [currentStep, festival])
+
+  const items = currentStep === 1
+    ? festivalItems
+    : [2, 3, 4].includes(currentStep) && festival
+      ? kakaoItems
+      : (DUMMY_ITEMS[currentStep] || [])
   const visibleItems = showAll ? items : items.slice(0, SHOW_COUNT)
   const remainCount = items.length - SHOW_COUNT
 
@@ -67,9 +146,6 @@ function BuilderCardGrid({ currentStep, onSelect }) {
               )}
             </div>
 
-            {/* 북마크 버튼 */}
-            <button className="buildercardgrid_bookmark">🔖</button>
-
             {/* 이미지 */}
             <div
               className="buildercardgrid_image"
@@ -81,12 +157,13 @@ function BuilderCardGrid({ currentStep, onSelect }) {
             <div className="buildercardgrid_info">
               <div className="buildercardgrid_meta">
                 {item.price && <span className="buildercardgrid_price">{item.price}</span>}
-                <span className="buildercardgrid_rating">★ {item.rating}</span>
+                {item.views != null && <span className="buildercardgrid_rating">👁 {item.views?.toLocaleString()}</span>}
               </div>
               <h3 className="buildercardgrid_name">{item.name}</h3>
               <div className="buildercardgrid_details">
-                <span>🚶 도보 {item.walk}</span>
-                <span>{item.distance}</span>
+                {item.date && <span>📅 {item.date}</span>}
+                {item.walk && <span>🚶 도보 {item.walk}</span>}
+                {item.distance && !item.date && <span>{item.distance}</span>}
                 {item.wait && (
                   <span className={`buildercardgrid_wait ${item.wait === '0분' ? 'none' : ''}`}>
                     🕐 대기 {item.wait}

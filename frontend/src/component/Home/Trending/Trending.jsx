@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { fetchPhotos } from '../../../utils/unsplash'
 import './Trending.css'
 
-const CATEGORIES = ['전체', '음악', '전통', '푸드', '꽃·계절', '야경']
 
 // 오늘 날짜 기준으로 isLive 자동 계산
 function calcIsLive(festivals) {
@@ -19,7 +18,6 @@ function calcIsLive(festivals) {
 
 function Trending() {
     const navigate = useNavigate()
-    const [activeCategory, setActiveCategory] = useState('전체')
     const [festivals, setFestivals] = useState([])
     const [images, setImages] = useState([])
 
@@ -32,15 +30,10 @@ function Trending() {
           id: f.id,
           region: f.region,
           name: f.name,
-          start_date: f.startDate, // Spring의 startDate -> React의 start_date
-          end_date: f.endDate,     // Spring의 endDate -> React의 end_date
-          rating: f.rating,        // 평점
-          views: f.viewCount,      // 조회수
-
-          // 아래 두 개는 아직 DB에 없는 컬럼이므로 UI를 위해 임시로 랜덤 값을 넣습니다.
-          // 나중에 AI가 카테고리를 분류해주거나 이미지가 추가되면 교체하면 됩니다.
-          category: CATEGORIES[Math.floor(Math.random() * 5) + 1],
-          image: ''
+          start_date: f.startDate,
+          end_date: f.endDate,
+          rating: f.rating,
+          views: f.viewCount,
         }));
 
         const live = calcIsLive(mappedData)
@@ -51,10 +44,6 @@ function Trending() {
       })
       .catch(err => console.error("트렌딩 API 호출 에러:", err));
     }, [])
-
-    // 카테고리 탭 클릭 시 필터링
-    const filtered = festivals
-    .filter(f => activeCategory === '전체' || f.category === activeCategory)
 
   return (
     <section className="trending">
@@ -68,24 +57,11 @@ function Trending() {
           </p>
           <h2 className="trending_title">지금, 사람들이 가장 많이 검색해요.</h2>
         </div>
-
-        {/* 카테고리 필터 탭 */}
-        <div className="trending_tabs">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              className={`trending_tab ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </div>
 
         {/* 축제 카드 그리드 영역 */}
         <div className="trending_grid">
-          {filtered.map((festival, idx) => (
+          {festivals.map((festival, idx) => (
             <div key={festival.id} className="trending_card" onClick={() => navigate(`/festival/${festival.id}`)}>
 
               <div className="trending_card_image" style={{ backgroundImage: `url(${images[idx % images.length] || `https://picsum.photos/seed/${festival.id}/800/400`})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -99,8 +75,7 @@ function Trending() {
               <div className="trending_card_body">
                 <div className="trending_card_meta">
                   <span className="trending_region">{festival.region}</span>
-                  {/* 🎯 실제 DB의 평점이 표시됩니다 */}
-                  <span className="trending_rating">★ {festival.rating}</span>
+                  <span className="trending_rating">👁 {festival.views?.toLocaleString()}</span>
                 </div>
                 <h3 className="trending_name">{festival.name}</h3>
                 <div className="trending_card_footer">

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import './MapGuide.css'
 
 const GUIDE_STEPS = [
@@ -8,8 +9,8 @@ const GUIDE_STEPS = [
   },
   {
     num: '02',
-    title: '시·군·구 단위로 진입',
-    desc: '세부 지역을 한 번 더 클릭해 깊이 들어가기',
+    title: '지역별 축제 리스트 확인',
+    desc: '해당 지역에서 열리는 축제를 한눈에 탐색',
   },
   {
     num: '03',
@@ -19,6 +20,7 @@ const GUIDE_STEPS = [
 ]
 
 function MapGuide() {
+  const navigate = useNavigate()
   return (
     <div className="mapguide">
 
@@ -40,7 +42,7 @@ function MapGuide() {
       </div>
 
       {/* 오른쪽: 버튼 */}
-      <button className="mapguide_btn">가이드 더보기 →</button>
+      <button className="mapguide_btn" onClick={() => navigate('/about')}>가이드 더보기 →</button>
 
     </div>
   )

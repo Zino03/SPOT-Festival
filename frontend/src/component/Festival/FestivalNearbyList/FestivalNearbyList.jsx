@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import './FestivalNearbyList.css'
 
 const AI_TIPS = {
@@ -6,7 +7,15 @@ const AI_TIPS = {
   cafe:       '축제 후 카페는 오후 3~4시가 가장 한산해요.',
 }
 
-function FestivalNearbyList({ activeCategory, places }) {
+function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectPlace }) {
+  const itemRefs = useRef({})
+
+  useEffect(() => {
+    if (!selectedPlaceId) return
+    const el = itemRefs.current[selectedPlaceId]
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, [selectedPlaceId])
+
   if (!places?.length) {
     return (
       <div className="festivalnearbylist">
@@ -20,7 +29,6 @@ function FestivalNearbyList({ activeCategory, places }) {
 
       <div className="festivalnearbylist_header">
         <span>가까운 순 · {places.length}곳</span>
-        <span className="festivalnearbylist_sort">전체 ∨</span>
       </div>
 
       <ul className="festivalnearbylist_list">
@@ -29,11 +37,16 @@ function FestivalNearbyList({ activeCategory, places }) {
           const distance = place.distance ? `${place.distance}m` : '-'
           const address  = place.road_address_name || place.address_name || ''
           const rank     = String.fromCharCode(65 + i)
+          const isActive = selectedPlaceId === place.id
 
           return (
-            <li key={place.id ?? i} className="festivalnearbylist_item">
+            <li
+              key={place.id ?? i}
+              ref={el => { itemRefs.current[place.id] = el }}
+              className={`festivalnearbylist_item${isActive ? ' festivalnearbylist_item--active' : ''}`}
+              onClick={() => onSelectPlace(place.id)}
+            >
               <span className="festivalnearbylist_rank">{rank}</span>
-              <div className="festivalnearbylist_image" />
               <div className="festivalnearbylist_info">
                 <h3 className="festivalnearbylist_name">{name}</h3>
                 <div className="festivalnearbylist_meta">

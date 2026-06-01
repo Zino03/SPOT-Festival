@@ -4,7 +4,7 @@
   border-radius: 16px;
   overflow: hidden;          
   color: #fff;
-  margin: 16px 24px;
+  margin: 16px 64px;
 
   /* TODO: 랜덤 배경 이미지 - JS에서 style={{ backgroundImage }} 로 주입 */
   background-color: #1a1a2e; /* 임시 배경색 */

@@ -9,7 +9,6 @@ import './RegionPage.css'
 
 function RegionPage() {
   const { regionId } = useParams()
-  const [selectedCity, setSelectedCity] = useState(null)
   const [festivalCount, setFestivalCount] = useState(0)
   const [heroBg, setHeroBg] = useState(`https://picsum.photos/seed/${regionId}-hero/1400/480`)
 
@@ -37,7 +36,7 @@ function RegionPage() {
       {/* 본문 */}
       <div className="regionpage_body">
         <div className="regionpage_content">
-          <RegionMapViewer onSelectCity={setSelectedCity} />
+          <RegionMapViewer />
           <RegionFestivalList onFestivalCountChange={setFestivalCount} />
         </div>
       </div>
