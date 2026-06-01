@@ -7,7 +7,6 @@ import FestivalPage from './pages/FestivalPage'
 import BuilderPage from './pages/BuilderPage'
 import AboutPage from './pages/AboutPage'
 
-// Header는 모든 페이지에 고정, Routes로 페이지별 컴포넌트 렌더링
 function App() {
   return (
     <BrowserRouter>
