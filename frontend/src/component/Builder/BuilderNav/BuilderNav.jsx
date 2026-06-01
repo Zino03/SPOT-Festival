@@ -11,7 +11,7 @@ const STEP_LABELS = {
 
 function BuilderNav({ currentStep, totalSteps = 5, selectedItem, onPrev, onNext }) {
   const isFirst = currentStep === 1
-  const isLast  = currentStep === totalSteps - 1  // 4단계가 마지막 선택 단계
+  const isLast = currentStep === totalSteps - 1 // 4단계가 마지막 선택 단계
 
   return (
     <div className="buildernav">
@@ -40,7 +40,7 @@ function BuilderNav({ currentStep, totalSteps = 5, selectedItem, onPrev, onNext 
       <button
         className="buildernav_btn_next"
         onClick={onNext}
-        disabled={!selectedItem}  // 선택 안 하면 비활성화
+        disabled={!selectedItem} // 선택 안 하면 비활성화
       >
         {isLast ? 'AI 리포트 보기' : `다음 · ${STEP_LABELS[currentStep + 1]}`} →
       </button>

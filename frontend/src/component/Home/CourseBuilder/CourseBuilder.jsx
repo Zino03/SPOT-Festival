@@ -1,6 +1,11 @@
+// 홈 코스 빌더 홍보 섹션
+// 좌측 텍스트/버튼 + 우측 빌더 UI 미리보기
+// 고정 샘플 데이터 사용
+
 import { useNavigate } from 'react-router-dom'
 import './CourseBuilder.css'
 
+// 우측 미리보기용 고정 샘플 (홍보 목적)
 const DUMMY_STEPS = [
   { icon: '📅', text: '10월 17일 토요일', status: 'done' },
   { icon: '✦', text: '청주 음악 축제', status: 'done' },
@@ -12,6 +17,8 @@ function CourseBuilder() {
   const navigate = useNavigate()
   return (
     <section className="coursebuilder">
+
+      {/* 좌측 텍스트 + 버튼 */}
       <div className="coursebuilder_left">
         <p className="coursebuilder_label">
           <span className="coursebuilder_label_line"></span>
@@ -26,6 +33,8 @@ function CourseBuilder() {
         </p>
         <button className="coursebuilder_btn" onClick={() => navigate('/builder')}>코스 빌더 시작하기 →</button>
       </div>
+
+      {/* 우측 빌더 UI 샘플 미리보기 */}
       <div className="coursebuilder_right">
         <p className="coursebuilder_step_label">STEP 2 / 4</p>
         <div className="coursebuilder_steps">
@@ -38,6 +47,7 @@ function CourseBuilder() {
           ))}
         </div>
       </div>
+
     </section>
   )
 }
