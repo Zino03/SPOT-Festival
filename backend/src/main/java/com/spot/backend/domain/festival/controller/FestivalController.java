@@ -1,4 +1,4 @@
-package com.spot.backend.controller;
+package com.spot.backend.domain.festival.controller;
 
 import com.spot.backend.domain.festival.dto.FestivalDetailResponse;
 import com.spot.backend.domain.festival.entity.Festival;
