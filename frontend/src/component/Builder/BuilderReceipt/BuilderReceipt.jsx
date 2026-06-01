@@ -47,9 +47,6 @@ function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDi
                 {selected && (
                   <div className="builderreceipt_selected">
                     <span>{selected.name}</span>
-                    {selected.rating && (
-                      <span className="builderreceipt_rating">★ {selected.rating}</span>
-                    )}
                     {selected.distance && (
                       <span>{selected.distance}</span>
                     )}
@@ -92,9 +89,6 @@ function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDi
         </div>
       </div>
 
-      {/* 드래프트 저장 버튼 */}
-      {/* TODO: 드래프트 저장 기능 연동 */}
-      <button className="builderreceipt_save">🔖 드래프트 저장</button>
 
     </div>
   )

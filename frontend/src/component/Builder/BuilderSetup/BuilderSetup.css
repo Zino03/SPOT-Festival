@@ -1,0 +1,119 @@
+.buildersetup {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  background: var(--color-bg-subtle);
+}
+
+.buildersetup_card {
+  background: #fff;
+  border-radius: 24px;
+  border: 1px solid var(--color-border);
+  padding: 48px 56px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.buildersetup_header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buildersetup_label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.12em;
+}
+
+.buildersetup_title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.buildersetup_desc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.buildersetup_section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.buildersetup_section_label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.buildersetup_section_label span {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  margin-left: 4px;
+}
+
+.buildersetup_chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.buildersetup_chip {
+  background: var(--color-bg-subtle);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-base);
+}
+
+.buildersetup_chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.buildersetup_chip.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.buildersetup_cta {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  font-family: var(--font-base);
+  margin-top: 8px;
+}
+
+.buildersetup_cta:hover:not(:disabled) {
+  background: #e85d2a;
+}
+
+.buildersetup_cta:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

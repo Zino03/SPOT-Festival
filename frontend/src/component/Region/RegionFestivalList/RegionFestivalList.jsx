@@ -18,6 +18,7 @@ function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
   const [festivals, setFestivals] = useState([])
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true)
+  const [sortBy, setSortBy] = useState('date') // 'date' | 'views'
 
   useEffect(() => {
     setLoading(true)
@@ -39,6 +40,11 @@ function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
       .finally(() => setLoading(false))
   }, [regionId])
 
+  const sorted = [...festivals].sort((a, b) => {
+    if (sortBy === 'views') return (b.viewCount || 0) - (a.viewCount || 0)
+    return new Date(a.startDate) - new Date(b.startDate)
+  })
+
   if (loading) return <div style={{ padding: '40px', color: '#aaa' }}>불러오는 중...</div>
 
   return (
@@ -49,12 +55,21 @@ function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
         <p className="regionfestivallist_title">
           이 지역에서 열리는 <span>{festivals.length}개 축제</span>
         </p>
-        <span className="regionfestivallist_sort">최근 등록순</span>
+        <div className="regionfestivallist_sort_btns">
+          <button
+            className={`regionfestivallist_sort_btn ${sortBy === 'date' ? 'active' : ''}`}
+            onClick={() => setSortBy('date')}
+          >날짜순</button>
+          <button
+            className={`regionfestivallist_sort_btn ${sortBy === 'views' ? 'active' : ''}`}
+            onClick={() => setSortBy('views')}
+          >인기순</button>
+        </div>
       </div>
 
       {/* 축제 카드 목록 */}
       <ul className="regionfestivallist_list">
-        {festivals.map((festival, idx) => (
+        {sorted.map((festival, idx) => (
           <li
             key={festival.id}
             className={`regionfestivallist_item ${festival.isLive ? 'live' : ''}`}
@@ -72,8 +87,7 @@ function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
             {/* 축제 정보 */}
             <div className="regionfestivallist_info">
               <div className="regionfestivallist_meta">
-                <span className="regionfestivallist_category">{festival.category}</span>
-                <span className="regionfestivallist_rating">★ {festival.rating}</span>
+                <span className="regionfestivallist_rating">👁 {festival.viewCount?.toLocaleString()}</span>
               </div>
               <h3 className="regionfestivallist_name">{festival.name}</h3>
               <p className="regionfestivallist_date">
@@ -88,11 +102,6 @@ function RegionFestivalList({ onFestivalCountChange, onStatsChange }) {
         ))}
       </ul>
 
-      {/* 하단 버튼 */}
-      <div className="regionfestivallist_footer">
-        <button className="regionfestivallist_btn_list">리스트로 정렬</button>
-        <button className="regionfestivallist_btn_map">지도로 비교 →</button>
-      </div>
 
     </div>
   )

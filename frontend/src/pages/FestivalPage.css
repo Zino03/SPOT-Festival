@@ -18,5 +18,6 @@
 .festivalpage_content {
   display: flex;
   gap: 24px;
-  align-items: flex-start;
+  align-items: stretch;
+  height: 580px;
 }

@@ -1,5 +1,5 @@
 .daytrip {
-  padding: 48px 24px;
+  padding: 64px;
 }
 
 /* 데이터 로딩 중 표시*/
@@ -66,14 +66,6 @@
   line-height: 1.6;
 }
 
-/* 버튼 묶음 */
-.daytrip_header_right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;               
-}
-
 /* 저장 버튼 */
 .daytrip_btn_save {
   background: none;
@@ -86,23 +78,6 @@
 
 .daytrip_btn_save:hover {
   color: #1a1a2e;
-}
-
-/* 이 코스 시작하기 버튼 */
-.daytrip_btn_start {
-  background: #1a1a2e;          
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.daytrip_btn_start:hover {
-  background: #2351cc;
 }
 
 /* ─────────────────────────────────────

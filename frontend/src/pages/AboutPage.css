@@ -1,0 +1,192 @@
+.aboutpage {
+  padding-bottom: 80px;
+}
+
+/* 히어로 */
+.aboutpage_hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  padding: 100px 64px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.aboutpage_hero::before {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: -100px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(35,81,204,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.aboutpage_hero_inner {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.aboutpage_hero_label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.14em;
+  margin-bottom: 20px;
+}
+
+.aboutpage_hero_title {
+  font-size: 52px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  word-break: keep-all;
+}
+
+.aboutpage_hero_desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  word-break: keep-all;
+}
+
+.aboutpage_hero_btn {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: var(--font-base);
+}
+
+.aboutpage_hero_btn:hover {
+  background: #e85d2a;
+}
+
+/* 본문 */
+.aboutpage_body {
+  padding: 0 64px;
+}
+
+/* 섹션 공통 */
+.aboutpage_section {
+  padding: 64px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.aboutpage_section:last-child {
+  border-bottom: none;
+}
+
+.aboutpage_section_label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.14em;
+  margin-bottom: 10px;
+}
+
+.aboutpage_section_title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 36px;
+}
+
+/* 가이드 그리드 */
+.aboutpage_guide_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.aboutpage_guide_card {
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aboutpage_guide_num {
+  font-size: 32px;
+  font-weight: 800;
+  color: rgba(26,26,46,0.08);
+  line-height: 1;
+}
+
+.aboutpage_guide_icon {
+  font-size: 28px;
+}
+
+.aboutpage_guide_title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.aboutpage_guide_desc {
+  font-size: 13px;
+  color: var(--color-text-sub);
+  line-height: 1.7;
+  word-break: keep-all;
+  margin: 0;
+}
+
+/* 기술 스택 */
+.aboutpage_tech_grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.aboutpage_tech_card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  min-width: 180px;
+}
+
+.aboutpage_tech_category {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.aboutpage_tech_items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.aboutpage_tech_item {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* 데이터 출처 섹션 */
+.aboutpage_data_desc {
+  font-size: 15px;
+  color: var(--color-text-sub);
+  line-height: 1.8;
+  max-width: 600px;
+  word-break: keep-all;
+}
+
+.aboutpage_data_desc strong {
+  color: var(--color-primary);
+  font-weight: 700;
+}

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import './CourseBuilder.css'
 
 const DUMMY_STEPS = [
@@ -8,6 +9,7 @@ const DUMMY_STEPS = [
 ]
 
 function CourseBuilder() {
+  const navigate = useNavigate()
   return (
     <section className="coursebuilder">
       <div className="coursebuilder_left">
@@ -22,7 +24,7 @@ function CourseBuilder() {
         <p className="coursebuilder_desc">
           단계별로 장소를 선택하면 동선·시간·주차까지 자동으로 계산됩니다.
         </p>
-        <button className="coursebuilder_btn">코스 빌더 시작하기 →</button>
+        <button className="coursebuilder_btn" onClick={() => navigate('/builder')}>코스 빌더 시작하기 →</button>
       </div>
       <div className="coursebuilder_right">
         <p className="coursebuilder_step_label">STEP 2 / 4</p>

@@ -1,6 +1,6 @@
 /* 섹션 전체 */
 .regiongrid {
-  padding: 64px 48px;
+  padding: 64px;
   background: var(--color-bg-subtle);
 }
 
