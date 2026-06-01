@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Slf4j
+@Slf4j // 로그 메서드 자동
 @Service
 @RequiredArgsConstructor
 public class FestivalDataSyncService {
@@ -33,7 +33,7 @@ public class FestivalDataSyncService {
         this.restClient = RestClient.builder()
                 .requestFactory(new HttpComponentsClientHttpRequestFactory(httpClient))
                 .defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
-                .build();
+                .build(); // 서버가 일반 HTTP 클라이언트 요청을 막는 경우 방지
     }
 
     @Value("${public-data.api-key}")
@@ -48,7 +48,7 @@ public class FestivalDataSyncService {
         int pageNo = 1;
         int savedCount = 0;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        // while 문을 이용해 데이터가 없을 때까지 페이지를 계속 넘김
+        // while 문을 이용해 데이터가 없을 때까지 페이지를 계속 넘김 (100개씩)
         while (true) {
             String requestUrl = String.format("%s?serviceKey=%s&pageNo=%d&numOfRows=100&type=json",
                     festivalApiUrl, serviceKey, pageNo);
@@ -115,6 +115,6 @@ public class FestivalDataSyncService {
             }
         }
 
-        log.info("2026년 축제 데이터 전체 동기화 완료! 총 신규 저장 건수: {}", savedCount);
+        log.info("2026년 축제 데이터 전체 동기화 완료 총 신규 저장 건수: {}", savedCount);
     }
 }

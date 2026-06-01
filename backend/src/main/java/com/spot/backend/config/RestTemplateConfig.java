@@ -9,9 +9,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 
-// 설정 클래스
-// RestTemplate은 공공포털 API 같은 외부 API를 호출할 때 쓰는 도구
-
+// 설정 클래스 (외부 API를 호출)
+// 공공데이터 API가 JSON 응답 시 
+// application/json이 아닌 text/html 으로 보내는 케이스 해결
 @Configuration
 public class RestTemplateConfig {
 
@@ -27,6 +27,8 @@ public class RestTemplateConfig {
             MediaType.TEXT_PLAIN
         ));
         restTemplate.getMessageConverters().add(0, converter);
+        // 기존 컨버터 목록 맨 앞에 넣기
+        // Spring은 컨버터를 순서대로 순회하기 때문에
 
         return restTemplate;
     }

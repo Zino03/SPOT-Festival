@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/planner")
-@CrossOrigin(origins = "http://localhost:5173")
 public class PlannerController {
 
     private final TravelPlannerService travelPlannerService;
@@ -17,7 +16,7 @@ public class PlannerController {
 
     @PostMapping("/generate")
     public String generateTravelPlan(@RequestBody PlannerRequestDto request) {
-        // 프론트엔드에서 넘어온 JSON 요청을 받아 AI 플래너 서비스로 전달
+        // 프론트엔드에서 넘어온 JSON 요청을 받아 AI 플래너 서비스로 전달 (POST)
         return travelPlannerService.generatePlanner(request);
     }
 }

@@ -1,6 +1,6 @@
 package com.spot.backend.infrastructure.kakao.controller;
 
-import com.spot.backend.infrastructure.kakao.service.ParkingService;
+import com.spot.backend.infrastructure.kakao.service.KakaoPlacesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +12,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ParkingController {
 
-    private final ParkingService parkingService;
+    private final KakaoPlacesService kakaoPlacesService;
 
     // 축제 위치 기준 근처 주차장 조회
     @GetMapping("/nearby")
     public List<Map<String, Object>> getNearby(
             @RequestParam double lat,
             @RequestParam double lng) {
-        return parkingService.getNearbyParkings(lat, lng);
+        return kakaoPlacesService.getNearbyParkings(lat, lng);
     }
 }
