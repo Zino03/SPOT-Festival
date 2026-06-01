@@ -3,6 +3,7 @@ import { loadKakaoMap } from '../../../utils/kakao'
 import './FestivalNearbyMap.css'
 
 const KAKAO_CATEGORY = { restaurant: 'FD6', cafe: 'CE7', parking: 'PK6' }
+const KAKAO_RADIUS   = { restaurant: 1000,  cafe: 1000,  parking: 2000  }
 
 function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoad, selectedPlaceId, onSelectPlace }) {
   const mapRef     = useRef(null)
@@ -13,8 +14,11 @@ function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoa
   // 지도 + 축제 위치 핀 초기화
   useEffect(() => {
     if (!festival?.lat || !festival?.lng) return
+    let destroyed = false
 
     loadKakaoMap().then(() => {
+      if (destroyed || !mapRef.current) return
+
       const { kakao } = window
       const pos = new kakao.maps.LatLng(festival.lat, festival.lng)
       const map = new kakao.maps.Map(mapRef.current, { center: pos, level: 5 })
@@ -29,12 +33,15 @@ function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoa
 
       setMapReady(true)
     }).catch(err => console.error(err.message))
+
+    return () => { destroyed = true }
   }, [festival])
 
   // 카테고리 변경 시 마커 교체
   useEffect(() => {
     const map = mapObjRef.current
     if (!map || !window.kakao?.maps) return
+    let destroyed = false
 
     markersRef.current.forEach(({ marker, infoWindow }) => { infoWindow.close(); marker.setMap(null) })
     markersRef.current = []
@@ -67,23 +74,35 @@ function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoa
 
     // 이미 검색한 결과 있으면 재사용
     const cached = nearbyPlaces[activeCategory]
-    if (cached?.length) { addMarkers(cached); return }
+    if (cached?.length) { addMarkers(cached); return () => { destroyed = true } }
 
-    // 카카오 Places 검색
+    // 카카오 Places 검색 — 전체 페이지 누적
     const code = KAKAO_CATEGORY[activeCategory]
-    if (!code || !festival?.lat) return
+    if (!code || !festival?.lat) return () => { destroyed = true }
 
+    const allPlaces = []
     const ps = new kakao.maps.services.Places()
-    ps.categorySearch(code, (result, status) => {
-      if (status === kakao.maps.services.Status.OK) {
-        onNearbyLoad(activeCategory, result)
-        addMarkers(result)
+
+    ps.categorySearch(code, (result, status, pagination) => {
+      if (destroyed) return
+      if (status !== kakao.maps.services.Status.OK) return
+
+      allPlaces.push(...result)
+
+      if (pagination.hasNextPage) {
+        pagination.nextPage()
+      } else {
+        onNearbyLoad(activeCategory, allPlaces)
+        addMarkers(allPlaces)
       }
     }, {
       location: new kakao.maps.LatLng(festival.lat, festival.lng),
-      radius: 1500,
+      radius: KAKAO_RADIUS[activeCategory],
       sort: kakao.maps.services.SortBy.DISTANCE,
+      size: 15,
     })
+
+    return () => { destroyed = true }
   }, [activeCategory, festival, nearbyPlaces, mapReady])
 
   // 선택된 장소 → 마커 포커싱

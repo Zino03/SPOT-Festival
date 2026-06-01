@@ -35,20 +35,14 @@ function RegionHeader({ festivalCount }) {
 
   return (
     <div className="regionheader">
-
-      {/* 왼쪽: 타이틀 영역 */}
-      <div className="regionheader_left">
-        <p className="regionheader_label">
-          <span className="regionheader_label_line"></span>
-          {region.nameEn} · KOREA
-        </p>
-        <h1 className="regionheader_title">
-          {region.nameKo}, <span>{festivalCount}개 축제</span>가 열려요.
-        </h1>
-        <p className="regionheader_desc">{region.desc}</p>
-      </div>
-
-
+      <p className="regionheader_label">
+        <span className="regionheader_label_line"></span>
+        {region.nameEn} · KOREA
+      </p>
+      <h1 className="regionheader_title">
+        {region.nameKo}, <span>{festivalCount}개 축제</span>가 열려요.
+      </h1>
+      <p className="regionheader_desc">{region.desc}</p>
     </div>
   )
 }

@@ -15,10 +15,18 @@
 }
 
 .festivalnearbylist_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 13px;
   color: var(--color-text-muted);
   padding: 0 4px;
   flex-shrink: 0;
+}
+
+.festivalnearbylist_hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
 }
 
 /* 목록 — 남은 공간 채우고 스크롤 */
@@ -56,10 +64,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-.festivalnearbylist_item:first-child {
-  border-color: var(--color-accent);
-  background: #fff8f5;
-}
 
 .festivalnearbylist_item--active {
   border-color: var(--color-accent) !important;
@@ -86,10 +90,6 @@
   flex-shrink: 0;
 }
 
-.festivalnearbylist_item:first-child .festivalnearbylist_rank {
-  background: var(--color-accent);
-  color: #fff;
-}
 
 .festivalnearbylist_info {
   flex: 1;
@@ -120,6 +120,26 @@
 .festivalnearbylist_meta span + span::before {
   content: '·';
   margin-right: 6px;
+}
+
+/* 더 보기 버튼 */
+.festivalnearbylist_more {
+  width: 100%;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.festivalnearbylist_more:hover {
+  background: var(--color-border);
+  color: var(--color-primary);
 }
 
 /* AI TIP */

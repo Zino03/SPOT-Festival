@@ -1,12 +1,5 @@
 .regionheader {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.regionheader_left {
-  display: flex;
   flex-direction: column;
   gap: 8px;
 }
@@ -51,42 +44,3 @@
   line-height: 1.6;
 }
 
-/* 오른쪽 액션 버튼 */
-.regionheader_actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.regionheader_btn {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.35);
-  backdrop-filter: blur(6px);
-  border-radius: var(--radius-full);
-  padding: 10px 18px;
-  font-size: 13px;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.regionheader_btn:hover {
-  background: rgba(255,255,255,0.25);
-}
-
-.regionheader_btn_share {
-  background: var(--color-accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  padding: 10px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.regionheader_btn_share:hover {
-  background: #e85d2a;
-}
