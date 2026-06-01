@@ -15,8 +15,10 @@ public class PlannerController {
     }
 
     @PostMapping("/generate")
-    public String generateTravelPlan(@RequestBody PlannerRequestDto request) {
+    public String generateTravelPlan(
+            @RequestBody PlannerRequestDto request,
+            @RequestParam(value = "refresh", defaultValue = "false") boolean refresh) {
         // 프론트엔드에서 넘어온 JSON 요청을 받아 AI 플래너 서비스로 전달 (POST)
-        return travelPlannerService.generatePlanner(request);
+        return travelPlannerService.generatePlanner(request, refresh);
     }
 }
