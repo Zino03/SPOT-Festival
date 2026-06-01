@@ -1,13 +1,14 @@
 /* 히어로 전체 */
 .festivalhero {
-  margin-bottom: 48px;
+  margin-bottom: 0;
+  padding: 0 48px;
 }
 
 /* 배경 이미지 영역 */
 .festivalhero_bg {
   position: relative;
-  height: 380px;
-  border-radius: 16px;
+  height: 420px;
+  border-radius: 20px;
   overflow: hidden;
   background-color: #1a1a2e; /* 임시 배경색 */
   background-size: cover;
