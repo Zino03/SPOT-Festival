@@ -24,9 +24,40 @@
   flex-shrink: 0;
 }
 
+.festivalnearbylist_sort {
+  display: flex;
+  gap: 4px;
+}
+
+.festivalnearbylist_sort_btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-base);
+}
+
+.festivalnearbylist_sort_btn:hover {
+  border-color: #aaa;
+  color: var(--color-primary);
+}
+
+.festivalnearbylist_sort_btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
 .festivalnearbylist_hint {
   font-size: 11px;
   color: var(--color-text-muted);
+  padding: 0 4px;
 }
 
 /* 목록 — 남은 공간 채우고 스크롤 */

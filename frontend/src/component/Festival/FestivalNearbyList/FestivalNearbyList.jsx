@@ -9,11 +9,11 @@ const AI_TIPS = {
 
 const INITIAL_COUNT = 10
 
-function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectPlace }) {
+function FestivalNearbyList({ activeCategory, activeSort, onSortChange, places, selectedPlaceId, onSelectPlace }) {
   const itemRefs = useRef({})
   const [showAll, setShowAll] = useState(false)
 
-  useEffect(() => { setShowAll(false) }, [activeCategory])
+  useEffect(() => { setShowAll(false) }, [activeCategory, activeSort])
 
   useEffect(() => {
     if (!selectedPlaceId) return
@@ -36,9 +36,19 @@ function FestivalNearbyList({ activeCategory, places, selectedPlaceId, onSelectP
     <div className="festivalnearbylist">
 
       <div className="festivalnearbylist_header">
-        <span>가까운 순 · {places.length}곳</span>
-        <span className="festivalnearbylist_hint">클릭 포커싱 · 더블클릭 카카오맵</span>
+        <span>{activeSort === 'accuracy' ? '인기 순' : '가까운 순'} · {places.length}곳</span>
+        <div className="festivalnearbylist_sort">
+          <button
+            className={`festivalnearbylist_sort_btn ${activeSort === 'distance' ? 'active' : ''}`}
+            onClick={() => onSortChange('distance')}
+          >거리순</button>
+          <button
+            className={`festivalnearbylist_sort_btn ${activeSort === 'accuracy' ? 'active' : ''}`}
+            onClick={() => onSortChange('accuracy')}
+          >인기순</button>
+        </div>
       </div>
+      <span className="festivalnearbylist_hint">클릭 포커싱 · 더블클릭 카카오맵</span>
 
       <ul className="festivalnearbylist_list">
         {visiblePlaces.map((place, i) => {

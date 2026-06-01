@@ -11,11 +11,18 @@ function FestivalPage() {
   const [festival, setFestival]         = useState(null)
   const [nearbyPlaces, setNearbyPlaces] = useState({})
   const [loading, setLoading]           = useState(true)
-  const [activeCategory, setActiveCategory] = useState('restaurant')
+  const [activeCategory,  setActiveCategory]  = useState('restaurant')
+  const [activeSort,      setActiveSort]      = useState('distance')
   const [selectedPlaceId, setSelectedPlaceId] = useState(null)
 
   function handleSelectCategory(category) {
     setActiveCategory(category)
+    setSelectedPlaceId(null)
+  }
+
+  function handleSortChange(sort) {
+    setActiveSort(sort)
+    setNearbyPlaces({})
     setSelectedPlaceId(null)
   }
 
@@ -47,6 +54,7 @@ function FestivalPage() {
         <FestivalNearbyMap
           festival={festival}
           activeCategory={activeCategory}
+          activeSort={activeSort}
           nearbyPlaces={nearbyPlaces}
           onNearbyLoad={handleNearbyLoad}
           selectedPlaceId={selectedPlaceId}
@@ -54,6 +62,8 @@ function FestivalPage() {
         />
         <FestivalNearbyList
           activeCategory={activeCategory}
+          activeSort={activeSort}
+          onSortChange={handleSortChange}
           places={nearbyPlaces[activeCategory] || []}
           selectedPlaceId={selectedPlaceId}
           onSelectPlace={setSelectedPlaceId}

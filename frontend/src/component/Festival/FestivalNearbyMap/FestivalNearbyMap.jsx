@@ -5,7 +5,7 @@ import './FestivalNearbyMap.css'
 const KAKAO_CATEGORY = { restaurant: 'FD6', cafe: 'CE7', parking: 'PK6' }
 const KAKAO_RADIUS   = { restaurant: 1000,  cafe: 1000,  parking: 2000  }
 
-function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoad, selectedPlaceId, onSelectPlace }) {
+function FestivalNearbyMap({ festival, activeCategory, activeSort, nearbyPlaces, onNearbyLoad, selectedPlaceId, onSelectPlace }) {
   const mapRef     = useRef(null)
   const mapObjRef  = useRef(null)
   const markersRef = useRef([]) // [{ marker, infoWindow, id }]
@@ -82,6 +82,9 @@ function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoa
 
     const allPlaces = []
     const ps = new kakao.maps.services.Places()
+    const sortBy = activeSort === 'accuracy'
+      ? kakao.maps.services.SortBy.ACCURACY
+      : kakao.maps.services.SortBy.DISTANCE
 
     ps.categorySearch(code, (result, status, pagination) => {
       if (destroyed) return
@@ -98,12 +101,12 @@ function FestivalNearbyMap({ festival, activeCategory, nearbyPlaces, onNearbyLoa
     }, {
       location: new kakao.maps.LatLng(festival.lat, festival.lng),
       radius: KAKAO_RADIUS[activeCategory],
-      sort: kakao.maps.services.SortBy.DISTANCE,
+      sort: sortBy,
       size: 15,
     })
 
     return () => { destroyed = true }
-  }, [activeCategory, festival, nearbyPlaces, mapReady])
+  }, [activeCategory, activeSort, festival, nearbyPlaces, mapReady])
 
   // 선택된 장소 → 마커 포커싱
   useEffect(() => {
