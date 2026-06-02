@@ -26,7 +26,7 @@ const DUMMY_ITEMS = {
 const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
 const SHOW_COUNT = 5
 
-function BuilderCardGrid({ currentStep, festival, onSelect }) {
+function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const [selectedId,    setSelectedId]    = useState(null)
   const [showAll,       setShowAll]       = useState(false)
   const [festivalItems, setFestivalItems] = useState([])
@@ -34,9 +34,18 @@ function BuilderCardGrid({ currentStep, festival, onSelect }) {
 
   // Step 1: 실제 Trending 축제 API 연동
   useEffect(() => {
-    if (currentStep !== 1) return
-    fetch('http://localhost:8080/api/festivals/trending')
-      .then(res => res.json())
+    if (currentStep !== 1 || !preferences || !preferences.region) return
+    fetch('http://localhost:8080/api/festivals/recommend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(preferences)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('AI 축제 추천 API 응답 에러');
+        return res.json();
+      })
       .then(data => {
         const mapped = data.map((f, i) => ({
           id:       f.id,
@@ -55,8 +64,8 @@ function BuilderCardGrid({ currentStep, festival, onSelect }) {
         }))
         setFestivalItems(mapped)
       })
-      .catch(err => console.error('축제 API 에러:', err))
-  }, [currentStep])
+      .catch(err => console.error('AI 축제 추천 API 에러:', err))
+  }, [currentStep, preferences])
 
   // Step 2(맛집), Step 3(카페): Kakao Places
   useEffect(() => {

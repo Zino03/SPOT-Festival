@@ -9,7 +9,34 @@ const RECEIPT_STEPS = [
   { id: 5, label: 'AI 리포트', icon: '✦' },
 ]
 
-function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDistance }) {
+function BuilderReceipt({ currentStep, selectedItems}) {
+  // ✨ 1. 동적 서브타이틀 (선택된 축제가 있으면 축제명, 없으면 기본 텍스트)
+  const festivalName = selectedItems?.[1]?.name || 'AI 맞춤 코스';
+
+  // ✨ 2. 동적 이동 거리 계산 (문자열에서 km, m를 파싱하여 meter 단위로 합산 후 다시 포맷팅)
+  const totalDistanceMeters = Object.values(selectedItems || {}).reduce((acc, item) => {
+    if (!item || !item.distance) return acc;
+    const distStr = item.distance.toString();
+    if (distStr.includes('km')) return acc + parseFloat(distStr) * 1000;
+    return acc + parseFloat(distStr.replace(/[^0-9.]/g, ''));
+  }, 0);
+
+  const displayDistance = totalDistanceMeters > 0
+    ? (totalDistanceMeters >= 1000 ? (totalDistanceMeters / 1000).toFixed(1) + 'km' : Math.round(totalDistanceMeters) + 'm')
+    : '-';
+
+  // ✨ 3. 동적 예상 시간 계산 (UX를 위해 그럴싸한 가중치 부여: 축제 3.5h, 식사 1.5h, 카페 1h 등)
+  let estimatedHours = 0;
+  if (selectedItems?.[1]) estimatedHours += 3.5;
+  if (selectedItems?.[2]) estimatedHours += 1.5;
+  if (selectedItems?.[3]) estimatedHours += 1.0;
+  if (selectedItems?.[4]) estimatedHours += 0.5;
+
+  const displayTime = estimatedHours > 0 ? `${estimatedHours}h` : '-';
+
+  // ✨ 4. 진척도 계산 (0 ~ 4 사이로 고정)
+  const progressCount = Math.min(Math.max(currentStep - 1, 0), 4);
+
   return (
     <div className="builderreceipt">
 
@@ -18,8 +45,7 @@ function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDi
         <span className="builderreceipt_icon">R</span>
         <div>
           <p className="builderreceipt_label">RECEIPT · 선행 영수증</p>
-          {/* TODO: API 연동 시 축제명/지역 동적으로 교체 */}
-          <p className="builderreceipt_subtitle">spot.kr / builder / 청주음악제</p>
+          <p className="builderreceipt_subtitle">spot.kr / builder / {festivalName}</p>
         </div>
       </div>
 
@@ -28,7 +54,6 @@ function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDi
         {RECEIPT_STEPS.slice(0, 4).map(step => {
           const isDone = currentStep > step.id
           const isActive = currentStep === step.id
-          // TODO: API 연동 시 selectedItems → 실제 선택 데이터로 교체
           const selected = selectedItems?.[step.id]
 
           return (
@@ -69,23 +94,21 @@ function BuilderReceipt({ currentStep, selectedItems, estimatedTime, estimatedDi
       <div className="builderreceipt_footer">
         <div className="builderreceipt_stat">
           <span>⏱ 예상 시간</span>
-          {/* TODO: API 연동 시 estimatedTime → 실제 데이터로 교체 */}
-          <strong>~ {estimatedTime || '7h'}</strong>
+          <strong>~ {displayTime}</strong>
         </div>
         <div className="builderreceipt_stat">
           <span>🚶 예상 이동</span>
-          {/* TODO: API 연동 시 estimatedDistance → 실제 데이터로 교체 */}
-          <strong>~ {estimatedDistance || '3km'}</strong>
+          <strong>~ {displayDistance}</strong>
         </div>
         <div className="builderreceipt_progress">
           <span>진척도</span>
           <div className="builderreceipt_progress_bar">
             <div
               className="builderreceipt_progress_fill"
-              style={{ width: `${((currentStep - 1) / 4) * 100}%` }}
+              style={{ width: `${(progressCount / 4) * 100}%` }}
             />
           </div>
-          <span>{currentStep - 1} / 4</span>
+          <span>{progressCount} / 4</span>
         </div>
       </div>
 
