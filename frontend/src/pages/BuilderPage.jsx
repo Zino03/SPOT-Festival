@@ -75,10 +75,13 @@ function BuilderPage() {
           <BuilderStepHeader
             currentStep={step}
             totalCount={null}
+            preferences={preferences}
+            festival={selectedFestival}
           />
           <BuilderCardGrid
             currentStep={step}
             festival={selectedFestival}
+            preferences={preferences}
             onSelect={handleSelect}
           />
           <BuilderNav

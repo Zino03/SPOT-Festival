@@ -1,8 +1,10 @@
 package com.spot.backend.domain.festival.controller;
 
 import com.spot.backend.domain.festival.dto.FestivalDetailResponse;
+import com.spot.backend.domain.festival.service.FestivalService;
 import com.spot.backend.domain.festival.entity.Festival;
 import com.spot.backend.domain.festival.repository.FestivalRepository;
+import com.spot.backend.domain.festival.dto.FestivalRecommendRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,11 @@ import java.util.Map;
 @RestController // 모든 메서드가 JSON을 반환하는 컨트롤러
 @RequestMapping("/api/festivals") // 엔드포인트 명시
 @RequiredArgsConstructor // final 필드를 받는 생성자 자동 생성
+@CrossOrigin(origins = "http://localhost:5173")
 // -> Spring이 그 생성자로 FestivalRepository 주입
 public class FestivalController {
     private final FestivalRepository festivalRepository;
+    private final FestivalService festivalService;
 
     // 홈 화면 통계 카드
     @GetMapping("/stats")
@@ -105,5 +109,11 @@ public class FestivalController {
                     return ResponseEntity.ok(new FestivalDetailResponse(festival));
                 })
                 .orElse(ResponseEntity.notFound().build()); // 없는 ID면 404
+    }
+
+    @PostMapping("/recommend")
+    public ResponseEntity<?> recommendFestivals(@RequestBody FestivalRecommendRequest request) {
+        // 프론트엔드의 취향 데이터를 서비스 계층으로 전달
+        return ResponseEntity.ok(festivalService.recommendByAI(request));
     }
 }
