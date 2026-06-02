@@ -18,19 +18,26 @@ const STEP_FILTERS = {
   4: ['무료', '유료', '실내', '실외', '+필터'],
 }
 
-// 단계별 더미 부제목
-// TODO: API 연동 시 선택된 축제/지역 기반으로 동적 교체
-const STEP_SUBTITLES = {
-  1: '현재 위치 기준 · 진행 중인 축제',
-  2: '청주 음악제 반경 1.5km · 카카오 로컬 데이터',
-  3: '청주 음악제 반경 1.5km · 카카오 로컬 데이터',
-  4: '청주 음악제 반경 1.5km · 카카오 로컬 데이터',
-}
-
-function BuilderStepHeader({ currentStep, totalCount }) {
+function BuilderStepHeader({ currentStep, totalCount, preferences, festival }) {
   const [activeFilter, setActiveFilter] = useState('전체')
   const filters = STEP_FILTERS[currentStep] || []
+  //현재 단계와 넘어온 데이터에 따라 부제목을 동적으로 생성하는 함수
+  const getDynamicSubtitle = () => {
+    if (currentStep === 1) {
+      // 1단계: 유저가 셋업에서 입력한 데이터 조합 (예: "서울/경기 · 7/3 · 친구들과 함께")
+      if (!preferences || !preferences.region) return 'AI 맞춤 축제 분석 중...';
 
+      // 날짜 포맷팅 (2026-07-03 -> 7/3)
+      const dateObj = preferences.date ? new Date(preferences.date) : null;
+      const dateStr = dateObj ? `${dateObj.getMonth() + 1}/${dateObj.getDate()}` : '';
+
+      return `${preferences.region} · ${dateStr} · ${preferences.companion} 함께`;
+    } else {
+      // 2~4단계: 1단계에서 선택한 축제 이름을 기반으로 표시
+      const festivalName = festival?.name || '선택된 축제';
+      return `${festivalName} 반경 1.5km · 카카오 로컬 데이터`;
+    }
+  }
   return (
     <div className="builderstepheader">
 
@@ -42,7 +49,7 @@ function BuilderStepHeader({ currentStep, totalCount }) {
           </h2>
           <p className="builderstepheader_subtitle">
             {/* TODO: API 연동 시 STEP_SUBTITLES → 동적 데이터로 교체 */}
-            {STEP_SUBTITLES[currentStep]}
+            {getDynamicSubtitle()}
             {totalCount && (
               <span className="builderstepheader_count"> · {totalCount}개 후보</span>
             )}

@@ -38,4 +38,8 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
             "ORDER BY view_count DESC, id ASC " +
             "LIMIT 8", nativeQuery = true) // LIMIT 사용을 위해 nativeQuery 사용
     List<Festival> findTop8Trending(@Param("today") LocalDate today, @Param("nextWeek") LocalDate nextWeek);
+
+    // 유저가 선택한 날짜가 축제 시작일과 종료일 사이에 있고, 지역이 일치하는 축제 조회 ('전국'이면 지역 무시)
+    @Query("SELECT f FROM Festival f WHERE (:region = '전국' OR f.region = :region) AND :date BETWEEN f.startDate AND f.endDate")
+    List<Festival> findByRegionAndDateValid(@Param("region") String region, @Param("date") LocalDate date);
 }
