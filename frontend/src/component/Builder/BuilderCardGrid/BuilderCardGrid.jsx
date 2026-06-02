@@ -31,22 +31,36 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const [showAll,       setShowAll]       = useState(false)
   const [festivalItems, setFestivalItems] = useState([])
   const [kakaoItems,    setKakaoItems]    = useState([])
+  // 예외 처리 알림 문구를 담을 새로운 State 추가
+  const [fallbackMsg,   setFallbackMsg]   = useState('')
 
   // Step 1: 실제 Trending 축제 API 연동
   useEffect(() => {
-    if (currentStep !== 1 || !preferences || !preferences.region) return
+    if (currentStep !== 1 || !preferences || !preferences.region) return;
+    const fetchFestivals = (currentPrefs, isRetry = false) => {
     fetch('http://localhost:8080/api/festivals/recommend', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(preferences)
+      body: JSON.stringify(currentPrefs)
     })
       .then(res => {
         if (!res.ok) throw new Error('AI 축제 추천 API 응답 에러');
         return res.json();
       })
       .then(data => {
+        // 예외 처리: 데이터가 텅 비었을 때의 플랜 B
+        if (data.length === 0) {
+          // 1. 처음 검색했는데 없고, 지역이 '전국'이 아니었다면? -> 전국으로 재검색!
+          if (!isRetry && currentPrefs.region !== '전국') {
+            setFallbackMsg(`'${currentPrefs.region}' 지역에 진행 중인 축제가 없어 전국 기준으로 추천해 드립니다.`);
+            fetchFestivals({ ...currentPrefs, region: '전국' }, true); // isRetry를 true로 주고 재요청
+            return; // 기존 로직은 여기서 정지
+          }
+          // 2. 전국으로 재검색했는데도 없거나, 애초에 전국으로 검색했는데도 없다면?
+          setFallbackMsg('선택하신 날짜에 진행 중인 축제가 없습니다.');
+        }
         const mapped = data.map((f, i) => ({
           id:       f.id,
           name:     f.name,
@@ -61,11 +75,15 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
           lng:      f.lng,
           image:    '',
           isAI:     i === 0,  // 조회수 1위 = AI 추천
-        }))
+        }));
         setFestivalItems(mapped)
       })
       .catch(err => console.error('AI 축제 추천 API 에러:', err))
-  }, [currentStep, preferences])
+    };
+    // 처음 마운트 될 때 알림창 초기화 후 기본 취향으로 1차 요청
+    setFallbackMsg('');
+    fetchFestivals(preferences, false);
+  }, [currentStep, preferences]);
 
   // Step 2(맛집), Step 3(카페): Kakao Places
   useEffect(() => {
@@ -136,6 +154,25 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
 
   return (
     <div className="buildercardgrid">
+        {/* ✨ 예외 처리 알림 배너 (1단계에서 에러 메시지가 있을 때만 노출) */}
+        {fallbackMsg && currentStep === 1 && (
+        <div style={{
+          backgroundColor: '#fff3cd',
+          color: '#856404',
+          padding: '12px 16px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+          fontSize: '14px',
+          fontWeight: '600',
+          border: '1px solid #ffeeba',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+        }}>
+            <span>🚨</span> {fallbackMsg}
+          </div>
+      )}
 
       {/* 카드 그리드 */}
       <div className="buildercardgrid_grid">
