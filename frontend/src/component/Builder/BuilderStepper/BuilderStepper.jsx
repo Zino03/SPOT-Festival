@@ -34,7 +34,7 @@ function BuilderStepper({ currentStep, selectedItems }) {
               {/* TODO: API 연동 시 selectedItems[step.id] → 실제 선택 데이터로 교체 */}
               {isDone && selectedItems?.[step.id] && (
                 <span className="builderstepper_selected">
-                  {selectedItems[step.id]}
+                  {selectedItems[step.id]?.name}
                 </span>
               )}
             </div>
