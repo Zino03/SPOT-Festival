@@ -31,4 +31,8 @@ public class FestivalDetailResponse {
         this.lng = festival.getLng();
         this.viewCount = festival.getViewCount();
     }
+    // Stream의 .map(FestivalDetailResponse::from) 에서 호출될 메서드
+    public static FestivalDetailResponse from(Festival festival) {
+        return new FestivalDetailResponse(festival); // 위에 만들어둔 생성자 재활용!
+    }
 }
