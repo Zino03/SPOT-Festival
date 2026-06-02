@@ -12,7 +12,7 @@ const STEP_TITLES = {
 // 단계별 더미 필터
 // TODO: API 연동 시 fetch('/api/builder/filters?step=2')로 교체
 const STEP_FILTERS = {
-  1: ['전체', '음악', '전통', '푸드', '꽃·계절', '야경'],
+  1: [],
   2: ['한식', '분식', '양식', '디저트', '+필터'],
   3: ['카페', '베이커리', '디저트', '음료', '+필터'],
   4: ['무료', '유료', '실내', '실외', '+필터'],
@@ -50,6 +50,7 @@ function BuilderStepHeader({ currentStep, totalCount }) {
         </div>
 
         {/* 필터 탭 */}
+        {filters.length > 0 && (
         <div className="builderstepheader_filters">
           {filters.map(filter => (
             <button
@@ -61,6 +62,7 @@ function BuilderStepHeader({ currentStep, totalCount }) {
             </button>
           ))}
         </div>
+        )}
       </div>
 
     </div>
