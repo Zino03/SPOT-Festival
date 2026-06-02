@@ -64,36 +64,59 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
     fetchFestivals(preferences, false);
   }, [currentStep, preferences]);
 
-  // Step 2(맛집), Step 3(카페): Kakao Places
+  // Step 2(맛집), Step 3(카페): Kakao Places + Gemini AI 하이브리드 방식
   useEffect(() => {
-    if (![2, 3].includes(currentStep) || !festival?.lat) return
-    setKakaoItems([])
+    if (![2, 3].includes(currentStep) || !festival?.lat) return;
+    setKakaoItems([]);
 
     loadKakaoMap().then(() => {
-      const { kakao } = window
-      const ps = new kakao.maps.services.Places()
+      const { kakao } = window;
+      const ps = new kakao.maps.services.Places();
       ps.categorySearch(KAKAO_CODE[currentStep], (result, status) => {
-        if (status !== kakao.maps.services.Status.OK) return
-        setKakaoItems(result.map((p, i) => ({
+        if (status !== kakao.maps.services.Status.OK) return;
+        // 1. 카카오에서 받아온 원본 데이터를 백엔드 DTO(KakaoPlaceDto) 형식에 맞게 가공
+        const rawPlaces = result.map(p => ({
           id:       p.id,
           name:     p.place_name,
           category: p.category_name?.split('>').pop().trim() || '',
           price:    null,
-          rating:   null,
           distance: p.distance ? `${p.distance}m` : null,
           walk:     p.distance ? `${Math.ceil(p.distance / 80)}분` : null,
           wait:     null,
-          isAI:     i === 0,
           address:  p.road_address_name || p.address_name,
           phone:    p.phone,
-        })))
+          isAI:     false,
+        }));
+        // 2. 가공한 리스트와 유저 취향을 묶어서 스프링 부트 백엔드로 전송
+        fetch('http://localhost:8080/api/restaurants/recommend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            preferences: preferences, // 1단계에서 수집한 취향 데이터 (테마, 동행자 등)
+            places: rawPlaces         // 카카오에서 가져온 거리순 15개 장소 리스트
+          })
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('AI 맛집/카페 정렬 API 통신 에러');
+          return res.json();
+        })
+        .then(sortedData => {
+          // 3. 백엔드(Gemini)가 정렬하고 뱃지(isAI)를 붙여준 데이터를 화면에 렌더링
+          setKakaoItems(sortedData);
+        })
+        .catch(err => {
+          console.error('AI 정렬 통신 실패, 기본 거리순으로 렌더링합니다:', err);
+          // 에러 시 방어 로직: 기존처럼 0번째에 AI 뱃지를 달아 거리순으로 보여줌
+          if (rawPlaces.length > 0) rawPlaces[0].isAI = true;
+          setKakaoItems(rawPlaces);
+        });
       }, {
         location: new kakao.maps.LatLng(festival.lat, festival.lng),
         radius: 1500,
         sort: kakao.maps.services.SortBy.DISTANCE,
       })
     })
-  }, [currentStep, festival])
+  }, [currentStep, festival, preferences]);
 
   // Step 4: 주차장 API
   useEffect(() => {
