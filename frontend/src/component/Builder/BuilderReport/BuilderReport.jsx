@@ -18,6 +18,9 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
       duration: preferences.duration,
       companion: preferences.companion,
       themes: preferences.themes,
+      restaurants: selectedItems[2] || [],
+      cafe: selectedItems[3] || null,
+      parking: selectedItems[4] || null,
     }
 
     fetch('http://localhost:8080/api/planner/generate', {
@@ -83,18 +86,28 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
           { step: 2, label: '맛집', icon: '🍴' },
           { step: 3, label: '카페', icon: '☕' },
           { step: 4, label: '주차장', icon: '🅿' },
-        ].map(({ step, label, icon }) => (
-          selectedItems[step] && (
-            <div key={step} className="builderreport_summary_item">
-              <span className="builderreport_summary_icon">{icon}</span>
-              <div>
-                <p className="builderreport_summary_label">{label}</p>
-                <p className="builderreport_summary_name">{selectedItems[step].name}</p>
+        ].map(({ step, label, icon }) => {
+            const itemData = selectedItems[step];
+            if (!itemData) return null;
+            return (
+              <div key={step} className="builderreport_summary_item">
+                <span className="builderreport_summary_icon">{icon}</span>
+                <div>
+                  <p className="builderreport_summary_label">{label}</p>
+                  {Array.isArray(itemData) ? (
+                    itemData.map((place, idx) => (
+                      <p key={place.id || idx} className="builderreport_summary_name">
+                        {idx === 0 ? '☀️ ' : '🌙 '} {place.name}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="builderreport_summary_name">{itemData.name}</p>
+                  )}
+                </div>
               </div>
+                )
+              })}
             </div>
-          )
-        ))}
-      </div>
 
       {/* 일정표 */}
       {result.itinerary?.map(day => (

@@ -30,8 +30,8 @@ function BuilderPage() {
     setStep(preselected ? 2 : 1)
   }
 
-  function handleSelect(item) {
-    setSelectedItems(prev => ({ ...prev, [step]: item }))
+  function handleSelect(payload) {
+    setSelectedItems(prev => ({ ...prev, [step]: payload }))
   }
 
   function handleNext() {
@@ -63,6 +63,10 @@ function BuilderPage() {
       />
     )
   }
+  const isStep2Complete = step === 2 && Array.isArray(selectedItems[2]) && selectedItems[2].length === 2;
+  const currentNavSelectedItem = step === 2
+    ? (isStep2Complete ? selectedItems[2] : null)
+    : selectedItems[step];
 
   return (
     <main className="builderpage">
@@ -86,7 +90,7 @@ function BuilderPage() {
           />
           <BuilderNav
             currentStep={step}
-            selectedItem={selectedItems[step]}
+            selectedItem={currentNavSelectedItem}
             onPrev={handlePrev}
             onNext={handleNext}
           />

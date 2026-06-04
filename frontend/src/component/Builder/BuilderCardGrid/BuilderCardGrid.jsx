@@ -2,51 +2,44 @@ import { useState, useEffect } from 'react'
 import { loadKakaoMap } from '../../../utils/kakao'
 import './BuilderCardGrid.css'
 
-// 단계별 더미 데이터 (step 1은 API로 교체됨)
-const DUMMY_ITEMS = {
-  2: [
-    { id: 1, name: 'OO국밥',    category: '한식', price: '₩8,000~',  rating: 4.8, distance: '0.4km', walk: '12분', wait: null,  image: '', isAI: true,  isSelected: true  },
-    { id: 2, name: '△△스테이크', category: '양식', price: '₩12,000~', rating: 4.4, distance: '0.7km', walk: '8분',  wait: '5분', image: '', isAI: false, isSelected: false },
-    { id: 3, name: 'OO파스타',  category: '양식', price: '₩14,000~', rating: 4.5, distance: '0.9km', walk: '11분', wait: '0분', image: '', isAI: false, isSelected: false },
-    { id: 4, name: '▽▽분식',   category: '분식', price: '₩6,000~',  rating: 4.3, distance: '0.5km', walk: '7분',  wait: '8분', image: '', isAI: false, isSelected: false },
-    { id: 5, name: '◇◆중식',   category: '한식', price: '₩9,500~',  rating: 4.2, distance: '0.8km', walk: '10분', wait: '15분',image: '', isAI: false, isSelected: false },
-  ],
-  3: [
-    { id: 1, name: '한적 카페',   category: '카페', price: '₩5,000~', rating: 4.7, distance: '0.3km', walk: '4분',  wait: null,  image: '', isAI: true,  isSelected: false },
-    { id: 2, name: '감성 베이커리', category: '베이커리', price: '₩4,000~', rating: 4.4, distance: '0.6km', walk: '8분', wait: null, image: '', isAI: false, isSelected: false },
-    { id: 3, name: '루프탑 카페', category: '카페', price: '₩6,000~', rating: 4.3, distance: '0.9km', walk: '11분', wait: '3분', image: '', isAI: false, isSelected: false },
-  ],
-  4: [
-    { id: 1, name: '한강 공영주차장', category: '무료', price: 'Free',    rating: 4.5, distance: '0.2km', walk: '2분',  wait: null,  image: '', isAI: true,  isSelected: false },
-    { id: 2, name: '충북 중앙 P타워', category: '유료', price: '₩2,000/h', rating: 4.7, distance: '0.3km', walk: '4분', wait: null,  image: '', isAI: false, isSelected: false },
-    { id: 3, name: '지하 P동',       category: '유료', price: '₩1,500/h', rating: 4.4, distance: '0.4km', walk: '5분', wait: null,  image: '', isAI: false, isSelected: false },
-  ],
-}
-
 const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
 const SHOW_COUNT = 5
 
 function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
-  const [selectedId,    setSelectedId]    = useState(null)
+  const [selectedIds,    setSelectedIds]    = useState([])
   const [showAll,       setShowAll]       = useState(false)
   const [festivalItems, setFestivalItems] = useState([])
   const [kakaoItems,    setKakaoItems]    = useState([])
+  // 예외 처리 알림 문구를 담을 새로운 State 추가
+  const [fallbackMsg,   setFallbackMsg]   = useState('')
 
   // Step 1: 실제 Trending 축제 API 연동
   useEffect(() => {
-    if (currentStep !== 1 || !preferences || !preferences.region) return
+    if (currentStep !== 1 || !preferences || !preferences.region) return;
+    const fetchFestivals = (currentPrefs, isRetry = false) => {
     fetch('http://localhost:8080/api/festivals/recommend', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(preferences)
+      body: JSON.stringify(currentPrefs)
     })
       .then(res => {
         if (!res.ok) throw new Error('AI 축제 추천 API 응답 에러');
         return res.json();
       })
       .then(data => {
+        // 예외 처리: 데이터가 텅 비었을 때의 플랜 B
+        if (data.length === 0) {
+          // 1. 처음 검색했는데 없고, 지역이 '전국'이 아니었다면? -> 전국으로 재검색!
+          if (!isRetry && currentPrefs.region !== '전국') {
+            setFallbackMsg(`'${currentPrefs.region}' 지역에 진행 중인 축제가 없어 전국 기준으로 추천해 드립니다.`);
+            fetchFestivals({ ...currentPrefs, region: '전국' }, true); // isRetry를 true로 주고 재요청
+            return; // 기존 로직은 여기서 정지
+          }
+          // 2. 전국으로 재검색했는데도 없거나, 애초에 전국으로 검색했는데도 없다면?
+          setFallbackMsg('선택하신 날짜에 진행 중인 축제가 없습니다.');
+        }
         const mapped = data.map((f, i) => ({
           id:       f.id,
           name:     f.name,
@@ -60,43 +53,70 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
           lat:      f.lat,
           lng:      f.lng,
           image:    '',
-          isAI:     i === 0,  // 조회수 1위 = AI 추천
-        }))
+          isAI:     i === 0,
+        }));
         setFestivalItems(mapped)
       })
       .catch(err => console.error('AI 축제 추천 API 에러:', err))
-  }, [currentStep, preferences])
+    };
+    // 처음 마운트 될 때 알림창 초기화 후 기본 취향으로 1차 요청
+    setFallbackMsg('');
+    fetchFestivals(preferences, false);
+  }, [currentStep, preferences]);
 
-  // Step 2(맛집), Step 3(카페): Kakao Places
+  // Step 2(맛집), Step 3(카페): Kakao Places + Gemini AI 하이브리드 방식
   useEffect(() => {
-    if (![2, 3].includes(currentStep) || !festival?.lat) return
-    setKakaoItems([])
+    if (![2, 3].includes(currentStep) || !festival?.lat) return;
+    setKakaoItems([]);
 
     loadKakaoMap().then(() => {
-      const { kakao } = window
-      const ps = new kakao.maps.services.Places()
+      const { kakao } = window;
+      const ps = new kakao.maps.services.Places();
       ps.categorySearch(KAKAO_CODE[currentStep], (result, status) => {
-        if (status !== kakao.maps.services.Status.OK) return
-        setKakaoItems(result.map((p, i) => ({
+        if (status !== kakao.maps.services.Status.OK) return;
+        // 1. 카카오에서 받아온 원본 데이터를 백엔드 DTO(KakaoPlaceDto) 형식에 맞게 가공
+        const rawPlaces = result.map(p => ({
           id:       p.id,
           name:     p.place_name,
           category: p.category_name?.split('>').pop().trim() || '',
           price:    null,
-          rating:   null,
           distance: p.distance ? `${p.distance}m` : null,
           walk:     p.distance ? `${Math.ceil(p.distance / 80)}분` : null,
           wait:     null,
-          isAI:     i === 0,
           address:  p.road_address_name || p.address_name,
           phone:    p.phone,
-        })))
+          isAI:     false,
+        }));
+        // 2. 가공한 리스트와 유저 취향을 묶어서 스프링 부트 백엔드로 전송
+        fetch('http://localhost:8080/api/restaurants/recommend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            preferences: preferences, // 1단계에서 수집한 취향 데이터 (테마, 동행자 등)
+            places: rawPlaces         // 카카오에서 가져온 거리순 15개 장소 리스트
+          })
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('AI 맛집/카페 정렬 API 통신 에러');
+          return res.json();
+        })
+        .then(sortedData => {
+          // 3. 백엔드(Gemini)가 정렬하고 뱃지(isAI)를 붙여준 데이터를 화면에 렌더링
+          setKakaoItems(sortedData);
+        })
+        .catch(err => {
+          console.error('AI 정렬 통신 실패, 기본 거리순으로 렌더링합니다:', err);
+          // 에러 시 방어 로직: 기존처럼 0번째에 AI 뱃지를 달아 거리순으로 보여줌
+          if (rawPlaces.length > 0) rawPlaces[0].isAI = true;
+          setKakaoItems(rawPlaces);
+        });
       }, {
         location: new kakao.maps.LatLng(festival.lat, festival.lng),
         radius: 1500,
         sort: kakao.maps.services.SortBy.DISTANCE,
       })
     })
-  }, [currentStep, festival])
+  }, [currentStep, festival, preferences]);
 
   // Step 4: 주차장 API
   useEffect(() => {
@@ -129,31 +149,80 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const remainCount = items.length - SHOW_COUNT
 
   function handleSelect(item) {
-    setSelectedId(item.id)
-    // 선택된 아이템을 부모(BuilderPage)로 전달
-    if (onSelect) onSelect(item)
+    if (currentStep === 2) {
+      // 맛집: 최대 2개 선택 가능
+      let newIds = [...selectedIds];
+      if (newIds.includes(item.id)) {
+        // 이미 선택된 거면 해제
+        newIds = newIds.filter(id => id !== item.id);
+      } else {
+        // 새로 선택하는 경우
+        if (newIds.length >= 2) {
+          // 이미 2개가 찼다면 가장 오래된 첫 번째 값을 밀어내고 새로 추가 (Queue 방식)
+          newIds.shift();
+        }
+        newIds.push(item.id);
+      }
+      setSelectedIds(newIds);
+      // 부모로 데이터 전달 (선택된 객체들의 '배열'을 만들어서 보냄)
+      const selectedItems = items.filter(i => newIds.includes(i.id));
+      if (onSelect) onSelect(selectedItems);
+    } else {
+      // 1, 3, 4단계: 기존처럼 1개만 선택
+      setSelectedIds([item.id]);
+      if (onSelect) onSelect(item);
+    }
   }
 
   return (
     <div className="buildercardgrid">
+        {/* ✨ 예외 처리 알림 배너 (1단계에서 에러 메시지가 있을 때만 노출) */}
+        {fallbackMsg && currentStep === 1 && (
+        <div style={{
+          backgroundColor: '#fff3cd',
+          color: '#856404',
+          padding: '12px 16px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+          fontSize: '14px',
+          fontWeight: '600',
+          border: '1px solid #ffeeba',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+        }}>
+            <span>🚨</span> {fallbackMsg}
+          </div>
+      )}
 
       {/* 카드 그리드 */}
       <div className="buildercardgrid_grid">
-        {visibleItems.map(item => (
-          <div
-            key={item.id}
-            className={`buildercardgrid_card ${selectedId === item.id ? 'selected' : ''}`}
-            onClick={() => handleSelect(item)}
-          >
-            {/* AI 추천 + 선택됨 뱃지 */}
-            <div className="buildercardgrid_badges">
-              {item.isAI && (
-                <span className="buildercardgrid_badge_ai">✦ AI 1순위</span>
-              )}
-              {selectedId === item.id && (
-                <span className="buildercardgrid_badge_selected">선택됨</span>
-              )}
-            </div>
+        {visibleItems.map(item => {
+          // 현재 카드가 선택되었는지 여부 확인
+          const isSelected = selectedIds.includes(item.id);
+          // 2단계일 경우 배열의 인덱스를 통해 점심/저녁 구분
+          const selectionIndex = selectedIds.indexOf(item.id);
+
+          return (
+            <div
+              key={item.id}
+              className={`buildercardgrid_card ${isSelected ? 'selected' : ''}`}
+              onClick={() => handleSelect(item)}
+            >
+              <div className="buildercardgrid_badges">
+                {item.isAI && (
+                  <span className="buildercardgrid_badge_ai">✦ AI 1순위</span>
+                )}
+                {/* 선택됨 뱃지 점심/저녁 동적 표시 */}
+                {isSelected && (
+                  <span className="buildercardgrid_badge_selected">
+                    {currentStep === 2
+                      ? (selectionIndex === 0 ? '선택됨 (점심)' : '선택됨 (저녁)')
+                      : '선택됨'}
+                  </span>
+                )}
+              </div>
 
             {/* 이미지 */}
             <div
@@ -180,9 +249,9 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
                 )}
               </div>
             </div>
-
           </div>
-        ))}
+        );
+      })}
 
         {/* 더보기 카드 */}
         {!showAll && remainCount > 0 && (
