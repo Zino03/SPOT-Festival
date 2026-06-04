@@ -9,18 +9,7 @@ const STEP_TITLES = {
   4: '주차장을 골라요.',
 }
 
-// 단계별 더미 필터
-// TODO: API 연동 시 fetch('/api/builder/filters?step=2')로 교체
-const STEP_FILTERS = {
-  1: [],
-  2: ['한식', '분식', '양식', '디저트', '+필터'],
-  3: ['카페', '베이커리', '디저트', '음료', '+필터'],
-  4: ['무료', '유료', '실내', '실외', '+필터'],
-}
-
 function BuilderStepHeader({ currentStep, totalCount, preferences, festival }) {
-  const [activeFilter, setActiveFilter] = useState('전체')
-  const filters = STEP_FILTERS[currentStep] || []
   //현재 단계와 넘어온 데이터에 따라 부제목을 동적으로 생성하는 함수
   const getDynamicSubtitle = () => {
     if (currentStep === 1) {
@@ -55,21 +44,6 @@ function BuilderStepHeader({ currentStep, totalCount, preferences, festival }) {
             )}
           </p>
         </div>
-
-        {/* 필터 탭 */}
-        {filters.length > 0 && (
-        <div className="builderstepheader_filters">
-          {filters.map(filter => (
-            <button
-              key={filter}
-              className={`builderstepheader_filter ${activeFilter === filter ? 'active' : ''}`}
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-        )}
       </div>
 
     </div>
