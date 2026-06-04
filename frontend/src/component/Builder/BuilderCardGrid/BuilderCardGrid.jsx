@@ -6,7 +6,7 @@ const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
 const SHOW_COUNT = 5
 
 function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
-  const [selectedId,    setSelectedId]    = useState(null)
+  const [selectedIds,    setSelectedIds]    = useState([])
   const [showAll,       setShowAll]       = useState(false)
   const [festivalItems, setFestivalItems] = useState([])
   const [kakaoItems,    setKakaoItems]    = useState([])
@@ -53,7 +53,7 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
           lat:      f.lat,
           lng:      f.lng,
           image:    '',
-          isAI:     i === 0,  // 조회수 1위 = AI 추천
+          isAI:     i === 0,
         }));
         setFestivalItems(mapped)
       })
@@ -149,9 +149,29 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const remainCount = items.length - SHOW_COUNT
 
   function handleSelect(item) {
-    setSelectedId(item.id)
-    // 선택된 아이템을 부모(BuilderPage)로 전달
-    if (onSelect) onSelect(item)
+    if (currentStep === 2) {
+      // 맛집: 최대 2개 선택 가능
+      let newIds = [...selectedIds];
+      if (newIds.includes(item.id)) {
+        // 이미 선택된 거면 해제
+        newIds = newIds.filter(id => id !== item.id);
+      } else {
+        // 새로 선택하는 경우
+        if (newIds.length >= 2) {
+          // 이미 2개가 찼다면 가장 오래된 첫 번째 값을 밀어내고 새로 추가 (Queue 방식)
+          newIds.shift();
+        }
+        newIds.push(item.id);
+      }
+      setSelectedIds(newIds);
+      // 부모로 데이터 전달 (선택된 객체들의 '배열'을 만들어서 보냄)
+      const selectedItems = items.filter(i => newIds.includes(i.id));
+      if (onSelect) onSelect(selectedItems);
+    } else {
+      // 1, 3, 4단계: 기존처럼 1개만 선택
+      setSelectedIds([item.id]);
+      if (onSelect) onSelect(item);
+    }
   }
 
   return (
@@ -178,21 +198,31 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
 
       {/* 카드 그리드 */}
       <div className="buildercardgrid_grid">
-        {visibleItems.map(item => (
-          <div
-            key={item.id}
-            className={`buildercardgrid_card ${selectedId === item.id ? 'selected' : ''}`}
-            onClick={() => handleSelect(item)}
-          >
-            {/* AI 추천 + 선택됨 뱃지 */}
-            <div className="buildercardgrid_badges">
-              {item.isAI && (
-                <span className="buildercardgrid_badge_ai">✦ AI 1순위</span>
-              )}
-              {selectedId === item.id && (
-                <span className="buildercardgrid_badge_selected">선택됨</span>
-              )}
-            </div>
+        {visibleItems.map(item => {
+          // 현재 카드가 선택되었는지 여부 확인
+          const isSelected = selectedIds.includes(item.id);
+          // 2단계일 경우 배열의 인덱스를 통해 점심/저녁 구분
+          const selectionIndex = selectedIds.indexOf(item.id);
+
+          return (
+            <div
+              key={item.id}
+              className={`buildercardgrid_card ${isSelected ? 'selected' : ''}`}
+              onClick={() => handleSelect(item)}
+            >
+              <div className="buildercardgrid_badges">
+                {item.isAI && (
+                  <span className="buildercardgrid_badge_ai">✦ AI 1순위</span>
+                )}
+                {/* 선택됨 뱃지 점심/저녁 동적 표시 */}
+                {isSelected && (
+                  <span className="buildercardgrid_badge_selected">
+                    {currentStep === 2
+                      ? (selectionIndex === 0 ? '선택됨 (점심)' : '선택됨 (저녁)')
+                      : '선택됨'}
+                  </span>
+                )}
+              </div>
 
             {/* 이미지 */}
             <div
@@ -219,9 +249,9 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
                 )}
               </div>
             </div>
-
           </div>
-        ))}
+        );
+      })}
 
         {/* 더보기 카드 */}
         {!showAll && remainCount > 0 && (
