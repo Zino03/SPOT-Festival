@@ -37,58 +37,65 @@ public class TravelPlannerService {
     @Transactional
     public String generatePlanner(PlannerRequestDto request, boolean refresh) {
         LocalDate today = LocalDate.now();
-        // 1. 강제 새로고침(refresh=true) 요청이 오면 기존 오늘자 캐시를 삭제하여 중복 적재 방지
-        if (refresh) {
-            plannerRepository.findByFestivalNameAndCreatedAt(request.getFestivalName(), today)
-                    .ifPresent(plannerRepository::delete);
-        } else {
-            // 2. 새로고침이 아니라면 DB를 먼저 조회 (캐시 히트)
-            Optional<Planner> cachedPlanner = plannerRepository.findByFestivalNameAndCreatedAt(request.getFestivalName(), today);
-            if (cachedPlanner.isPresent()) {
-                return convertEntityToJsonString(cachedPlanner.get(), request.getDuration());
+        boolean isCustomPlan = request.getRestaurants() != null && !request.getRestaurants().isEmpty();
+        // Trending 모드일 때만 DB 캐시 조회 및 삭제 적용 (오염 방지)
+        if (!isCustomPlan) {
+            if (refresh) {
+                plannerRepository.findByFestivalNameAndCreatedAt(request.getFestivalName(), today)
+                        .ifPresent(plannerRepository::delete);
+            } else {
+                Optional<Planner> cached = plannerRepository.findByFestivalNameAndCreatedAt(request.getFestivalName(), today);
+                if (cached.isPresent()) {
+                    return convertEntityToJsonString(cached.get(), request.getDuration());
+                }
             }
         }
-        List<Map<String, Object>> parkingDataList = kakaoPlacesService.getNearbyParkings(request.getLatitude(), request.getLongitude());
-        // Map 덩어리에서 주차장 이름만 뽑아 List<String>으로 변환
-        List<String> parkingLots = parkingDataList.stream()
-                .map(parking -> (String) parking.get("place_name")) // 카카오 API의 장소명 키값
-                .limit(3) // AI 프롬프트를 위해 제일 가까운 주차장 상위 3개만 자르기 (옵션)
-                .toList();
 
-        if (parkingLots.isEmpty()) {
-            parkingLots = Arrays.asList("축제장 인근 유료 및 공영 주차장");
+        String parkingName;
+        String lunchName;
+        String dinnerName;
+        String cafeName;
+
+        // 모드에 따른 데이터 주입 (투트랙)
+        if (isCustomPlan) {
+            // [Builder 모드] 유저가 선택한 장소 그대로 사용 (환각 방지)
+            parkingName = request.getParking() != null ? request.getParking().getName() : "인근 주차장";
+            cafeName = request.getCafe() != null ? request.getCafe().getName() : "인근 카페";
+            List<PlannerRequestDto.PlaceDto> rests = request.getRestaurants();
+            lunchName = rests.get(0).getName();
+            dinnerName = (rests.size() > 1) ? rests.get(1).getName() : "자유 저녁 식사";
+        } else {
+            // [Trending 모드] 카카오 API로 자동 검색 (메인 페이지용)
+            List<Map<String, Object>> parkingData = kakaoPlacesService.getNearbyParkings(request.getLatitude(), request.getLongitude());
+            parkingName = parkingData.isEmpty() ? "공영 주차장" : (String) parkingData.get(0).get("place_name");
+
+            List<Map<String, Object>> cafes = kakaoPlacesService.getNearbyPlaces(request.getLatitude(), request.getLongitude(), "CE7", 2);
+            cafeName = cafes.isEmpty() ? "인근 감성 카페" : (String) cafes.get(0).get("place_name");
+
+            List<Map<String, Object>> rests = kakaoPlacesService.getNearbyPlaces(request.getLatitude(), request.getLongitude(), "FD6", 5);
+            lunchName = rests.isEmpty() ? "로컬 맛집" : (String) rests.get(0).get("place_name");
+            dinnerName = rests.size() > 1 ? (String) rests.get(1).get("place_name") : "분위기 좋은 저녁 식당";
         }
 
-        // 맛집 (카카오 FD6)
-        List<String> restaurants = kakaoPlacesService.getNearbyPlaces(request.getLatitude(), request.getLongitude(), "FD6", 5)
-                .stream()
-                .map(p -> (String) p.get("place_name"))
-                .limit(3)
-                .toList();
-        if (restaurants.isEmpty()) restaurants = Arrays.asList("축제장 인근 음식점");
+        String themeString = (request.getThemes() != null && !request.getThemes().isEmpty())
+                ? String.join(", ", request.getThemes()) : "자유로운";
 
-        // 카페 (카카오 CE7)
-        List<String> cafes = kakaoPlacesService.getNearbyPlaces(request.getLatitude(), request.getLongitude(), "CE7", 5)
-                .stream()
-                .map(p -> (String) p.get("place_name"))
-                .limit(2)
-                .toList();
-        if (cafes.isEmpty()) cafes = Arrays.asList("축제장 인근 카페");
-
-        // 테마 리스트를 하나의 문자열로 변환 (예: "조용한, 힐링")
-        String themeString = String.join(", ", request.getThemes());
-
-        // Gemini에게 보낼 완벽한 프롬프트 조립 (Java 15+ Text Block 사용)
         String prompt = """
-            너는 코스 기획 전문가야. 유저는 [%s]과 함께 [%s] 분위기의 [%s] 여행을 원해.
-            제공된 장소 데이터를 조합해서 유저의 성향에 딱 맞는 시간대별 여행 일정표를 만들어줘.
+            너는 코스 기획 전문가야. 유저는 [%s]과 함께 [%s] 일정으로 [%s] 분위기의 여행을 원해.
+            아래 [장소 데이터]만 사용하여 동선과 시간에 맞는 완벽한 일정표를 만들어줘.
             다른 잡담은 절대 하지 말고 오직 아래 JSON 포맷으로만 응답해.
+
+            🚨 [절대 지켜야 할 강력한 제약 조건]
+            1. 환각 금지: 제공된 장소 외에 네가 임의로 새로운 식당이나 카페를 절대 지어내지 마라.
+            2. 식사 분배: 반드시 아래 제공된 '점심 식당'은 점심 시간에, '저녁 식당'은 저녁 시간에 배치해라.
+            3. 일정의 시작은 주차장에 주차하는 것으로 시작하고, 메인 축제 일정을 하이라이트로 넣어라.
 
             [장소 데이터]
             - 메인 축제: %s
-            - 주차장 후보: %s
-            - 맛집 후보: %s
-            - 카페 후보: %s
+            - 시작 주차장: %s
+            - 점심 식당: %s
+            - 저녁 식당: %s
+            - 방문할 카페: %s
 
             [출력 JSON 포맷]
             {
@@ -104,26 +111,28 @@ public class TravelPlannerService {
               ]
             }
             """.formatted(
-                request.getCompanion(),
+                request.getCompanion() != null ? request.getCompanion() : "친구",
+                request.getDuration() != null ? request.getDuration() : "당일치기",
                 themeString,
-                request.getDuration(),
                 request.getFestivalName(),
-                String.join(", ", parkingLots),
-                String.join(", ", restaurants),
-                String.join(", ", cafes),
-                request.getDuration()
+                parkingName,
+                lunchName,
+                dinnerName,
+                cafeName,
+                request.getDuration() != null ? request.getDuration() : "당일치기"
         );
-        // Gemini가 생성한 JSON 결과 문자열
+
         String jsonResult = geminiService.getTravelPlanFromGemini(prompt);
 
-        // 3. 새로 생성된 AI 플랜을 파싱하여 DB에 저장
-        savePlannerToDb(jsonResult, request.getFestivalName(), today);
+        // Trending 모드일 때만 DB에 저장 (개인 커스텀 일정은 저장 안 함)
+        if (!isCustomPlan) {
+            savePlannerToDb(jsonResult, request.getFestivalName(), today);
+        }
 
-        // 조립된 프롬프트를 GeminiService로 넘겨서 파싱된 JSON 결과를 받아옵니다.
-        return geminiService.getTravelPlanFromGemini(prompt);
+        return jsonResult;
     }
     /**
-     * ✨ 보조 메서드 1: DB에서 조회한 Entity 구조를 프론트가 원하는 JSON 스트링 포맷으로 역변환
+     * 보조 메서드 1: DB에서 조회한 Entity 구조를 프론트가 원하는 JSON 스트링 포맷으로 역변환
      */
     private String convertEntityToJsonString(Planner planner, String duration) {
         try {
@@ -152,7 +161,7 @@ public class TravelPlannerService {
     }
 
     /**
-     * ✨ 보조 메서드 2: Gemini JSON 문자열을 파싱해서 1:N 관계의 관계형 DB 엔티티로 저장
+     * 보조 메서드 2: Gemini JSON 문자열을 파싱해서 1:N 관계의 관계형 DB 엔티티로 저장
      */
     private void savePlannerToDb(String jsonResult, String festivalName, LocalDate today) {
         try {
