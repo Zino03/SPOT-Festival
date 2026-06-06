@@ -1,15 +1,24 @@
 import { useState, useEffect } from 'react'
 import { loadKakaoMap } from '../../../utils/kakao'
+import { fetchPhotos } from '../../../utils/unsplash'
 import './BuilderCardGrid.css'
 
 const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
 const SHOW_COUNT = 5
+
+// 단계별 Unsplash 검색 쿼리 (주차장은 이미지 불필요)
+const IMAGE_QUERY = {
+  1: 'Korean festival outdoor celebration',
+  2: 'Korean restaurant food traditional',
+  3: 'Korean cafe coffee aesthetic interior',
+}
 
 function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const [selectedIds,    setSelectedIds]    = useState([])
   const [showAll,       setShowAll]       = useState(false)
   const [festivalItems, setFestivalItems] = useState([])
   const [kakaoItems,    setKakaoItems]    = useState([])
+  const [images,        setImages]        = useState([])
   // 예외 처리 알림 문구를 담을 새로운 State 추가
   const [fallbackMsg,   setFallbackMsg]   = useState('')
 
@@ -140,11 +149,15 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
       .catch(err => console.error('주차장 API 에러:', err))
   }, [currentStep, festival])
 
-  const items = currentStep === 1
-    ? festivalItems
-    : [2, 3, 4].includes(currentStep) && festival
-      ? kakaoItems
-      : (DUMMY_ITEMS[currentStep] || [])
+  const items = currentStep === 1 ? festivalItems : kakaoItems
+
+  // items가 바뀔 때 해당 단계 키워드로 이미지 배치 요청
+  useEffect(() => {
+    const query = IMAGE_QUERY[currentStep]
+    if (!items.length || !query) return
+    fetchPhotos(query, Math.min(items.length, 15))
+      .then(urls => setImages(urls))
+  }, [items, currentStep])
   const visibleItems = showAll ? items : items.slice(0, SHOW_COUNT)
   const remainCount = items.length - SHOW_COUNT
 
@@ -198,7 +211,7 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
 
       {/* 카드 그리드 */}
       <div className="buildercardgrid_grid">
-        {visibleItems.map(item => {
+        {visibleItems.map((item, idx) => {
           // 현재 카드가 선택되었는지 여부 확인
           const isSelected = selectedIds.includes(item.id);
           // 2단계일 경우 배열의 인덱스를 통해 점심/저녁 구분
@@ -227,8 +240,7 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
             {/* 이미지 */}
             <div
               className="buildercardgrid_image"
-              // TODO: 이미지 생기면 아래 style 주석 해제
-              // style={{ backgroundImage: `url(${item.image})` }}
+              style={images[idx % images.length] ? { backgroundImage: `url(${images[idx % images.length]})` } : {}}
             />
 
             {/* 카드 정보 */}
