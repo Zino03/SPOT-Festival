@@ -28,7 +28,6 @@ function BuilderNav({ currentStep, totalSteps = 5, selectedItem, onPrev, onNext 
       {/* 현재 선택 상태 */}
       <div className="buildernav_status">
         <span className="buildernav_step">{currentStep} / {totalSteps - 1}</span>
-        {/* TODO: API 연동 시 selectedItem → 실제 선택 데이터로 교체 */}
         {selectedItem && (
           <span className="buildernav_selected">
             선택됨 · {selectedItem.name}
