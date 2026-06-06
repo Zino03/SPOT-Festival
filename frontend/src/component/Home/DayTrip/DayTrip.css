@@ -2,7 +2,7 @@
   padding: 64px;
 }
 
-/* 데이터 로딩 중 표시*/
+/* 데이터 로딩 중 표시 */
 .daytrip_loading {
   text-align: center;
   padding: 48px;
@@ -10,9 +10,7 @@
   font-size: 15px;
 }
 
-/* ─────────────────────────────────────
-   상단 헤더 (타이틀 + 버튼)
-───────────────────────────────────── */
+/* 상단 헤더 (타이틀 + 버튼) */
 .daytrip_header {
   display: flex;
   align-items: flex-end; 
@@ -26,7 +24,7 @@
   gap: 8px;
 }
 
-/* 상단 레이블 (— AI CURATED COURSE) */
+/* 상단 레이블 */
 .daytrip_label {
   display: flex;
   align-items: center;
@@ -54,7 +52,7 @@
   word-break: keep-all;
 }
 
-/* 타이틀 강조 텍스트 (충북 청주시) */
+/* 타이틀 강조 텍스트 */
 .daytrip_title span {
   color: #2351cc; 
 }
@@ -96,18 +94,14 @@
   transform: translateY(-2px);
 }
 
-/* ─────────────────────────────────────
-   코스 카드
-───────────────────────────────────── */
+/* 코스 카드 */
 .daytrip_card {
   background: #f8f9fa;
   border-radius: 16px;
   padding: 28px 32px;
 }
 
-/* ─────────────────────────────────────
-   코스 요약 정보 바
-───────────────────────────────────── */
+/* 코스 요약 정보 바 */
 .daytrip_info_bar {
   display: flex;
   align-items: center;
@@ -139,9 +133,7 @@
   color: #aaa;
 }
 
-/* ─────────────────────────────────────
-   타임라인
-───────────────────────────────────── */
+/* 타임라인 */
 .daytrip_timeline {
   display: flex;
   align-items: flex-start;
@@ -235,9 +227,7 @@
   color: #ff6b35;
 }
 
-/* ─────────────────────────────────────
-   AI 추천 이유 박스
-───────────────────────────────────── */
+/* AI 추천 이유 박스 */
 .daytrip_ai_reason {
   display: flex;
   align-items: flex-start;
@@ -251,7 +241,7 @@
   text-align: left;
 }
 
-/* ℹ 아이콘 */
+/* i 아이콘 */
 .daytrip_ai_reason_icon {
   width: 28px;
   height: 28px;

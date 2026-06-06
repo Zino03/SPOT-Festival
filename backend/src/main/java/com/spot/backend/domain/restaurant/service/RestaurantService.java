@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RestaurantService {
 
-    private final GeminiService geminiService; // 1단계에서 쓰신 제미나이 서비스
+    private final GeminiService geminiService;
 
     public List<KakaoPlaceDto> recommendByAI(RestaurantRecommendRequest request) {
 
@@ -64,7 +64,7 @@ public class RestaurantService {
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
-            // 6. 혹시 AI가 응답에서 누락시킨 장소가 있다면 맨 뒤에 이어붙이기 (안전 장치)
+            // 6. 혹시 AI가 응답에서 누락시킨 장소가 있다면 맨 뒤에 붙이기
             candidates.stream()
                     .filter(p -> !rankedIds.contains(p.getId()))
                     .forEach(sortedPlaces::add);

@@ -1,6 +1,5 @@
 // 축제 상세 페이지 카카오 지도 컴포넌트
 // 축제 위치에 커스텀 핀을 표시하고, 카카오 Places API로 주변 장소를 검색해 마커 표시
-//
 
 // 1. festival 변경 시 : 지도 초기화 + 축제 위치 핀 생성 → mapReady = true
 // 2. activeCategory / activeSort / mapReady 변경 시 : 기존 마커 제거 후 Places 재검색

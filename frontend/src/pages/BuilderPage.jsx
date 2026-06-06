@@ -15,8 +15,10 @@ import './BuilderPage.css'
 function BuilderPage() {
   const location = useLocation()
   const preselected = location.state?.preselectedFestival ?? null
+  // DayTrip -> 완성된 코스를 가져올 때 리포트 화면으로 바로 진입
+  const jumpToReport = location.state?.jumpToReport ?? false
 
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(jumpToReport ? 5 : 0)
   const [preferences, setPreferences] = useState({})
   const [selectedItems, setSelectedItems] = useState(
     preselected ? { 1: preselected } : {}

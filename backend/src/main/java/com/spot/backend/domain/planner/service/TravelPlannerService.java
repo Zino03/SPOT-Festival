@@ -135,10 +135,10 @@ public class TravelPlannerService {
         }
     }
 
-    /**
-     * 보조 메서드 1: DB 캐시 Entity를 프론트가 원하는 Map 구조로 변환
-     * String을 거치지 않고 바로 Map으로 조립해 직렬화 오버헤드를 줄임
-     */
+    /*
+        보조 메서드 1: DB 캐시 Entity를 프론트가 원하는 Map 구조로 변환
+        String을 거치지 않고 바로 Map으로 조립해 직렬화 오버헤드를 줄임
+    */
     private Map<String, Object> convertEntityToMap(Planner planner, String duration) {
         List<Map<String, String>> timelineMaps = planner.getTimelines().stream()
                 .map(t -> Map.of(
@@ -157,9 +157,9 @@ public class TravelPlannerService {
         );
     }
 
-    /**
-     * 보조 메서드 2: Gemini JSON 문자열을 파싱해서 1:N 관계의 관계형 DB 엔티티로 저장
-     */
+    /*
+        보조 메서드 2: Gemini JSON 문자열을 파싱해서 1:N 관계의 관계형 DB 엔티티로 저장
+    */
     private void savePlannerToDb(String jsonResult, String festivalName, LocalDate today) {
         try {
             JsonNode root = objectMapper.readTree(jsonResult);
@@ -189,7 +189,7 @@ public class TravelPlannerService {
 
             plannerRepository.save(planner);
         } catch (Exception e) {
-            // JSON 파싱이나 DB 저장 중 예외 발생 시 로그 출력 후 원본 리턴하도록 스킵 (시스템 안정성 방어)
+            // JSON 파싱이나 DB 저장 중 예외 발생 시 로그 출력 후 원본 리턴하도록 스킵
             System.err.println("AI 결과 DB 저장 중 예외 발생: " + e.getMessage());
         }
     }

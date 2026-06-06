@@ -13,9 +13,9 @@ public class Timeline {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String time;      // 예: "11:00"
-    private String place;     // 예: "한강 공영주차장"
-    private String activity;  // 예: "도착 · 무료 주차 2시간"
+    private String time; // 예: "11:00"
+    private String place; // 예: "한강 공영주차장"
+    private String activity; // 예: "도착 · 무료 주차 2시간"
 
     // N:1 관계 (여러 타임라인이 하나의 플래너에 속함)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,7 +29,7 @@ public class Timeline {
         this.activity = activity;
     }
 
-    // Planner(부모)를 세팅하기 위한 메서드
+    // Planner를 세팅하기 위한 메서드
     public void setPlanner(Planner planner) {
         this.planner = planner;
     }

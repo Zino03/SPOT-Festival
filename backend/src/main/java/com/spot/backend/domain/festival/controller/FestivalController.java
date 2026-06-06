@@ -57,34 +57,34 @@ public class FestivalController {
 
     // 지역 영문 매핑
     private static final Map<String, String> REGION_KEYWORD = Map.ofEntries(
-        Map.entry("seoul",     "서울"),
-        Map.entry("gyeonggi",  "경기"),
-        Map.entry("incheon",   "인천"),
-        Map.entry("gangwon",   "강원"),
-        Map.entry("chungnam",  "충청남도"),
-        Map.entry("chungbuk",  "충청북도"),
-        Map.entry("daejeon",   "대전"),
-        Map.entry("sejong",    "세종"),
-        Map.entry("jeonbuk",   "전라북도"),
-        Map.entry("jeonnam",   "전라남도"),
-        Map.entry("gwangju",   "광주"),
+        Map.entry("seoul", "서울"),
+        Map.entry("gyeonggi", "경기"),
+        Map.entry("incheon", "인천"),
+        Map.entry("gangwon", "강원"),
+        Map.entry("chungnam", "충청남도"),
+        Map.entry("chungbuk", "충청북도"),
+        Map.entry("daejeon", "대전"),
+        Map.entry("sejong", "세종"),
+        Map.entry("jeonbuk", "전라북도"),
+        Map.entry("jeonnam", "전라남도"),
+        Map.entry("gwangju", "광주"),
         Map.entry("gyeongbuk", "경상북도"),
         Map.entry("gyeongnam", "경상남도"),
-        Map.entry("daegu",     "대구"),
-        Map.entry("ulsan",     "울산"),
-        Map.entry("busan",     "부산"),
-        Map.entry("jeju",      "제주")
+        Map.entry("daegu", "대구"),
+        Map.entry("ulsan", "울산"),
+        Map.entry("busan", "부산"),
+        Map.entry("jeju", "제주")
     );
 
     // 지도 각 지역 표시할 축제 수 API
     @GetMapping("/region-counts")
     public List<Map<String, Object>> getRegionCounts() {
         return REGION_KEYWORD.entrySet().stream()
-                .map(e -> Map.<String, Object>of(
-                        "regionId", e.getKey(),
-                        "count",    festivalRepository.countByRegionKeyword(e.getValue())
-                ))
-                .toList();
+            .map(e -> Map.<String, Object>of(
+                "regionId", e.getKey(),
+                "count", festivalRepository.countByRegionKeyword(e.getValue())
+            ))
+            .toList();
     }
 
    // 지역별 축제 목록 API
@@ -93,9 +93,9 @@ public class FestivalController {
         String keyword = REGION_KEYWORD.get(regionId.toLowerCase()); // 대소문자 구분 x
         if (keyword == null) return ResponseEntity.badRequest().build(); // 없는 지역이면 400 에러
         List<FestivalDetailResponse> result = festivalRepository.findByRegionKeyword(keyword)
-                .stream()
-                .map(FestivalDetailResponse::new)
-                .toList();
+            .stream()
+            .map(FestivalDetailResponse::new)
+            .toList();
         return ResponseEntity.ok(result);
     }
 
@@ -103,12 +103,12 @@ public class FestivalController {
     @GetMapping("/{id}")
     public ResponseEntity<FestivalDetailResponse> getFestivalDetail(@PathVariable Long id) {
         return festivalRepository.findById(id)
-                .map(festival -> {
-                    festival.incrementViewCount(); // 조회 시 viewCount + 1
-                    festivalRepository.save(festival);
-                    return ResponseEntity.ok(new FestivalDetailResponse(festival));
-                })
-                .orElse(ResponseEntity.notFound().build()); // 없는 ID면 404
+            .map(festival -> {
+                festival.incrementViewCount(); // 조회 시 viewCount + 1
+                festivalRepository.save(festival);
+                return ResponseEntity.ok(new FestivalDetailResponse(festival));
+            })
+            .orElse(ResponseEntity.notFound().build()); // 없는 ID면 404
     }
 
     @PostMapping("/recommend")

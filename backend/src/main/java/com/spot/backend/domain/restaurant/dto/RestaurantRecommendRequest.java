@@ -18,7 +18,7 @@ public class RestaurantRecommendRequest {
 
     @Data
     public static class KakaoPlaceDto {
-        private String id; // 카카오 장소 ID는 문자열입니다.
+        private String id; // 카카오 장소 ID는 문자열
         private String name;
         private String category;
         private String distance;

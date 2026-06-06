@@ -83,9 +83,9 @@ function BuilderReceipt({ currentStep, selectedItems}) {
                 {selectedArray.map((item, index) => (
                   <div key={item.id || index} className="builderreceipt_selected">
                     <span>
-                        {step.id == 2 ? (index == 0 ? '☀️ 점심: ' : '🌙 저녁: ') : ''}
-                        {item.name}
-                    </span>
+                {step.id == 2 ? (index == 0 ? '☀️ 점심: ' : '🌙 저녁: ') : ''}
+                {item.name}
+              </span>
                     {item.distance && (
                       <span>{item.distance}</span>
                     )}
