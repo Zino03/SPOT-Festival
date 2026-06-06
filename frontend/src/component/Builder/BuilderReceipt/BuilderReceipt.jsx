@@ -12,7 +12,7 @@ const RECEIPT_STEPS = [
 function BuilderReceipt({ currentStep, selectedItems}) {
   // 1. 동적 서브타이틀 (선택된 축제가 있으면 축제명, 없으면 기본 텍스트)
   const festivalName = selectedItems?.[1]?.name || 'AI 맞춤 코스';
-  // 배열 평탄화: 2단계(배열)와 나머지(객체)를 모두 하나의 1차원 배열로 합침
+  // 배열과 나머지를 모두 하나의 1차원 배열로 합침
   const allSelectedPlaces = Object.values(selectedItems || {}).reduce((acc, curr) => {
     if (Array.isArray(curr)) return acc.concat(curr);
     if (curr) acc.push(curr);
@@ -31,7 +31,7 @@ function BuilderReceipt({ currentStep, selectedItems}) {
     ? (totalDistanceMeters >= 1000 ? (totalDistanceMeters / 1000).toFixed(1) + 'km' : Math.round(totalDistanceMeters) + 'm')
     : '-';
 
-  // 3. 동적 예상 시간 계산 (UX를 위해 그럴싸한 가중치 부여: 축제 3.5h, 식사 1.5h, 카페 1h 등)
+  // 3. 동적 예상 시간 계산 (가중치 부여: 축제 3.5h, 식사 1.5h, 카페 1h 등)
   let estimatedHours = 0;
   if (selectedItems?.[1]) estimatedHours += 3.5;
   if (Array.isArray(selectedItems?.[2])) {
