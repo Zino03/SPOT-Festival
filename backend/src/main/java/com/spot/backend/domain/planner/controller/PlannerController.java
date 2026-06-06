@@ -4,6 +4,8 @@ import com.spot.backend.domain.festival.dto.PlannerRequestDto;
 import com.spot.backend.domain.planner.service.TravelPlannerService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/planner")
 public class PlannerController {
@@ -15,7 +17,7 @@ public class PlannerController {
     }
 
     @PostMapping("/generate")
-    public String generateTravelPlan(
+    public Map<String, Object> generateTravelPlan(
             @RequestBody PlannerRequestDto request,
             @RequestParam(value = "refresh", defaultValue = "false") boolean refresh) {
         // 프론트엔드에서 넘어온 JSON 요청을 받아 AI 플래너 서비스로 전달 (POST)

@@ -5,7 +5,7 @@ function BuilderHeader() {
     <div className="builderheader">
       <p className="builderheader_label">
         <span className="builderheader_label_line"></span>
-        FULL-PAGE WIZARD · 길 포현 = 길 단계
+        STEP BY STEP · 단계별 코스 설계
       </p>
       <h1 className="builderheader_title">
         AI가 추천하고, <span>당신이 고르는</span> 하루.
