@@ -1,10 +1,10 @@
 package com.spot.backend.domain.planner.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spot.backend.domain.festival.dto.PlannerRequestDto;
-
 import com.spot.backend.domain.planner.entity.Planner;
 import com.spot.backend.domain.planner.entity.Timeline;
 import com.spot.backend.domain.planner.repository.PlannerRepository;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +34,7 @@ public class TravelPlannerService {
         this.objectMapper = new ObjectMapper();
     }
     @Transactional
-    public String generatePlanner(PlannerRequestDto request, boolean refresh) {
+    public Map<String, Object> generatePlanner(PlannerRequestDto request, boolean refresh) {
         LocalDate today = LocalDate.now();
         boolean isCustomPlan = request.getRestaurants() != null && !request.getRestaurants().isEmpty();
         // Trending 모드일 때만 DB 캐시 조회 및 삭제 적용 (오염 방지)
@@ -46,7 +45,7 @@ public class TravelPlannerService {
             } else {
                 Optional<Planner> cached = plannerRepository.findByFestivalNameAndCreatedAt(request.getFestivalName(), today);
                 if (cached.isPresent()) {
-                    return convertEntityToJsonString(cached.get(), request.getDuration());
+                    return convertEntityToMap(cached.get(), request.getDuration());
                 }
             }
         }
@@ -129,40 +128,38 @@ public class TravelPlannerService {
             savePlannerToDb(jsonResult, request.getFestivalName(), today);
         }
 
-        return jsonResult;
-    }
-    /**
-     * 보조 메서드 1: DB에서 조회한 Entity 구조를 프론트가 원하는 JSON 스트링 포맷으로 역변환
-     */
-    private String convertEntityToJsonString(Planner planner, String duration) {
         try {
-            // DB의 자식 타임라인 리스트를 JSON 구조의 Map 리스트로 매핑
-            List<Map<String, String>> timelineMaps = planner.getTimelines().stream()
-                    .map(t -> Map.of(
-                            "time", t.getTime(),
-                            "place", t.getPlace(),
-                            "activity", t.getActivity()
-                    )).toList();
-
-            // 프론트 UI가 쓰던 출력 포맷 구조 그대로 Map 조립
-            Map<String, Object> rootMap = Map.of(
-                    "title", planner.getTitle(),
-                    "duration", duration,
-                    "itinerary", List.of(Map.of(
-                            "day", 1,
-                            "timeline", timelineMaps
-                    ))
-            );
-
-            return objectMapper.writeValueAsString(rootMap);
+            return objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("캐시 데이터 JSON 변환 실패", e);
+            throw new RuntimeException("Gemini 응답 JSON 파싱 실패", e);
         }
     }
 
-    /**
-     * 보조 메서드 2: Gemini JSON 문자열을 파싱해서 1:N 관계의 관계형 DB 엔티티로 저장
-     */
+    /*
+        보조 메서드 1: DB 캐시 Entity를 프론트가 원하는 Map 구조로 변환
+        String을 거치지 않고 바로 Map으로 조립해 직렬화 오버헤드를 줄임
+    */
+    private Map<String, Object> convertEntityToMap(Planner planner, String duration) {
+        List<Map<String, String>> timelineMaps = planner.getTimelines().stream()
+                .map(t -> Map.of(
+                        "time", t.getTime(),
+                        "place", t.getPlace(),
+                        "activity", t.getActivity()
+                )).toList();
+
+        return Map.of(
+                "title", planner.getTitle(),
+                "duration", duration,
+                "itinerary", List.of(Map.of(
+                        "day", 1,
+                        "timeline", timelineMaps
+                ))
+        );
+    }
+
+    /*
+        보조 메서드 2: Gemini JSON 문자열을 파싱해서 1:N 관계의 관계형 DB 엔티티로 저장
+    */
     private void savePlannerToDb(String jsonResult, String festivalName, LocalDate today) {
         try {
             JsonNode root = objectMapper.readTree(jsonResult);
@@ -192,7 +189,7 @@ public class TravelPlannerService {
 
             plannerRepository.save(planner);
         } catch (Exception e) {
-            // JSON 파싱이나 DB 저장 중 예외 발생 시 로그 출력 후 원본 리턴하도록 스킵 (시스템 안정성 방어)
+            // JSON 파싱이나 DB 저장 중 예외 발생 시 로그 출력 후 원본 리턴하도록 스킵
             System.err.println("AI 결과 DB 저장 중 예외 발생: " + e.getMessage());
         }
     }

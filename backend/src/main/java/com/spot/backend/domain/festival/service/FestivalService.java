@@ -4,7 +4,6 @@ import com.spot.backend.domain.festival.dto.FestivalRecommendRequest;
 import com.spot.backend.domain.festival.dto.FestivalDetailResponse;
 import com.spot.backend.domain.festival.entity.Festival;
 import com.spot.backend.domain.festival.repository.FestivalRepository;
-// TODO: 상혁님이 이전에 만드신 Gemini 연동 서비스의 패키지 경로로 맞춰주세요.
 import com.spot.backend.infrastructure.ai.service.GeminiService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
-    private final GeminiService geminiService; // 오늘 오전에 연동하신 Gemini API 서비스
+    private final GeminiService geminiService; // Gemini API 서비스
 
     public List<FestivalDetailResponse> recommendByAI(FestivalRecommendRequest request) {
 
@@ -74,7 +73,7 @@ public class FestivalService {
 
         } catch (Exception e) {
             // AI 호출 실패 시 (토큰 초과, 서버 에러 등)
-            // 로직이 터지지 않도록 기존 DB 조회 순서대로 반환하는 든든한 방어 코드!
+            // 로직이 터지지 않도록 기존 DB 조회 순서대로 반환
             log.error("AI 추천 중 오류 발생, 기본 순서로 반환합니다.", e);
             return candidates.stream().map(FestivalDetailResponse::from).collect(Collectors.toList());
         }

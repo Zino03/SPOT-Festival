@@ -31,7 +31,6 @@ function BuilderStepper({ currentStep, selectedItems }) {
               <span className="builderstepper_label">{step.label}</span>
 
               {/* 선택된 항목 표시 (완료된 단계) */}
-              {/* TODO: API 연동 시 selectedItems[step.id] → 실제 선택 데이터로 교체 */}
               {isDone && selectedItems?.[step.id] && (
                 <span className="builderstepper_selected">
                   {selectedItems[step.id]?.name}

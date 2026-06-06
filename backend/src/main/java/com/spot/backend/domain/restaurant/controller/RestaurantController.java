@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/restaurants")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173") // ✨ 1단계와 동일하게 CORS 허용
+@CrossOrigin(origins = "http://localhost:5173") // 1단계와 동일하게 CORS 허용
 public class RestaurantController {
 
     private final RestaurantService restaurantService;

@@ -1,86 +1,130 @@
+// 홈 AI 추천 코스 섹션
+// 트렌딩 축제 중 LIVE 중인 축제를 우선 선택하고 AI 플래너 API로 하루 코스를 생성한다.
+// LIVE 축제가 없으면 첫 번째 트렌딩 축제를 사용하며, 트렌딩 API 실패 시 기본값으로 폴백한다.
+//
+// ?refresh=false : 백엔드 DB 캐시에서 반환 (빠름)
+// ?refresh=true  : Gemini AI에게 새로 생성 요청 ("새 코스 짜기" 버튼)
+
+import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import './DayTrip.css'
+
+// 트렌딩 API 실패 시 사용할 기본 축제
+const FALLBACK_FESTIVAL = {
+  name: '청주 음악 축제',
+  lat: 36.6424,
+  lng: 127.4890,
+  region: '충북 청주시',
+}
 
 function DayTrip() {
   const [course, setCourse] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-  // API 호출 로직을 재사용 가능한 함수로 분리 (isRefresh 파라미터 추가)
-  const fetchCourse = (isRefresh = false) => {
+  // 새 코스 짜기 버튼에서 재사용할 현재 선택된 축제
+  const [currentFestival, setCurrentFestival] = useState(null)
+  const navigate = useNavigate()
+
+  // festival을 직접 받는 이유: setCurrentFestival이 비동기라
+  // useEffect 안에서 바로 fetchCourse를 호출할 때 state가 아직 반영 안 됨
+  const fetchCourse = (isRefresh = false, festival = null) => {
+    const target = festival || currentFestival
+    if (!target) return
+
     setIsLoading(true)
-    setErrorMessage(null) // 다시 요청할 때 기존 에러 메시지 초기화
-    // 백엔드 주소 뒤에 ?refresh=true/false 쿼리 파라미터를 동적으로 붙여줍니다.
-  fetch(`http://localhost:8080/api/planner/generate?refresh=${isRefresh}`, {
-    method: 'POST',
-    headers:{
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      duration: "당일치기",
-      companion: "친구",
-      themes: ["음악", "휴식", "트렌디한"],
-      festivalName: "청주 음악 축제",
-      latitude: 36.6424,
-      longitude: 127.4890
+    setErrorMessage(null)
+
+    fetch(`http://localhost:8080/api/planner/generate?refresh=${isRefresh}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        duration: "당일치기",
+        companion: "친구",
+        themes: ["음악", "휴식", "트렌디한"],
+        festivalName: target.name,
+        latitude: target.lat || 37.5665,
+        longitude: target.lng || 126.9780,
+      })
     })
-  })
-    .then(async (res) => {
-    // 백엔드가 200(성공)이 아닌 에러 상태를 보냈을 때 처리
+      .then(async res => {
         if (!res.ok) {
-              const errorData = await res.json();
-              throw new Error(errorData.message); // 백엔드가 보낸 에러 메시지를 던짐
-            }
-            return res.json();
-        })
-    .then(data => {
-      // 중요: 백엔드에서 주는 데이터(data)를 프론트엔드 UI 구조에 맞게 변환(Mapping)
-      const today = new Date();
-      const mappedData = {
-        date: `${today.getMonth() + 1}월 ${today.getDate()}일`,
-        region: '충북 청주시',
-        totalTime: '총 7시간', // (참고: 거리/시간은 추후 카카오 모빌리티 API 등으로 고도화 가능)
-        distance: '3.4km',
-        walk: '12분 도보',
-        updatedAt: today.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-        aiReason: data.title || 'AI가 분석한 최적의 동선입니다.',
-        // 백엔드의 itinerary -> timeline 배열을 프론트의 steps 배열로 변환
-        steps: data.itinerary[0].timeline.map((item, index) => ({
-          time: item.time,
-          icon: index === 0 ? 'P' : (index === 1 ? '🍴' : '✦'), // 순서에 맞춰 임시 아이콘 부여
-          title: item.place,
-          desc: item.activity,
-          highlight: index === 1 // 두 번째 항목 오렌지색 강조
-        })) || []
-      }
-      setCourse(mappedData)
-      setIsLoading(false)
-    })
-    .catch(err => {
-      console.error('AI 코스 로딩 에러:', err)
-      setErrorMessage(err.message)
-      setIsLoading(false)
-    })
+          const errorData = await res.json()
+          throw new Error(errorData.message)
+        }
+        return res.json()
+      })
+      .then(data => {
+        const today = new Date()
+        const mappedData = {
+          date: `${today.getMonth() + 1}월 ${today.getDate()}일`,
+          region: target.region || '전국',
+          totalTime: '총 7시간',
+          distance: '3.4km',
+          walk: '12분 도보',
+          updatedAt: today.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          aiReason: data.title || 'AI가 분석한 최적의 동선입니다.',
+          // 백엔드의 itinerary → timeline 배열을 프론트의 steps 배열로 변환
+          steps: data.itinerary[0].timeline.map((item, index) => ({
+            time: item.time,
+            icon: index === 0 ? 'P' : (index === 1 ? '🍴' : '✦'),
+            title: item.place,
+            desc: item.activity,
+            highlight: index === 1 // 두 번째 항목 오렌지색 강조
+          })) || []
+        }
+        setCourse(mappedData)
+        setIsLoading(false)
+      })
+      .catch(err => {
+        console.error('AI 코스 로딩 에러:', err)
+        setErrorMessage(err.message)
+        setIsLoading(false)
+      })
   }
+
   useEffect(() => {
-    fetchCourse(false)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    fetch('http://localhost:8080/api/festivals/trending')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.length) {
+          setCurrentFestival(FALLBACK_FESTIVAL)
+          fetchCourse(false, FALLBACK_FESTIVAL)
+          return
+        }
+        // LIVE 축제 우선, 없으면 첫 번째 트렌딩
+        const live = data.find(f =>
+          new Date(f.startDate) <= today && today <= new Date(f.endDate)
+        )
+        const target = live || data[0]
+        setCurrentFestival(target)
+        fetchCourse(false, target)
+      })
+      .catch(err => {
+        console.error('트렌딩 축제 로드 실패, 기본값 사용:', err)
+        setCurrentFestival(FALLBACK_FESTIVAL)
+        fetchCourse(false, FALLBACK_FESTIVAL)
+      })
   }, [])
-  // 에러가 발생했을 때 보여줄 화면
+
   if (errorMessage) {
     return (
       <section className="daytrip">
-        <div className="daytrip_loading" style={{ color: '#ff6b6b'}}>
+        <div className="daytrip_loading" style={{ color: '#ff6b6b' }}>
           <span>⚠️ {errorMessage}</span>
           <button
             onClick={() => fetchCourse(true)}
             style={{ padding: '8px 16px', borderRadius: '4px', border: '1px solid #ff6b6b', backgroundColor: 'transparent', color: '#ff6b6b', cursor: 'pointer', marginTop: '10px' }}
           >
-             🔄 다시 시도하기
+            🔄 다시 시도하기
           </button>
         </div>
       </section>
     )
   }
-  // 데이터 로딩 중
+
   if (isLoading || !course) {
     return (
       <section className="daytrip">
@@ -100,7 +144,6 @@ function DayTrip() {
           <p className="daytrip_label">
             <span className="daytrip_label_line"></span>
             AI CURATED COURSE · 오늘의 추천 코스
-            {/* ✨ 4. 강제 새로고침(새 코스 발급) 버튼 추가 */}
             <button
               onClick={() => fetchCourse(true)}
               title="AI에게 새로운 코스를 요청합니다"
@@ -117,8 +160,16 @@ function DayTrip() {
           </p>
         </div>
         <div className="daytrip_header_right">
-          <button className="daytrip_btn_save">🔖 저장</button>
-          <button className="daytrip_btn_start">이 코스 시작하기 →</button>
+          <button 
+            className="daytrip_btn_start"
+            // 이미 생성된 course 데이터를 state로 담아서 리포트 페이지로 넘김
+            onClick={() => navigate('/builder', { 
+              state: { 
+                jumpToReport: true, // 바로 결과창
+                preloadedCourse: course // 완성된 데이터도 함께 전달
+              } })}
+          >이 코스 시작하기 →
+          </button>
         </div>
       </div>
 

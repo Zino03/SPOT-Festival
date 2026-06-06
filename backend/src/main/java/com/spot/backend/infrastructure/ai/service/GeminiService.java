@@ -53,8 +53,11 @@ public class GeminiService {
                     .path("parts").get(0)
                     .path("text");
 
-            // 3. 최종 산출물 리턴
-            return textNode.asText();
+            // 3. 마크다운 코드블록 제거 후 순수 JSON 문자열만 리턴
+            // Gemini가 프롬프트를 무시하고 ```json ... ``` 형태로 감싸서 줄 때가 있음
+            String text = textNode.asText();
+            text = text.replaceAll("(?s)```json\\s*", "").replaceAll("```", "").trim();
+            return text;
 
         } catch (Exception e) {
             e.printStackTrace();

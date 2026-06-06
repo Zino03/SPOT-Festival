@@ -10,7 +10,7 @@
   height: 420px;
   border-radius: 20px;
   overflow: hidden;
-  background-color: #1a1a2e; /* 임시 배경색 */
+  background-color: #1a1a2e;
   background-size: cover;
   background-position: center;
 }
@@ -43,7 +43,7 @@
   width: 60px;
   height: 60px;
   border-radius: 8px;
-  background-color: #333; /* 임시 배경색 */
+  background-color: #333;
   background-size: cover;
   background-position: center;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -103,16 +103,6 @@
   font-size: 11px;
 }
 
-/* P SCORE 뱃지 */
-.festivalhero_badge_score {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 11px;
-}
-
 /* 축제명 */
 .festivalhero_title {
   font-size: 36px;
@@ -143,26 +133,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-/* 아이콘 버튼 (북마크, 공유) */
-.festivalhero_btn_icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-}
-
-.festivalhero_btn_icon:hover {
-  background: rgba(255, 255, 255, 0.35);
 }
 
 /* 코스에 추가 버튼 */

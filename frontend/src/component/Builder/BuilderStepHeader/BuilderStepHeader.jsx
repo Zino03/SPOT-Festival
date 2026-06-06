@@ -37,7 +37,6 @@ function BuilderStepHeader({ currentStep, totalCount, preferences, festival }) {
             {STEP_TITLES[currentStep]}
           </h2>
           <p className="builderstepheader_subtitle">
-            {/* TODO: API 연동 시 STEP_SUBTITLES → 동적 데이터로 교체 */}
             {getDynamicSubtitle()}
             {totalCount && (
               <span className="builderstepheader_count"> · {totalCount}개 후보</span>

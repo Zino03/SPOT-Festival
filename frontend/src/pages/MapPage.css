@@ -2,7 +2,7 @@
   padding-bottom: 64px;
 }
 
-/* ── 히어로 ── */
+/* 히어로 */
 .mappage_hero {
   height: 320px;
   background-size: cover;
@@ -89,7 +89,7 @@
   flex-shrink: 0;
 }
 
-/* ── 지도 + 리스트 ── */
+/* 지도 + 리스트 */
 .mappage_content {
   display: flex;
   gap: 24px;
