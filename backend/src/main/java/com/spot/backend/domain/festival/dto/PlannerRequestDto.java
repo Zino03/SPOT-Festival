@@ -16,8 +16,8 @@ public class PlannerRequestDto {
 
     // 프론트엔드에서 넘어오는 유저 선택 장소들을 받기 위한 필드 추가
     private List<PlaceDto> restaurants; // 맛집은 점심/저녁 2개이므로 List 형태
-    private PlaceDto cafe;              // 카페
-    private PlaceDto parking;           // 주차장
+    private PlaceDto cafe; // 카페
+    private PlaceDto parking; // 주차장
 
     @Data
     public static class PlaceDto {

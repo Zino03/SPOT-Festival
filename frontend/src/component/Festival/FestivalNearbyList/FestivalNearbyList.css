@@ -95,7 +95,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-
 .festivalnearbylist_item--active {
   border-color: var(--color-accent) !important;
   background: #fff0eb !important;
@@ -120,7 +119,6 @@
   justify-content: center;
   flex-shrink: 0;
 }
-
 
 .festivalnearbylist_info {
   flex: 1;

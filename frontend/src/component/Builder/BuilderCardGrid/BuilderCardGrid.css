@@ -1,9 +1,9 @@
-/* 그리드 레이아웃 (한 줄에 2개 고정) */
+/* 그리드 레이아웃 (한 줄에 2개) */
 .buildercardgrid_grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 어떤 화면 크기에서든 정확히 2등분(1fr) 합니다. */
+  grid-template-columns: repeat(2, 1fr); /* 2등분(1fr) */
   gap: 16px;
-  align-items: stretch; /* 같은 줄의 카드들이 가장 높은 카드의 높이에 맞춰 늘어납니다. */
+  align-items: stretch;
 }
 
 /* 카드 컨테이너 */
@@ -16,15 +16,15 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: 100%; /* 부모(Grid Cell)의 높이를 꽉 채우도록 설정 */
+  height: 100%;
   box-sizing: border-box;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  /* 텍스트 넘침 방지를 위해 min-width를 0으로 설정 (Flex 버그 방지) */
+  /* 텍스트 넘침 방지 -> min-width를 0으로 설정 */
   min-width: 0; 
 }
 
-/* (호버 및 선택 상태 클래스는 기존 코드 그대로 유지) */
+/* 호버 및 선택 */
 .buildercardgrid_card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); border-color: #d0d0d0; }
 .buildercardgrid_card.selected { border: 2px solid #ff6b35; background-color: #fffaf7; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15); }
 .buildercardgrid_card_header { display: flex; justify-content: space-between; align-items: flex-start; min-height: 24px; }
@@ -33,10 +33,7 @@
 .buildercardgrid_badge_ai { background: #1a1a2e; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
 .buildercardgrid_badge_selected { background: #ff6b35; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
 
-/* ─────────────────────────────────────
-   정보 영역 & 텍스트 말줄임(...) 처리
-───────────────────────────────────── */
-/* 내부 요소들이 카드 너비를 넘어가지 못하도록 제어 */
+/* 정보 영역 & 텍스트 말줄임(...) 처리 */
 .buildercardgrid_info {
   display: flex;
   flex-direction: column;
@@ -52,8 +49,8 @@
   color: #1a1a2e;
   line-height: 1.4;
   margin: 0;
-  white-space: nowrap; /* 줄바꿈 금지 */
-  overflow: hidden; /* 넘치는 텍스트 숨김 */
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis; /* ... 표시 */
 }
 
@@ -68,14 +65,12 @@
   text-overflow: ellipsis; 
 }
 
-/* ─────────────────────────────────────
-   하단 디테일 영역
-───────────────────────────────────── */
+/* 하단 디테일 영역 */
 .buildercardgrid_details {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: auto; /* ✨ 카드의 남는 공간을 모두 위쪽 마진으로 밀어내어, 항상 카드 맨 아래에 고정되게 만듭니다. */
+  margin-top: auto;
   padding-top: 16px;
   border-top: 1px dashed #eee;
   font-size: 13px;
@@ -83,9 +78,7 @@
   font-weight: 500;
 }
 
-/* ─────────────────────────────────────
-   스켈레톤(로딩) UI 애니메이션
-───────────────────────────────────── */
+/* 스켈레톤(로딩) UI 애니메이션 */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -106,7 +99,7 @@
   min-height: 180px; /* 실제 카드 높이와 비슷하게 맞춤 */
 }
 
-/* 스켈레톤 공통 질감 (은은하게 빛이 지나가는 효과) */
+/* 스켈레톤 공통 */
 .buildercardgrid_skeleton_line,
 .buildercardgrid_skeleton_box {
   background: #f6f7f8;
@@ -137,7 +130,7 @@
 
 /* 하단 정보 뼈대 모양 */
 .buildercardgrid_skeleton_box {
-  margin-top: auto; /* 실제 카드처럼 하단에 붙임 */
+  margin-top: auto;
   width: 100%;
   height: 30px;
   border-radius: 8px;

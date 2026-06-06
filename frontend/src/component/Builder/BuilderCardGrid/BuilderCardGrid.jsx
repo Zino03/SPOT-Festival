@@ -6,14 +6,14 @@ const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
 const SHOW_COUNT = 10
 
 function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
-  const [selectedIds,    setSelectedIds]    = useState([])
-  const [showAll,       setShowAll]       = useState(false)
+  const [selectedIds, setSelectedIds] = useState([])
+  const [showAll, setShowAll] = useState(false)
   const [festivalItems, setFestivalItems] = useState([])
-  const [kakaoItems,    setKakaoItems]    = useState([])
-  const [images,        setImages]        = useState([])
+  const [kakaoItems, setKakaoItems] = useState([])
+  const [images, setImages] = useState([])
 
   // 예외 처리 알림 문구를 담을 새로운 State 추가
-  const [fallbackMsg,   setFallbackMsg]   = useState('')
+  const [fallbackMsg, setFallbackMsg] = useState('')
 
   // 로딩 상태 관리 추가
   const [isLoading, setIsLoading] = useState(false)
@@ -35,31 +35,31 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
         return res.json();
       })
       .then(data => {
-        // 예외 처리: 데이터가 텅 비었을 때의 플랜 B
+        // 데이터가 텅 비었을 때
         if (data.length === 0) {
-          // 1. 처음 검색했는데 없고, 지역이 '전국'이 아니었다면? -> 전국으로 재검색!
+          // 1. 처음 검색했는데 없고, 지역이 '전국'이 아니었다면? -> 전국으로 재검색
           if (!isRetry && currentPrefs.region !== '전국') {
             setFallbackMsg(`'${currentPrefs.region}' 지역에 진행 중인 축제가 없어 전국 기준으로 추천해 드립니다.`);
             fetchFestivals({ ...currentPrefs, region: '전국' }, true); // isRetry를 true로 주고 재요청
             return; // 기존 로직은 여기서 정지
           }
-          // 2. 전국으로 재검색했는데도 없거나, 애초에 전국으로 검색했는데도 없다면?
+          // 2. 전국으로 검색해도 없으면
           setFallbackMsg('선택하신 날짜에 진행 중인 축제가 없습니다.');
         }
         const mapped = data.map((f, i) => ({
-          id:       f.id,
-          name:     f.name,
+          id: f.id,
+          name: f.name,
           category: f.region,
-          price:    null,
-          views:    f.viewCount,
+          price: null,
+          views: f.viewCount,
           distance: null,
-          walk:     null,
-          wait:     null,
-          date:     `${f.startDate?.slice(5).replace('-','/')} ~ ${f.endDate?.slice(5).replace('-','/')}`,
-          lat:      f.lat,
-          lng:      f.lng,
-          image:    '',
-          isAI:     i === 0,
+          walk: null,
+          wait: null,
+          date: `${f.startDate?.slice(5).replace('-','/')} ~ ${f.endDate?.slice(5).replace('-','/')}`,
+          lat: f.lat,
+          lng: f.lng,
+          image: '',
+          isAI: i === 0,
         }));
         setFestivalItems(mapped)
       })
@@ -88,16 +88,16 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
         if (status !== kakao.maps.services.Status.OK) return;
         // 1. 카카오에서 받아온 원본 데이터를 백엔드 DTO(KakaoPlaceDto) 형식에 맞게 가공
         const rawPlaces = result.map(p => ({
-          id:       p.id,
-          name:     p.place_name,
+          id: p.id,
+          name: p.place_name,
           category: p.category_name?.split('>').pop().trim() || '',
-          price:    null,
+          price: null,
           distance: p.distance ? `${p.distance}m` : null,
-          walk:     p.distance ? `${Math.ceil(p.distance / 80)}분` : null,
-          wait:     null,
-          address:  p.road_address_name || p.address_name,
-          phone:    p.phone,
-          isAI:     false,
+          walk: p.distance ? `${Math.ceil(p.distance / 80)}분` : null,
+          wait: null,
+          address: p.road_address_name || p.address_name,
+          phone: p.phone,
+          isAI: false,
         }));
         // 2. 가공한 리스트와 유저 취향을 묶어서 스프링 부트 백엔드로 전송
         fetch('http://localhost:8080/api/restaurants/recommend', {
@@ -105,7 +105,7 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             preferences: preferences, // 1단계에서 수집한 취향 데이터 (테마, 동행자 등)
-            places: rawPlaces         // 카카오에서 가져온 거리순 15개 장소 리스트
+            places: rawPlaces // 카카오에서 가져온 거리순 15개 장소 리스트
           })
         })
         .then(res => {
@@ -141,16 +141,16 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
     fetch(`http://localhost:8080/api/parking/nearby?lat=${festival.lat}&lng=${festival.lng}`)
       .then(r => r.json())
       .then(data => setKakaoItems(data.map((p, i) => ({
-        id:       p.id || i,
-        name:     p.place_name,
+        id: p.id || i,
+        name: p.place_name,
         category: '주차장',
-        price:    null,
-        rating:   null,
+        price: null,
+        rating: null,
         distance: `${p.distance}m`,
-        walk:     `${Math.ceil(p.distance / 80)}분`,
-        wait:     null,
-        isAI:     i === 0,
-        address:  p.road_address_name || p.address_name,
+        walk: `${Math.ceil(p.distance / 80)}분`,
+        wait: null,
+        isAI: i === 0,
+        address: p.road_address_name || p.address_name,
       }))))
       .catch(err => console.error('주차장 API 에러:', err))
       .finally(() => setIsLoading(false));

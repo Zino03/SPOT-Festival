@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
-    private final GeminiService geminiService; // 오늘 오전에 연동하신 Gemini API 서비스
+    private final GeminiService geminiService; // Gemini API 서비스
 
     public List<FestivalDetailResponse> recommendByAI(FestivalRecommendRequest request) {
 
@@ -73,7 +73,7 @@ public class FestivalService {
 
         } catch (Exception e) {
             // AI 호출 실패 시 (토큰 초과, 서버 에러 등)
-            // 로직이 터지지 않도록 기존 DB 조회 순서대로 반환하는 든든한 방어 코드!
+            // 로직이 터지지 않도록 기존 DB 조회 순서대로 반환
             log.error("AI 추천 중 오류 발생, 기본 순서로 반환합니다.", e);
             return candidates.stream().map(FestivalDetailResponse::from).collect(Collectors.toList());
         }

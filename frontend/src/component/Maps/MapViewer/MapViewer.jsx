@@ -2,7 +2,7 @@
 // REGION_CENTERS의 17개 좌표에 커스텀 오버레이 핀 렌더링
 // 핀 클릭 시 해당 지역 페이지(/region/:regionId)로 이동
 
-// 이벤트는 핀마다 리스너를 붙이지 않고 맵 컨테이너에 위임해 처리한다.
+// 이벤트는 핀마다 리스너를 붙이지 않고 맵 컨테이너에서 처리
 // loadKakaoMap()이 비동기이므로 컴포넌트 언마운트 시 destroyed 플래그로 콜백 실행 제한
 
 import { useEffect, useRef } from 'react'
@@ -57,7 +57,7 @@ function MapViewer({ onSelectRegion }) {
         overlaysRef.current.push(overlay)
       })
 
-      // 이벤트 위임 — 핀 클릭 시 지역 페이지로 이동
+      // 이벤트 위임 ->  핀 클릭 시 지역 페이지로 이동
       mapRef.current.addEventListener('click', e => {
         const pin = e.target.closest('.kakao_region_pin')
         if (pin) {
