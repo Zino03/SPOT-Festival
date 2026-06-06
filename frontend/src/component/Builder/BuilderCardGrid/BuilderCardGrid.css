@@ -1,174 +1,144 @@
-/* 카드 그리드 전체 */
-.buildercardgrid {
-  margin-bottom: 24px;
-}
-
-/* 3열 그리드 */
+/* 그리드 레이아웃 (한 줄에 2개 고정) */
 .buildercardgrid_grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* 어떤 화면 크기에서든 정확히 2등분(1fr) 합니다. */
   gap: 16px;
+  align-items: stretch; /* 같은 줄의 카드들이 가장 높은 카드의 높이에 맞춰 늘어납니다. */
 }
 
-/* 카드 기본 */
+/* 카드 컨테이너 */
 .buildercardgrid_card {
-  background: #fff;
-  border: 2px solid #eee;
+  background: #ffffff;
+  border: 1px solid #eaeaea;
   border-radius: 16px;
-  overflow: hidden;
+  padding: 24px;
   cursor: pointer;
-  position: relative;
-  transition: all 0.15s;
-}
-
-.buildercardgrid_card:hover {
-  border-color: #ff6b35;
-  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.15);
-}
-
-/* 선택된 카드 */
-.buildercardgrid_card.selected {
-  border-color: #ff6b35;
-  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.25);
-}
-
-/* 뱃지 묶음 */
-.buildercardgrid_badges {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  display: flex;
-  gap: 6px;
-  z-index: 1;
-}
-
-/* AI 1순위 뱃지 */
-.buildercardgrid_badge_ai {
-  background: #ff6b35;
-  color: #fff;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-/* 선택됨 뱃지 */
-.buildercardgrid_badge_selected {
-  background: #1a1a2e;
-  color: #fff;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-/* 북마크 버튼 */
-.buildercardgrid_bookmark {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-/* 이미지 */
-.buildercardgrid_image {
-  height: 160px;
-  background-color: #c0cfe8;
-  background-size: cover;
-  background-position: center;
-}
-
-/* 카드 정보 */
-.buildercardgrid_info {
-  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 16px;
+  height: 100%; /* 부모(Grid Cell)의 높이를 꽉 채우도록 설정 */
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  /* 텍스트 넘침 방지를 위해 min-width를 0으로 설정 (Flex 버그 방지) */
+  min-width: 0; 
 }
 
-/* 가격 + 평점 */
-.buildercardgrid_meta {
+/* (호버 및 선택 상태 클래스는 기존 코드 그대로 유지) */
+.buildercardgrid_card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); border-color: #d0d0d0; }
+.buildercardgrid_card.selected { border: 2px solid #ff6b35; background-color: #fffaf7; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15); }
+.buildercardgrid_card_header { display: flex; justify-content: space-between; align-items: flex-start; min-height: 24px; }
+.buildercardgrid_category { font-size: 13px; font-weight: 600; color: #888; }
+.buildercardgrid_badges { display: flex; gap: 6px; }
+.buildercardgrid_badge_ai { background: #1a1a2e; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+.buildercardgrid_badge_selected { background: #ff6b35; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+
+/* ─────────────────────────────────────
+   정보 영역 & 텍스트 말줄임(...) 처리
+───────────────────────────────────── */
+/* 내부 요소들이 카드 너비를 넘어가지 못하도록 제어 */
+.buildercardgrid_info {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
+  width: 100%;
+  min-width: 0; 
 }
 
-.buildercardgrid_price {
-  font-size: 12px;
-  color: #888;
-}
-
-.buildercardgrid_rating {
-  font-size: 12px;
-  color: #ff6b35;
-  font-weight: 600;
-}
-
-/* 이름 */
+/* 장소명/축제명 1줄 초과 시 ... 처리 */
 .buildercardgrid_name {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: #1a1a2e;
+  line-height: 1.4;
+  margin: 0;
+  white-space: nowrap; /* 줄바꿈 금지 */
+  overflow: hidden; /* 넘치는 텍스트 숨김 */
+  text-overflow: ellipsis; /* ... 표시 */
 }
 
-/* 도보/거리/대기 */
+/* 주소 1줄 초과 시 ... 처리 */
+.buildercardgrid_address {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+
+/* ─────────────────────────────────────
+   하단 디테일 영역
+───────────────────────────────────── */
 .buildercardgrid_details {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #888;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto; /* ✨ 카드의 남는 공간을 모두 위쪽 마진으로 밀어내어, 항상 카드 맨 아래에 고정되게 만듭니다. */
+  padding-top: 16px;
+  border-top: 1px dashed #eee;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
 }
 
-/* 대기 없음 */
-.buildercardgrid_wait.none {
-  color: #2e7d32;
-  font-weight: 600;
+/* ─────────────────────────────────────
+   스켈레톤(로딩) UI 애니메이션
+───────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-/* 더보기 카드 */
-.buildercardgrid_more {
+.buildercardgrid_skeleton_card {
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #f8f9fa;
-  border: 2px dashed #ddd;
-  border-radius: 16px;
-  cursor: pointer;
-  min-height: 240px;
-  transition: all 0.15s;
+  gap: 16px;
+  min-height: 180px; /* 실제 카드 높이와 비슷하게 맞춤 */
 }
 
-.buildercardgrid_more:hover {
-  border-color: #ff6b35;
-  background: #fff8f5;
+/* 스켈레톤 공통 질감 (은은하게 빛이 지나가는 효과) */
+.buildercardgrid_skeleton_line,
+.buildercardgrid_skeleton_box {
+  background: #f6f7f8;
+  background-image: linear-gradient(90deg, #f6f7f8 0px, #edeef1 40px, #f6f7f8 80px);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
 }
 
-.buildercardgrid_more_icon {
-  font-size: 32px;
-  color: #ccc;
-  font-weight: 300;
+/* 텍스트 뼈대 모양 잡기 */
+.buildercardgrid_skeleton_line {
+  height: 14px;
 }
 
-.buildercardgrid_more p {
-  font-size: 16px;
-  font-weight: 700;
-  color: #888;
+.buildercardgrid_skeleton_line.short {
+  width: 40%;
+  margin-bottom: 8px;
 }
 
-.buildercardgrid_more_desc {
-  font-size: 12px;
-  color: #bbb;
+.buildercardgrid_skeleton_line.title {
+  width: 80%;
+  height: 20px;
+}
+
+.buildercardgrid_skeleton_line.long {
+  width: 60%;
+}
+
+/* 하단 정보 뼈대 모양 */
+.buildercardgrid_skeleton_box {
+  margin-top: auto; /* 실제 카드처럼 하단에 붙임 */
+  width: 100%;
+  height: 30px;
+  border-radius: 8px;
 }

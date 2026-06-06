@@ -1,15 +1,37 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import './BuilderSetup.css'
 
 const REGIONS = ['전국', '서울/경기', '강원', '충청', '전라', '경상', '제주']
 const COMPANIONS = ['혼자', '연인', '친구들', '가족', '부모님']
 const THEMES = ['조용한', '힐링', '활동적인', '전통적인', '먹거리 탐방', '야경', '자연']
 
+// 상세 주소를 REGIONS 카테고리로 매핑해주는 헬퍼 함수
+const mapRegionToCategory = (address) => {
+  if (!address) return '';
+  if (address.match(/서울|경기|인천/)) return '서울/경기';
+  if (address.match(/강원/)) return '강원';
+  if (address.match(/충북|충남|충청|대전|세종/)) return '충청';
+  if (address.match(/전북|전남|전라|광주/)) return '전라';
+  if (address.match(/경북|경남|경상|부산|대구|울산/)) return '경상';
+  if (address.match(/제주/)) return '제주';
+
+  return '전국';
+};
+
 function BuilderSetup({ onComplete }) {
-  const [region, setRegion] = useState('')
+  const location = useLocation(); // 이전 페이지에서 넘어온 state 확인
+  
+  // 넘어온 preselectedRegion이 있다면 매핑 함수를 거쳐 초기값으로 세팅
+  const initialRegion = location.state?.preselectedRegion 
+    ? mapRegionToCategory(location.state.preselectedRegion) 
+    : '';
+
+  const [region, setRegion] = useState(initialRegion); // 초기값 설정
   const [date, setDate] = useState('') // 날짜 상태 추가
   const [companion, setCompanion] = useState('')
   const [themes, setThemes] = useState([])
+
   // 과거 날짜를 선택하지 못하도록 오늘 날짜 구하기 (YYYY-MM-DD 포맷)
   const today = new Date().toISOString().split('T')[0]
 

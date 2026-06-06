@@ -4,7 +4,6 @@ import com.spot.backend.domain.festival.dto.FestivalRecommendRequest;
 import com.spot.backend.domain.festival.dto.FestivalDetailResponse;
 import com.spot.backend.domain.festival.entity.Festival;
 import com.spot.backend.domain.festival.repository.FestivalRepository;
-// TODO: 상혁님이 이전에 만드신 Gemini 연동 서비스의 패키지 경로로 맞춰주세요.
 import com.spot.backend.infrastructure.ai.service.GeminiService;
 
 import lombok.RequiredArgsConstructor;

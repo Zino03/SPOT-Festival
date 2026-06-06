@@ -20,8 +20,7 @@ function BuilderTopBar({ currentStep }) {
         </span>
       </div>
 
-      {/* 오른쪽: 새 코스 버튼 */}
-      {/* TODO: 새 코스 시작 기능 연동 */}
+      {/* 오른쪽: 새 코스 버튼 — /builder로 이동하면 상태가 초기화됨 */}
       <button
         className="buildertopbar_btn"
         onClick={() => navigate('/builder')}

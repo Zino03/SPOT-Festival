@@ -5,6 +5,7 @@
 // ?refresh=false : 백엔드 DB 캐시에서 반환 (빠름)
 // ?refresh=true  : Gemini AI에게 새로 생성 요청 ("새 코스 짜기" 버튼)
 
+import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import './DayTrip.css'
 
@@ -22,6 +23,7 @@ function DayTrip() {
   const [errorMessage, setErrorMessage] = useState(null)
   // 새 코스 짜기 버튼에서 재사용할 현재 선택된 축제
   const [currentFestival, setCurrentFestival] = useState(null)
+  const navigate = useNavigate()
 
   // festival을 직접 받는 이유: setCurrentFestival이 비동기라
   // useEffect 안에서 바로 fetchCourse를 호출할 때 state가 아직 반영 안 됨
@@ -158,8 +160,16 @@ function DayTrip() {
           </p>
         </div>
         <div className="daytrip_header_right">
-          <button className="daytrip_btn_save">🔖 저장</button>
-          <button className="daytrip_btn_start">이 코스 시작하기 →</button>
+          <button 
+            className="daytrip_btn_start"
+            // 이미 생성된 course 데이터를 state로 담아서 리포트 페이지로 넘김
+            onClick={() => navigate('/builder', { 
+              state: { 
+                jumpToReport: true, // 바로 결과창
+                preloadedCourse: course // 완성된 데이터도 함께 전달
+              } })}
+          >이 코스 시작하기 →
+          </button>
         </div>
       </div>
 

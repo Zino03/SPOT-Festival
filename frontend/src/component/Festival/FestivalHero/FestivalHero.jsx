@@ -48,7 +48,9 @@ function FestivalHero({ festival }) {
           lng: festival.lng,
           date: `${startDate} ~ ${endDate}`,
           isAI: false,
-        }
+        },
+        // 빌더 Step 0에서 읽을 수 있도록 지역 문자열(예: '충북 청주시')을 추가 전달
+        preselectedRegion: festival.region
       }
     })
   }

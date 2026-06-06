@@ -1,17 +1,9 @@
 import { useState, useEffect } from 'react'
 import { loadKakaoMap } from '../../../utils/kakao'
-import { fetchPhotos } from '../../../utils/unsplash'
 import './BuilderCardGrid.css'
 
 const KAKAO_CODE = { 2: 'FD6', 3: 'CE7' }
-const SHOW_COUNT = 5
-
-// 단계별 Unsplash 검색 쿼리 (주차장은 이미지 불필요)
-const IMAGE_QUERY = {
-  1: 'Korean festival outdoor celebration',
-  2: 'Korean restaurant food traditional',
-  3: 'Korean cafe coffee aesthetic interior',
-}
+const SHOW_COUNT = 10
 
 function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const [selectedIds,    setSelectedIds]    = useState([])
@@ -19,20 +11,25 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   const [festivalItems, setFestivalItems] = useState([])
   const [kakaoItems,    setKakaoItems]    = useState([])
   const [images,        setImages]        = useState([])
+
   // 예외 처리 알림 문구를 담을 새로운 State 추가
   const [fallbackMsg,   setFallbackMsg]   = useState('')
+
+  // 로딩 상태 관리 추가
+  const [isLoading, setIsLoading] = useState(false)
 
   // Step 1: 실제 Trending 축제 API 연동
   useEffect(() => {
     if (currentStep !== 1 || !preferences || !preferences.region) return;
     const fetchFestivals = (currentPrefs, isRetry = false) => {
-    fetch('http://localhost:8080/api/festivals/recommend', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(currentPrefs)
-    })
+      setIsLoading(true); // 로딩
+      fetch('http://localhost:8080/api/festivals/recommend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(currentPrefs)
+      })
       .then(res => {
         if (!res.ok) throw new Error('AI 축제 추천 API 응답 에러');
         return res.json();
@@ -67,7 +64,11 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
         setFestivalItems(mapped)
       })
       .catch(err => console.error('AI 축제 추천 API 에러:', err))
+      .finally(() => {
+        if (!isRetry) setIsLoading(false); // 재요청이 아닐 때만 로딩 끄기
+      });
     };
+
     // 처음 마운트 될 때 알림창 초기화 후 기본 취향으로 1차 요청
     setFallbackMsg('');
     fetchFestivals(preferences, false);
@@ -76,6 +77,8 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   // Step 2(맛집), Step 3(카페): Kakao Places + Gemini AI 하이브리드 방식
   useEffect(() => {
     if (![2, 3].includes(currentStep) || !festival?.lat) return;
+
+    setIsLoading(true);
     setKakaoItems([]);
 
     loadKakaoMap().then(() => {
@@ -118,7 +121,8 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
           // 에러 시 방어 로직: 기존처럼 0번째에 AI 뱃지를 달아 거리순으로 보여줌
           if (rawPlaces.length > 0) rawPlaces[0].isAI = true;
           setKakaoItems(rawPlaces);
-        });
+        })
+        .finally(() => setIsLoading(false));
       }, {
         location: new kakao.maps.LatLng(festival.lat, festival.lng),
         radius: 1500,
@@ -130,6 +134,8 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
   // Step 4: 주차장 API
   useEffect(() => {
     if (currentStep !== 4 || !festival?.lat) return
+
+    setIsLoading(true);
     setKakaoItems([])
 
     fetch(`http://localhost:8080/api/parking/nearby?lat=${festival.lat}&lng=${festival.lng}`)
@@ -147,17 +153,10 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
         address:  p.road_address_name || p.address_name,
       }))))
       .catch(err => console.error('주차장 API 에러:', err))
+      .finally(() => setIsLoading(false));
   }, [currentStep, festival])
 
   const items = currentStep === 1 ? festivalItems : kakaoItems
-
-  // items가 바뀔 때 해당 단계 키워드로 이미지 배치 요청
-  useEffect(() => {
-    const query = IMAGE_QUERY[currentStep]
-    if (!items.length || !query) return
-    fetchPhotos(query, Math.min(items.length, 15))
-      .then(urls => setImages(urls))
-  }, [items, currentStep])
   const visibleItems = showAll ? items : items.slice(0, SHOW_COUNT)
   const remainCount = items.length - SHOW_COUNT
 
@@ -189,7 +188,7 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
 
   return (
     <div className="buildercardgrid">
-        {/* ✨ 예외 처리 알림 배너 (1단계에서 에러 메시지가 있을 때만 노출) */}
+        {/* 예외 처리 알림 배너 (1단계에서 에러 메시지가 있을 때만 노출) */}
         {fallbackMsg && currentStep === 1 && (
         <div style={{
           backgroundColor: '#fff3cd',
@@ -209,75 +208,61 @@ function BuilderCardGrid({ currentStep, festival, preferences, onSelect }) {
           </div>
       )}
 
-      {/* 카드 그리드 */}
-      <div className="buildercardgrid_grid">
-        {visibleItems.map((item, idx) => {
-          // 현재 카드가 선택되었는지 여부 확인
-          const isSelected = selectedIds.includes(item.id);
-          // 2단계일 경우 배열의 인덱스를 통해 점심/저녁 구분
-          const selectionIndex = selectedIds.indexOf(item.id);
 
-          return (
-            <div
-              key={item.id}
-              className={`buildercardgrid_card ${isSelected ? 'selected' : ''}`}
-              onClick={() => handleSelect(item)}
-            >
-              <div className="buildercardgrid_badges">
-                {item.isAI && (
-                  <span className="buildercardgrid_badge_ai">✦ AI 1순위</span>
-                )}
-                {/* 선택됨 뱃지 점심/저녁 동적 표시 */}
-                {isSelected && (
-                  <span className="buildercardgrid_badge_selected">
-                    {currentStep === 2
-                      ? (selectionIndex === 0 ? '선택됨 (점심)' : '선택됨 (저녁)')
-                      : '선택됨'}
-                  </span>
-                )}
-              </div>
-
-            {/* 이미지 */}
-            <div
-              className="buildercardgrid_image"
-              style={images[idx % images.length] ? { backgroundImage: `url(${images[idx % images.length]})` } : {}}
-            />
-
-            {/* 카드 정보 */}
-            <div className="buildercardgrid_info">
-              <div className="buildercardgrid_meta">
-                {item.price && <span className="buildercardgrid_price">{item.price}</span>}
-                {item.views != null && <span className="buildercardgrid_rating">👁 {item.views?.toLocaleString()}</span>}
-              </div>
-              <h3 className="buildercardgrid_name">{item.name}</h3>
-              <div className="buildercardgrid_details">
-                {item.date && <span>📅 {item.date}</span>}
-                {item.walk && <span>🚶 도보 {item.walk}</span>}
-                {item.distance && !item.date && <span>{item.distance}</span>}
-                {item.wait && (
-                  <span className={`buildercardgrid_wait ${item.wait === '0분' ? 'none' : ''}`}>
-                    🕐 대기 {item.wait}
-                  </span>
-                )}
-              </div>
+      {/* 로딩 중일 때 스켈레톤 UI 렌더링 */}
+      {isLoading ? (
+        <div className="buildercardgrid_grid">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div key={`skeleton-${n}`} className="buildercardgrid_skeleton_card">
+              <div className="buildercardgrid_skeleton_line short"></div>
+              <div className="buildercardgrid_skeleton_line title"></div>
+              <div className="buildercardgrid_skeleton_line long"></div>
+              <div className="buildercardgrid_skeleton_box"></div>
             </div>
-          </div>
-        );
-      })}
-
-        {/* 더보기 카드 */}
-        {!showAll && remainCount > 0 && (
-          <div
-            className="buildercardgrid_more"
-            onClick={() => setShowAll(true)}
-          >
-            <span className="buildercardgrid_more_icon">+</span>
-            <p>{remainCount} MORE</p>
-            <p className="buildercardgrid_more_desc">나머지 후보 보기</p>
-          </div>
-        )}
-      </div>
-
+          ))}
+        </div>
+      ) : (
+        /* 실제 데이터 렌더링 */
+        <div className="buildercardgrid_grid">
+          {visibleItems.map((item) => {
+            const isSelected = selectedIds.includes(item.id);
+            const selectionIndex = selectedIds.indexOf(item.id);
+            return (
+              <div key={item.id} className={`buildercardgrid_card ${isSelected ? 'selected' : ''}`} onClick={() => handleSelect(item)}>
+                <div className="buildercardgrid_card_header">
+                  <span className="buildercardgrid_category">{item.category}</span>
+                  <div className="buildercardgrid_badges">
+                    {item.isAI && <span className="buildercardgrid_badge_ai">✦ AI 추천</span>}
+                    {isSelected && (
+                      <span className="buildercardgrid_badge_selected">
+                        {currentStep === 2 ? (selectionIndex === 0 ? '점심' : '저녁') : '선택됨'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="buildercardgrid_info">
+                  <h3 className="buildercardgrid_name">{item.name}</h3>
+                  {item.address && <p className="buildercardgrid_address">{item.address}</p>}
+                  <div className="buildercardgrid_details">
+                    {item.date && <span>📅 {item.date}</span>}
+                    {item.views != null && <span>👁 {item.views.toLocaleString()}</span>}
+                    {item.walk && <span>🚶 도보 {item.walk}</span>}
+                    {item.distance && !item.date && <span>📍 {item.distance}</span>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          
+          {!showAll && remainCount > 0 && (
+            <div className="buildercardgrid_more" onClick={() => setShowAll(true)}>
+              <span className="buildercardgrid_more_icon">+</span>
+              <p>{remainCount} MORE</p>
+              <p className="buildercardgrid_more_desc">나머지 후보 보기</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
