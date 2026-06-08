@@ -1,6 +1,5 @@
 // 홈 AI 추천 코스 섹션
-// 트렌딩 축제 중 LIVE 중인 축제를 우선 선택하고 AI 플래너 API로 하루 코스를 생성한다.
-// LIVE 축제가 없으면 첫 번째 트렌딩 축제를 사용하며, 트렌딩 API 실패 시 기본값으로 폴백한다.
+// FALLBACK_FESTIVAL 기준으로 AI 플래너 API를 호출해 하루 코스를 생성한다.
 //
 // ?refresh=false : 백엔드 DB 캐시에서 반환 (빠름)
 // ?refresh=true  : Gemini AI에게 새로 생성 요청 ("새 코스 짜기" 버튼)
@@ -58,9 +57,6 @@ function DayTrip() {
         const mappedData = {
           date: `${today.getMonth() + 1}월 ${today.getDate()}일`,
           region: target.region || '전국',
-          totalTime: '총 7시간',
-          distance: '3.4km',
-          walk: '12분 도보',
           updatedAt: today.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
           aiReason: data.title || 'AI가 분석한 최적의 동선입니다.',
           // 백엔드의 itinerary → timeline 배열을 프론트의 steps 배열로 변환
@@ -83,30 +79,8 @@ function DayTrip() {
   }
 
   useEffect(() => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    fetch('http://localhost:8080/api/festivals/trending')
-      .then(res => res.json())
-      .then(data => {
-        if (!data.length) {
-          setCurrentFestival(FALLBACK_FESTIVAL)
-          fetchCourse(false, FALLBACK_FESTIVAL)
-          return
-        }
-        // LIVE 축제 우선, 없으면 첫 번째 트렌딩
-        const live = data.find(f =>
-          new Date(f.startDate) <= today && today <= new Date(f.endDate)
-        )
-        const target = live || data[0]
-        setCurrentFestival(target)
-        fetchCourse(false, target)
-      })
-      .catch(err => {
-        console.error('트렌딩 축제 로드 실패, 기본값 사용:', err)
-        setCurrentFestival(FALLBACK_FESTIVAL)
-        fetchCourse(false, FALLBACK_FESTIVAL)
-      })
+    setCurrentFestival(FALLBACK_FESTIVAL)
+    fetchCourse(false, FALLBACK_FESTIVAL)
   }, [])
 
   if (errorMessage) {
@@ -180,9 +154,6 @@ function DayTrip() {
         <div className="daytrip_info_bar">
           <div className="daytrip_info_left">
             <span className="daytrip_ai_badge">✦ AI</span>
-            <span>⏱ {course.totalTime}</span>
-            <span>🚗 {course.distance}</span>
-            <span>🚶 {course.walk}</span>
           </div>
           <span className="daytrip_updated">마지막 업데이트 · {course.updatedAt}</span>
         </div>

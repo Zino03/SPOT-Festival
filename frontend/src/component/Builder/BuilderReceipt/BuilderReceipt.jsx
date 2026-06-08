@@ -10,41 +10,9 @@ const RECEIPT_STEPS = [
 ]
 
 function BuilderReceipt({ currentStep, selectedItems}) {
-  // 1. 동적 서브타이틀 (선택된 축제가 있으면 축제명, 없으면 기본 텍스트)
   const festivalName = selectedItems?.[1]?.name || 'AI 맞춤 코스';
-  // 배열과 나머지를 모두 하나의 1차원 배열로 합침
-  const allSelectedPlaces = Object.values(selectedItems || {}).reduce((acc, curr) => {
-    if (Array.isArray(curr)) return acc.concat(curr);
-    if (curr) acc.push(curr);
-    return acc;
-  }, []);
 
-  // 2. 동적 이동 거리 계산
-  const totalDistanceMeters = allSelectedPlaces.reduce((acc, item) => {
-    if (!item || !item.distance) return acc;
-    const distStr = item.distance.toString();
-    if (distStr.includes('km')) return acc + parseFloat(distStr) * 1000;
-    return acc + parseFloat(distStr.replace(/[^0-9.]/g, ''));
-  }, 0);
-
-  const displayDistance = totalDistanceMeters > 0
-    ? (totalDistanceMeters >= 1000 ? (totalDistanceMeters / 1000).toFixed(1) + 'km' : Math.round(totalDistanceMeters) + 'm')
-    : '-';
-
-  // 3. 동적 예상 시간 계산 (가중치 부여: 축제 3.5h, 식사 1.5h, 카페 1h 등)
-  let estimatedHours = 0;
-  if (selectedItems?.[1]) estimatedHours += 3.5;
-  if (Array.isArray(selectedItems?.[2])) {
-    estimatedHours += (1.5 * selectedItems[2].length); // 점심, 저녁 각각 1.5h
-  } else if (selectedItems?.[2]) {
-    estimatedHours += 1.5;
-  }
-  if (selectedItems?.[3]) estimatedHours += 1.0;
-  if (selectedItems?.[4]) estimatedHours += 0.5;
-
-  const displayTime = estimatedHours > 0 ? `${estimatedHours}h` : '-';
-
-  // 4. 진척도 계산 (0 ~ 4 사이로 고정)
+  // 진척도 계산 (0 ~ 4 사이로 고정)
   const progressCount = Math.min(Math.max(currentStep - 1, 0), 4);
 
   return (
@@ -104,16 +72,7 @@ function BuilderReceipt({ currentStep, selectedItems}) {
         })}
       </ul>
 
-      {/* 예상 정보 */}
       <div className="builderreceipt_footer">
-        <div className="builderreceipt_stat">
-          <span>⏱ 예상 시간</span>
-          <strong>~ {displayTime}</strong>
-        </div>
-        <div className="builderreceipt_stat">
-          <span>🚶 예상 이동</span>
-          <strong>~ {displayDistance}</strong>
-        </div>
         <div className="builderreceipt_progress">
           <span>진척도</span>
           <div className="builderreceipt_progress_bar">
