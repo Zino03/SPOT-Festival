@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,16 @@ public class FestivalService {
 
     private final FestivalRepository festivalRepository;
     private final GeminiService geminiService; // Gemini API 서비스
+
+    public List<FestivalDetailResponse> getFestivalsByDate(LocalDate targetDate) {
+        log.info("캘린더 축제 조회 요청 날짜: {}", targetDate);
+        // Repository에 만든 쿼리로 특정 날짜 진행 중인 축제들 가져오기
+        List<Festival> festivals = festivalRepository.findFestivalsByDate(targetDate);
+        // Entity 리스트를 DTO 리스트로 변환해서 반환
+        return festivals.stream()
+                .map(FestivalDetailResponse::from)
+                .collect(Collectors.toList());
+    }
 
     public List<FestivalDetailResponse> recommendByAI(FestivalRecommendRequest request) {
 

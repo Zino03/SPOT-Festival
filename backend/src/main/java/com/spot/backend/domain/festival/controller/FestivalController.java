@@ -45,7 +45,7 @@ public class FestivalController {
         return festivalRepository.searchByKeyword(q.trim(), PageRequest.of(0, 50))
                 .stream().map(FestivalDetailResponse::new).toList();
     }
-
+    /* Trending 기능 주석 처리
     // 홈 화면 Trending
     @GetMapping("/trending")
     public List<Festival> getTrendingFestivals() {
@@ -53,6 +53,15 @@ public class FestivalController {
         LocalDate nextWeek = today.plusDays(7);
 
         return festivalRepository.findTop8Trending(today, nextWeek);
+    }
+    */
+    @GetMapping("/calendar")
+    public ResponseEntity<List<FestivalDetailResponse>> getFestivalsByCalendarDate(@RequestParam("date") String dateStr) {
+        // 프론트엔드에서 넘어온 문자열(예: "2026-06-08")을 자바 날짜 객체로 변환
+        LocalDate targetDate = LocalDate.parse(dateStr);
+        // Service 로직 호출하여 결과 반환
+        List<FestivalDetailResponse> response = festivalService.getFestivalsByDate(targetDate);
+        return ResponseEntity.ok(response);
     }
 
     // 지역 영문 매핑
