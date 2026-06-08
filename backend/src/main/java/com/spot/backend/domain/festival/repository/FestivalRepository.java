@@ -32,14 +32,20 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
     @Query("SELECT COUNT(f) FROM Festival f WHERE f.startDate <= :monthEnd AND f.endDate >= :monthStart")
     long countThisMonth(@Param("monthStart") LocalDate monthStart, @Param("monthEnd") LocalDate monthEnd);
 
+    /*  Trending 기능 주석 처리
     // 종료되지 않은 축제 중 조회수 상위 8개 (홈 화면 Treding)
     @Query(value = "SELECT * FROM festival " +
             "WHERE start_date <= :nextWeek AND end_date >= :today " +
             "ORDER BY view_count DESC, id ASC " +
             "LIMIT 8", nativeQuery = true) // LIMIT 사용을 위해 nativeQuery 사용
     List<Festival> findTop8Trending(@Param("today") LocalDate today, @Param("nextWeek") LocalDate nextWeek);
+    */
 
     // 유저가 선택한 날짜가 축제 시작일과 종료일 사이에 있고, 지역이 일치하는 축제 조회 ('전국'이면 지역 무시)
     @Query("SELECT f FROM Festival f WHERE (:region = '전국' OR f.region = :region) AND :date BETWEEN f.startDate AND f.endDate")
     List<Festival> findByRegionAndDateValid(@Param("region") String region, @Param("date") LocalDate date);
+
+    // 특정 날짜에 진행 중인 축제 조회 (캘린더용, 조회수 내림차순 정렬)
+    @Query("SELECT f FROM Festival f WHERE :date BETWEEN f.startDate AND f.endDate ORDER BY f.viewCount DESC")
+    List<Festival> findFestivalsByDate(@Param("date") LocalDate date);
 }
