@@ -1,6 +1,3 @@
-// 홈 페이지
-// HeroBanner → DayTrip → RegionGrid 순서로 섹션을 렌더링
-
 import HeroBanner from '../component/Home/HeroBanner/HeroBanner'
 import Calendar from '../component/Home/Calendar/Calendar'
 import DayTrip from '../component/Home/DayTrip/DayTrip'

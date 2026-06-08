@@ -1,9 +1,3 @@
-// 홈 AI 추천 코스 섹션
-// FALLBACK_FESTIVAL 기준으로 AI 플래너 API를 호출해 하루 코스를 생성한다.
-//
-// ?refresh=false : 백엔드 DB 캐시에서 반환 (빠름)
-// ?refresh=true  : Gemini AI에게 새로 생성 요청 ("새 코스 짜기" 버튼)
-
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import './DayTrip.css'
@@ -24,8 +18,7 @@ function DayTrip() {
   const [currentFestival, setCurrentFestival] = useState(null)
   const navigate = useNavigate()
 
-  // festival을 직접 받는 이유: setCurrentFestival이 비동기라
-  // useEffect 안에서 바로 fetchCourse를 호출할 때 state가 아직 반영 안 됨
+  // state 비동기 때문에 festival을 인자로 직접 받음
   const fetchCourse = (isRefresh = false, festival = null) => {
     const target = festival || currentFestival
     if (!target) return
@@ -136,11 +129,10 @@ function DayTrip() {
         <div className="daytrip_header_right">
           <button 
             className="daytrip_btn_start"
-            // 이미 생성된 course 데이터를 state로 담아서 리포트 페이지로 넘김
-            onClick={() => navigate('/builder', { 
+            onClick={() => navigate('/builder', {
               state: { 
-                jumpToReport: true, // 바로 결과창
-                preloadedCourse: course // 완성된 데이터도 함께 전달
+                jumpToReport: true,
+                preloadedCourse: course
               } })}
           >이 코스 시작하기 →
           </button>

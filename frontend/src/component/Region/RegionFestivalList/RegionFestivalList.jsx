@@ -1,13 +1,8 @@
-// 지역 페이지 우측 축제 목록 컴포넌트
-// 해당 지역의 전체 축제를 날짜순 / 인기순으로 정렬해 카드 리스트로 표시
-// 데이터 로드 완료 후 onFestivalCountChange 콜백으로 축제 수를 RegionPage에 전달
-
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { fetchPhotos } from '../../../utils/unsplash'
 import './RegionFestivalList.css'
 
-// 오늘 기준으로 진행 중인 축제인지 계산해 isLive 필드를 추가한다.
 function calcIsLive(festivals) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -41,7 +36,6 @@ function RegionFestivalList({ onFestivalCountChange }) {
       .finally(() => setLoading(false))
   }, [regionId])
 
-  // 원본 배열을 직접 변경하지 않기 위해 spread로 복사
   const sorted = [...festivals].sort((a, b) => {
     if (sortBy === 'views') return (b.viewCount || 0) - (a.viewCount || 0)
     return new Date(a.startDate) - new Date(b.startDate)
@@ -52,7 +46,6 @@ function RegionFestivalList({ onFestivalCountChange }) {
   return (
     <div className="regionfestivallist">
 
-      {/* 축제 수 + 정렬 버튼 */}
       <div className="regionfestivallist_header">
         <p className="regionfestivallist_title">
           이 지역에서 열리는 <span>{festivals.length}개 축제</span>
@@ -69,7 +62,6 @@ function RegionFestivalList({ onFestivalCountChange }) {
         </div>
       </div>
 
-      {/* 축제 카드 목록 */}
       <ul className="regionfestivallist_list">
         {sorted.map((festival, idx) => (
           <li
@@ -77,7 +69,6 @@ function RegionFestivalList({ onFestivalCountChange }) {
             className={`regionfestivallist_item ${festival.isLive ? 'live' : ''}`}
             onClick={() => navigate(`/festival/${festival.id}`)}
           >
-            {/* 이미지 — 이미지 수보다 축제가 많으면 나머지로 채움 */}
             <div
               className="regionfestivallist_image"
               style={{

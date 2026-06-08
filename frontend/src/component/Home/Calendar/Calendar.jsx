@@ -1,7 +1,3 @@
-// 홈 축제 캘린더 섹션
-// 날짜 클릭 시 /api/festivals/calendar?date=YYYY-MM-DD 호출
-// 해당 날짜에 진행 중인 축제 목록을 사이드에 표시한
-
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Calendar.css'

@@ -1,14 +1,3 @@
-// 축제 상세 페이지 (/festival/:festivalId)
-// 축제 히어로(FestivalHero) + 주변 장소 섹션 구성
-
-// 주변 장소 섹션 구조:
-// - FestivalNearbyHeader : 카테고리 탭 (식당 / 카페 / 주차장)
-// - FestivalNearbyMap : 카카오맵 + 장소 마커
-// - FestivalNearbyList : 장소 목록 (거리순 / 인기순 정렬)
-//
-// nearbyPlaces는 { restaurant: [...], cafe: [...], parking: [...] } 형태로 카테고리별 캐싱
-// 정렬이 변경되면 캐시를 초기화하고 새 정렬 기준으로 재검색
-
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import FestivalHero from '../component/Festival/FestivalHero/FestivalHero'
@@ -26,20 +15,17 @@ function FestivalPage() {
   const [activeSort, setActiveSort] = useState('distance')
   const [selectedPlaceId, setSelectedPlaceId] = useState(null)
 
-  // 카테고리 전환 시 선택된 장소 초기화
   function handleSelectCategory(category) {
     setActiveCategory(category)
     setSelectedPlaceId(null)
   }
 
-  // 정렬 변경 시 캐시 초기화 후 재검색
   function handleSortChange(sort) {
     setActiveSort(sort)
     setNearbyPlaces({})
     setSelectedPlaceId(null)
   }
 
-  // 축제 데이터 로드
   useEffect(() => {
     setLoading(true)
     fetch(`http://localhost:8080/api/festivals/${festivalId}`)
@@ -62,13 +48,11 @@ function FestivalPage() {
       <FestivalHero festival={festival} />
 
       <div className="festivalpage_body">
-        {/* 카테고리 탭 */}
         <FestivalNearbyHeader
           activeCategory={activeCategory}
           onSelectCategory={handleSelectCategory}
         />
 
-        {/* 지도(좌) + 목록(우) 2단 레이아웃 */}
         <div className="festivalpage_content">
           <FestivalNearbyMap
             festival={festival}

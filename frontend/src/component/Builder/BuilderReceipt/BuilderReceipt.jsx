@@ -1,6 +1,5 @@
 import './BuilderReceipt.css'
 
-// 단계 정의
 const RECEIPT_STEPS = [
   { id: 1, label: '축제', icon: '🎪' },
   { id: 2, label: '맛집', icon: '🍴' },
@@ -18,7 +17,6 @@ function BuilderReceipt({ currentStep, selectedItems}) {
   return (
     <div className="builderreceipt">
 
-      {/* 영수증 헤더 */}
       <div className="builderreceipt_header">
         <span className="builderreceipt_icon">R</span>
         <div>
@@ -27,7 +25,6 @@ function BuilderReceipt({ currentStep, selectedItems}) {
         </div>
       </div>
 
-      {/* 단계별 선택 목록 */}
       <ul className="builderreceipt_list">
         {RECEIPT_STEPS.slice(0, 4).map(step => {
           const isDone = currentStep > step.id
@@ -40,12 +37,10 @@ function BuilderReceipt({ currentStep, selectedItems}) {
               key={step.id}
               className={`builderreceipt_item ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}`}
             >
-              {/* 단계 번호 */}
               <span className="builderreceipt_num">
                 {isDone ? '✓' : step.id}
               </span>
 
-              {/* 단계 정보 */}
               <div className="builderreceipt_info">
                 <strong>{step.label}</strong>
                 {selectedArray.map((item, index) => (
@@ -64,7 +59,6 @@ function BuilderReceipt({ currentStep, selectedItems}) {
                 ))}
               </div>
 
-              {/* 완료 표시 */}
               {isDone && <span className="builderreceipt_check">•</span>}
               {isActive && <span className="builderreceipt_active_dot"></span>}
             </li>

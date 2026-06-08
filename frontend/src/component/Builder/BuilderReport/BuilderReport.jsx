@@ -14,10 +14,8 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    // 1. 홈(DayTrip)에서 이미 완성된 코스를 넘겨받은 경우 API 호출 생략
-    if (preloadedCourse) return;
+      if (preloadedCourse) return;
 
-    // 2. 직접 접근 방어 로직
     if (!selectedItems || !preferences) {
       setError('코스 설계에 필요한 정보가 부족합니다.')
       setLoading(false)
@@ -33,7 +31,7 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
       duration: preferences.duration || '당일치기',
       companion: preferences.companion || '친구',
       themes: preferences.themes || [],
-      restaurants: selectedItems[2] || [], // 배열 형태 처리
+      restaurants: selectedItems[2] || [],
       cafe: selectedItems[3] || null,
       parking: selectedItems[4] || null,
     }
@@ -72,7 +70,6 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
   return (
     <div className="builderreport">
 
-      {/* 헤더 */}
       <div className="builderreport_header">
         <div className="builderreport_header_left">
           <p className="builderreport_label">✦ AI COURSE REPORT</p>
@@ -92,8 +89,7 @@ function BuilderReport({ selectedItems, preferences, onReset }) {
           )}
           <button 
             className="builderreport_btn_map" 
-            // 지도 페이지로 이동할 때 전체 코스 데이터를 함께 넘겨줍니다.
-            onClick={() => navigate('/map', { state: { courseData: result } })}
+              onClick={() => navigate('/map', { state: { courseData: result } })}
           >
             지도에서 보기 →
           </button>
