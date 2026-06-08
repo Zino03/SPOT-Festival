@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class GeminiService {
     // 둘 다 application.yaml에서 가져옴
-    @Value("${gemini.api.key}")
+    @Value("${gemini.api.new-key}")
     private String apiKey;
 
     @Value("${gemini.api.url}")
