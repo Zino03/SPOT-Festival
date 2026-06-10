@@ -1,7 +1,3 @@
-// 홈 히어로 배너 컴포넌트
-// 상단 LIVE 뱃지 + 좌측 타이틀/버튼 + 우측 이번 달 통계 카드
-// 배경 이미지는 Unsplash에서 받아오며, 실패 시 picsum 폴백을 사용
-
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchPhoto } from '../../../utils/unsplash'
@@ -15,7 +11,6 @@ function HeroBanner() {
   const [monthCount, setMonthCount] = useState(0)
   const [heroBg, setHeroBg] = useState(FALLBACK_BG)
 
-  // 현재 라이브 축제 수 / 이번 달 축제 수
   useEffect(() => {
     fetch('http://localhost:8080/api/festivals/stats')
       .then(res => res.json())
@@ -26,7 +21,6 @@ function HeroBanner() {
       .catch(err => console.error('stats API 에러:', err))
   }, [])
 
-  // 히어로 배경 이미지
   useEffect(() => {
     fetchPhoto('Korean festival night celebration outdoor')
       .then(url => { if (url) setHeroBg(url) })
@@ -35,7 +29,6 @@ function HeroBanner() {
   return (
     <section className="hero" style={{ backgroundImage: `url(${heroBg})` }}>
 
-      {/* 상단 LIVE 뱃지 */}
       <div className="hero_topbar">
         <span className="hero_live">
           <span className="hero_live_dot"></span>
@@ -43,7 +36,6 @@ function HeroBanner() {
         </span>
       </div>
 
-      {/* 좌측 메인 타이틀 + 버튼 */}
       <div className="hero_content">
         <p className="hero_label">FESTIVAL · KOREA · 2026</p>
         <h1 className="hero_title">
@@ -59,7 +51,6 @@ function HeroBanner() {
         </div>
       </div>
 
-      {/* 우측 이번 달 통계 카드 */}
       <div className="hero_index_card">
         <p className="hero_index_label">이번 달 SPOT INDEX</p>
         <div className="hero_index_stats">

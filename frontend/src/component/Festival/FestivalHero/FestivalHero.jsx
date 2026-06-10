@@ -1,10 +1,3 @@
-// 축제 상세 페이지 히어로 컴포넌트
-// 축제 배경 이미지 + LIVE 뱃지 + 축제명/날짜/주소/조회수 + "코스에 추가" 버튼 구성
-
-// 배경 이미지는 festival.id를 FESTIVAL_QUERIES 배열 길이로 나눈 나머지로 쿼리를 선택
-// 같은 축제는 항상 같은 분위기의 이미지를 사용한다.
-// "코스에 추가" 클릭 시 선택된 축제 정보를 state로 빌더 페이지에 전달한다.
-
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchPhoto } from '../../../utils/unsplash'
@@ -23,7 +16,7 @@ function FestivalHero({ festival }) {
   const navigate = useNavigate()
   const [heroBg, setHeroBg] = useState('')
 
-  // festival.id % 쿼리 수 로 항상 같은 이미지 분위기를 유지
+  // id % 길이로 같은 축제는 항상 같은 분위기 이미지 고정
   useEffect(() => {
     const query = FESTIVAL_QUERIES[festival.id % FESTIVAL_QUERIES.length]
     fetchPhoto(query).then(url => { if (url) setHeroBg(url) })
@@ -36,7 +29,6 @@ function FestivalHero({ festival }) {
   const startDate = festival.startDate?.slice(5).replace('-', '/')
   const endDate = festival.endDate?.slice(5).replace('-', '/')
 
-  // 빌더 페이지로 이동하면서 현재 축제를 Step 1 선택 상태로 전달
   function handleAddToCourse() {
     navigate('/builder', {
       state: {

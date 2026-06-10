@@ -1,10 +1,3 @@
-// 전국 카카오 지도 컴포넌트
-// REGION_CENTERS의 17개 좌표에 커스텀 오버레이 핀 렌더링
-// 핀 클릭 시 해당 지역 페이지(/region/:regionId)로 이동
-
-// 이벤트는 핀마다 리스너를 붙이지 않고 맵 컨테이너에서 처리
-// loadKakaoMap()이 비동기이므로 컴포넌트 언마운트 시 destroyed 플래그로 콜백 실행 제한
-
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { loadKakaoMap, REGION_CENTERS } from '../../../utils/kakao'
@@ -20,7 +13,6 @@ function MapViewer({ onSelectRegion }) {
     let destroyed = false
 
     loadKakaoMap().then(() => {
-      // 언마운트 후 콜백이 실행되면 mapRef.current가 null이므로 중단
       if (destroyed || !mapRef.current) return
 
       const { kakao } = window

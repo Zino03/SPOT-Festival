@@ -1,0 +1,388 @@
+.cal_section {
+  padding: 88px 0;
+  background: var(--color-bg-subtle);
+}
+
+.cal_inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+/* 섹션 헤더 */
+.cal_head {
+  margin-bottom: 48px;
+}
+
+.cal_label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  margin-bottom: 14px;
+}
+
+.cal_label_line {
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.cal_title {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.cal_title span {
+  color: var(--color-accent);
+}
+
+/* 바디 레이아웃 */
+.cal_body {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+/* 캘린더 그리드 */
+.cal_grid_wrap {
+  flex: 1;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 32px 36px 24px;
+  box-shadow: var(--shadow-md);
+}
+
+/* 월 네비게이션 */
+.cal_nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.cal_nav_label {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.cal_nav_btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: none;
+  font-size: 22px;
+  color: var(--color-text-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+  padding: 0;
+}
+
+.cal_nav_btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-bg-subtle);
+}
+
+/* 요일 헤더 */
+.cal_weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+
+.cal_weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  padding: 6px 0;
+  letter-spacing: 0.06em;
+}
+
+.cal_weekday.sun { color: var(--color-accent-red); }
+.cal_weekday.sat { color: var(--color-blue); }
+
+/* 날짜 그리드 */
+.cal_days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal_loading {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.cal_day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+}
+
+.cal_day:hover:not(.other) {
+  background: #fff0eb;
+}
+
+.cal_day.other {
+  cursor: default;
+  pointer-events: none;
+}
+
+.cal_day_num {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+/* 다른 달 날짜 */
+.cal_day.other .cal_day_num {
+  color: var(--color-text-muted);
+  opacity: 0.35;
+}
+
+/* 일요일 — 1번째 열 */
+.cal_days > .cal_day:nth-child(7n+1) .cal_day_num { 
+  color: var(--color-accent-red); 
+}
+.cal_days > .cal_day.other:nth-child(7n+1) .cal_day_num { 
+  color: var(--color-accent-red); opacity: 0.3; 
+}
+
+/* 토요일 — 7번째 열 */
+.cal_days > .cal_day:nth-child(7n) .cal_day_num { 
+  color: var(--color-blue); 
+}
+.cal_days > .cal_day.other:nth-child(7n) .cal_day_num { 
+  color: var(--color-blue); opacity: 0.3; 
+}
+
+/* 오늘 */
+.cal_day.today {
+  background: #fff7f4;
+}
+
+.cal_day.today .cal_day_num {
+  color: var(--color-accent);
+  font-weight: 800;
+}
+
+.cal_day.today::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* 선택된 날짜 */
+.cal_day.selected {
+  background: var(--color-primary) !important;
+}
+
+.cal_day.selected .cal_day_num {
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.cal_day.selected .cal_dot {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.cal_day.selected::after {
+  background: rgba(255, 107, 53, 0.7);
+}
+
+/* 축제 닷 */
+.cal_dots {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.cal_dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* 범례 */
+.cal_legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+}
+
+.cal_legend_today {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.cal_legend_tip {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* 사이드 패널 */
+.cal_sidebar {
+  width: 400px;
+  height: 605px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cal_sidebar_head {
+  padding: 28px 28px 24px;
+  background: var(--color-primary);
+}
+
+.cal_sidebar_date {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.cal_sidebar_count {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* 로딩 스피너 */
+.cal_spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: cal_spin 0.7s linear infinite;
+}
+
+@keyframes cal_spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 빈 상태 */
+.cal_empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.cal_empty_icon {
+  font-size: 40px;
+}
+
+.cal_empty p {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* 축제 목록 */
+.cal_list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cal_list::-webkit-scrollbar { width: 4px; }
+.cal_list::-webkit-scrollbar-track { background: transparent; }
+.cal_list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.cal_item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cal_item:hover {
+  border-color: var(--color-accent);
+  background: #fff7f4;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.cal_item_top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cal_item_live {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-accent-red);
+  border-radius: 4px;
+  padding: 2px 6px;
+  letter-spacing: 0.04em;
+}
+
+.cal_item_region {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.cal_item_name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1.4;
+}
+
+.cal_item_date {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
