@@ -19,7 +19,7 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
 
     @Query("SELECT COUNT(f) FROM Festival f WHERE f.address LIKE %:keyword% OR f.region LIKE %:keyword%")
     long countByRegionKeyword(@Param("keyword") String keyword);
-
+    
     // startData, endDate 사이에 축제 수 계산 (홈 화면에 필요 - Live)
     @Query("SELECT COUNT(f) FROM Festival f WHERE f.startDate <= :today AND f.endDate >= :today")
     long countLiveToday(@Param("today") LocalDate today);

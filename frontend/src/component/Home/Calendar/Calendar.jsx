@@ -81,12 +81,13 @@ function Calendar() {
     sel.setHours(0, 0, 0, 0)
     return date.getTime() === sel.getTime()
   }
+/*
   function isLive(f) {
     const start = new Date(f.startDate); start.setHours(0, 0, 0, 0)
     const end = new Date(f.endDate); end.setHours(0, 0, 0, 0)
     return start <= todayRaw && todayRaw <= end
   }
-
+    */
   const cells = buildCells()
   const selLabel = `${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`
 
@@ -180,7 +181,6 @@ function Calendar() {
                     onClick={() => navigate(`/festival/${f.id}`)}
                   >
                     <div className="cal_item_top">
-                      {isLive(f) && <span className="cal_item_live">● LIVE</span>}
                       <span className="cal_item_region">{f.region}</span>
                     </div>
                     <strong className="cal_item_name">{f.name}</strong>
