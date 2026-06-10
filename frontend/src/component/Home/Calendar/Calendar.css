@@ -1,5 +1,5 @@
 .cal_section {
-  padding: 88px 0;
+  padding: 48px 0;
   background: var(--color-bg-subtle);
 }
 
@@ -11,7 +11,7 @@
 
 /* 섹션 헤더 */
 .cal_head {
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .cal_label {
@@ -34,7 +34,7 @@
 }
 
 .cal_title {
-  font-size: 34px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--color-primary);
   line-height: 1.2;
@@ -48,7 +48,7 @@
 .cal_body {
   display: flex;
   gap: 28px;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 /* 캘린더 그리드 */
@@ -56,7 +56,7 @@
   flex: 1;
   background: #fff;
   border-radius: var(--radius-lg);
-  padding: 32px 36px 24px;
+  padding: 20px 24px 16px;
   box-shadow: var(--shadow-md);
 }
 
@@ -65,11 +65,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 14px;
 }
 
 .cal_nav_label {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--color-primary);
 }
@@ -120,7 +120,8 @@
 .cal_days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+  grid-auto-rows: 44px;
+  gap: 2px;
 }
 
 .cal_loading {
@@ -131,12 +132,11 @@
 }
 
 .cal_day {
-  aspect-ratio: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 0.12s;
@@ -240,8 +240,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 20px;
-  padding-top: 18px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid var(--color-border);
 }
 
@@ -259,7 +259,6 @@
 /* 사이드 패널 */
 .cal_sidebar {
   width: 400px;
-  height: 605px;
   flex-shrink: 0;
   background: #fff;
   border-radius: var(--radius-lg);
@@ -267,18 +266,20 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
+  max-height: 460px;
 }
 
 .cal_sidebar_head {
-  padding: 28px 28px 24px;
+  padding: 20px 24px 16px;
   background: var(--color-primary);
 }
 
 .cal_sidebar_date {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .cal_sidebar_count {

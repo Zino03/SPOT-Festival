@@ -180,3 +180,26 @@
   background: var(--color-blue);
   transform: translateY(-1px);
 }
+
+@media (max-width: 960px) {
+  .regiongrid {
+    padding: 48px 32px;
+  }
+  .regiongrid_grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .regiongrid {
+    padding: 40px 20px;
+  }
+  .regiongrid_grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .regiongrid_footer {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
